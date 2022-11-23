@@ -1,22 +1,24 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0; 
-  font-family: Raleway, sans-serif;
-}
+// * {
+//   box-sizing: border-box;
+//   margin: 0;
+//   padding: 0; 
+//   font-family: Raleway, sans-serif;
+// }
 
-body {
-  background: linear-gradient(90deg, #C7C5F4, #776BCC);   
-}
+// body {
+//   background: linear-gradient(90deg, #C7C5F4, #776BCC);   
+// }
 
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
+// .container {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   min-height: 100vh;
+// }
+
+// * 이거 body랑 컨테이너 전부 적용되서 잠깐 막아놨습니다 수정 부탁드려요.. ㅠ
 
 .screen {   
   background: linear-gradient(90deg, #5D54A4, #7C78B8);   

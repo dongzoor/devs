@@ -1,0 +1,25 @@
+
+
+
+#adminNav {
+    background-color: #C7C5F4;
+    position: fixed;
+  top: 0;
+  /* width: 100% */
+  left: 0;
+  right: 0;
+  
+}
+.adminBoardlist{
+    display: flex;
+   align-items: center;
+   justify-content: center;
+   min-height: 100vh;
+   
+}
+.adminMemberlist {
+    display: flex;
+   align-items: center;
+   justify-content: center;
+   min-height: 100vh;
+}
