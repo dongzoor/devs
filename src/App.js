@@ -1,27 +1,28 @@
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
-import './App.css';
-import Admin from './pages/admin/Admin';
-import Login from './pages/Login';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import AdminBoardList from './pages/admin/AdminBoarList';
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import AdminMemberList from './pages/admin/AdminMemberLlist';
-import Register from "./pages/Register";
+
+import Admin from "./pages/admin/Admin";
+import Login from "./pages/login/Login";
+import Profile from "./pages/login/Profile";
+import Register from "./pages/login/Register";
 
 function App() {
   return (
     <>
-    <Router>
-      <Routes>
-      <Route path= "/AdminBoarList"  element={<AdminBoardList />} />
-      <Route path= "/AdminMemberList"  element={<AdminMemberList/>} />
-      <Route path="/" element={<Login />} />
-        <Route path="/Register" element={<Register />} />
-      </Routes>
-    </Router>
-    {/* <Login/>   */}
-    {/* 화면에 제꺼 출력이안되서 잠시 막아놨어요 */}
-      <Admin/>
+      <Router>
+        <Routes>
+          {/* <Route path= "/AdminBoarList"  element={<AdminBoardList />} />
+      <Route path= "/AdminMemberList"  element={<AdminMemberList/>} /> */}
+          {/* 작업하느라 주석처리 했습니다... 죄송합니다... - J2 */}
+          <Route path="/" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
+          <Route path="/Profile" element={<Profile />} />
+        </Routes>
+      </Router>
+      {/* <Login/>   */}
+      <Admin />
     </>
   );
 }
