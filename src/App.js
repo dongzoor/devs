@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminBoardList from './pages/admin/AdminBoarList';
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AdminMemberList from './pages/admin/AdminMemberLlist';
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -14,6 +15,8 @@ function App() {
       <Routes>
       <Route path= "/AdminBoarList"  element={<AdminBoardList />} />
       <Route path= "/AdminMemberList"  element={<AdminMemberList/>} />
+      <Route path="/" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
       </Routes>
     </Router>
     {/* <Login/>   */}
