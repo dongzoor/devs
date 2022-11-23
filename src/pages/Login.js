@@ -1,3 +1,5 @@
+import React from "react";
+import { Link } from "react-router-dom";
 import "../styles/Login.scss";
 import { FaUser, FaLock } from "react-icons/fa";
 import { SiKakaotalk, SiGoogle, SiGithub } from "react-icons/si";
@@ -12,7 +14,7 @@ function Login() {
               <FaUser className="login__icon" />
               <input
                 type="text"
-                class="login__input"
+                className="login__input"
                 placeholder="User name / Email"
               />
             </div>
@@ -20,14 +22,16 @@ function Login() {
               <FaLock className="pwd__icon" />
               <input
                 type="password"
-                class="login__input"
+                className="login__input"
                 placeholder="Password"
               />
             </div>
             <button class="button login__submit">
               <span class="button__text">Log In Now</span>
-              <i class="button__icon fas fa-chevron-right"></i>
             </button>
+            <Link to="/Register" style={{ margin: 10 }}>
+              Register
+            </Link>
           </form>
           <div className="social-login">
             <h3>log in via</h3>
