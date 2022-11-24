@@ -1,6 +1,6 @@
 import "../styles/Login.scss"
 
-function Login() {
+const Login = () => {
 
   return (
     <div class="container">
