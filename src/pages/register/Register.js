@@ -60,6 +60,11 @@ function Register() {
                     : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                 }
                 alt="프로필 이미지"
+                style={{
+                  width: "150px",
+                  height: "150px",
+                  borderRadius: "50%",
+                }}
               />
               <label className="profileImg-label" htmlFor="profileImg">
                 Add Image
