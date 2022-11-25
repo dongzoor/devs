@@ -1,8 +1,8 @@
-import "../login/Register.css";
+import "./Register.css";
 
 import { Link } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
-import React from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 
 const Box = styled.div`
@@ -30,6 +30,18 @@ const Content = styled.div`
 `;
 
 function Register() {
+  const [imgFile, setImgFile] = useState("");
+  const imgRef = useRef();
+
+  const saveImgFile = () => {
+    const file = imgRef.current.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImgFile(reader.result);
+    };
+  };
+
   return (
     <Box>
       <Container>
@@ -40,6 +52,25 @@ function Register() {
           <h1 class="form-title">Register Here</h1>
           <div>
             <form className="register-form">
+              <img
+                className="profile-img"
+                src={
+                  imgFile
+                    ? imgFile
+                    : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                }
+                alt="프로필 이미지"
+              />
+              <label className="profileImg-label" htmlFor="profileImg">
+                Add Image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                id="profileImg"
+                onChange={saveImgFile}
+                ref={imgRef}
+              />
               <input type="text" placeholder="ID(EMAIL)" />
               <input type="text" placeholder="PASSWORD" />
               <input type="text" placeholder="VERIFY PASSWORD" />
