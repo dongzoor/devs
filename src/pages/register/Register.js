@@ -1,8 +1,10 @@
 import "./Register.css";
 
+import React, { useRef, useState } from "react";
+
 import { Link } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
-import React, { useState, useRef } from "react";
+import UserApi from "../../api/UserApi";
 import styled from "styled-components";
 
 const Box = styled.div`
@@ -30,9 +32,24 @@ const Content = styled.div`
 `;
 
 function Register() {
+  const [userid, setUserid] = useState("");
+  const [userNickname, setUserNickname] = useState("");
+  const [password, setPassword] = useState("");
+  const [inputConPw, setInputConPw] = useState("");
+  const [phone, setPhone] = useState("");
   const [imgFile, setImgFile] = useState("");
   const imgRef = useRef();
 
+  const [isConId, setIsConId] = useState(false);
+  const [ConIdMessage, setConIdMessage] = useState("");
+
+  const [isConPw, setIsConPw] = useState(false);
+  const [conPwMessage, setConPwMessage] = useState("");
+
+  const [isConPhone, setIsConPhone] = useState(false);
+  const [ConPhoneMessage, setConPhoneMessage] = useState("");
+
+  //이미지 파일 저장
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
     const reader = new FileReader();
@@ -40,6 +57,87 @@ function Register() {
     reader.onloadend = () => {
       setImgFile(reader.result);
     };
+  };
+
+  const onChangeId = (e) => {
+    const idCheck = e.target.value;
+    setUserid(idCheck);
+
+    const regExp =
+      /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
+    if (regExp.test(idCheck) !== true) {
+      setConIdMessage("이메일주소 형식이 올바르지 않습니다.");
+      setIsConId(false);
+    } else {
+      setConIdMessage("");
+      setIsConId(true);
+    }
+  };
+
+  const onChangeNickname = (e) => {
+    setUserNickname(e.target.value);
+  };
+
+  const onChangePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const onChangePhone = (e) => {
+    const phoneCheck = e.target.value;
+    setPhone(phoneCheck);
+
+    const regExp = /^\d{2,3}-\d{3,4}-\d{4}$/;
+
+    if (regExp.test(phoneCheck) !== true) {
+      setConPhoneMessage(
+        "전화번호가 올바르지 않습니다. 하이픈(-)을 포함한 숫자만 입력하세요."
+      );
+      setIsConPhone(false);
+    } else {
+      setConPhoneMessage("");
+      setIsConPhone(true);
+    }
+  };
+
+  // 유효성 검사
+  const onChangeConPw = (e) => {
+    const passwordCurrent = e.target.value;
+    setInputConPw(passwordCurrent);
+    if (passwordCurrent !== password) {
+      setConPwMessage("비밀 번호가 일치하지 않습니다.");
+      setIsConPw(false);
+    } else {
+      setConPwMessage("비밀 번호가 일치 합니다. )");
+      setIsConPw(true);
+    }
+  };
+
+  // 회원가입
+  const onClickLogin = async () => {
+    console.log("Click 회원가입");
+    // 가입 여부 우선 확인
+    // const memberCheck = await UserApi.memberRegCheck(userid);
+    // console.log("가입 가능 여부 확인 : ", memberCheck.data);
+    // 가입 여부 확인 후 가입 절차 진행
+
+    if (true) {
+      console.log("가입된 아이디가 없습니다. 다음 단계 진행 합니다.");
+      const memberReg = await UserApi.memberReg(
+        userid,
+        password,
+        userNickname,
+        phone
+      );
+      console.log(memberReg.data.result);
+      if (memberReg.data.result === "OK") {
+        window.location.replace("/");
+      } else {
+        window.alert("회원 가입되었습니다.");
+      }
+    } else {
+      window.alert("이미 가입된 회원 입니다.");
+    }
   };
 
   return (
@@ -76,16 +174,65 @@ function Register() {
                 onChange={saveImgFile}
                 ref={imgRef}
               />
-              <input type="text" placeholder="ID(EMAIL)" />
-              <input type="text" placeholder="PASSWORD" />
-              <input type="text" placeholder="VERIFY PASSWORD" />
-              <input type="text" placeholder="PHONE NUMBER" />
-              <input type="text" placeholder="CODE" />
-              <input type="email" placeholder="EMAIL ADDRESS" />
+              <input
+                type="text"
+                placeholder="ID(EMAIL)"
+                value={userid}
+                onChange={onChangeId}
+              />
+              <span
+                className={`message ${isConId ? "success" : "error"}`}
+                style={{ color: "#ff0000" }}
+              >
+                {ConIdMessage}
+              </span>
+              <input
+                type="text"
+                placeholder="NICKNAME"
+                value={userNickname}
+                onChange={onChangeNickname}
+              />
+              <input
+                type="password"
+                placeholder="PASSWORD"
+                value={password}
+                onChange={onChangePassword}
+              />
+              <input
+                type="password"
+                placeholder="VERIFY PASSWORD"
+                value={inputConPw}
+                onChange={onChangeConPw}
+              />
+              <span
+                className={`message ${isConPw ? "success" : "error"}`}
+                style={{ color: "#ff0000" }}
+              >
+                {conPwMessage}
+              </span>
+              <input
+                type="text"
+                placeholder="PHONE NUMBER"
+                value={phone}
+                onChange={onChangePhone}
+              />
+              <div>
+                <span
+                  className={`message ${isConPhone ? "success" : "error"}`}
+                  style={{ color: "#ff0000" }}
+                >
+                  {ConPhoneMessage}
+                </span>
+              </div>
+              {/* <input type="text" placeholder="CODE" /> */}
               <input type="checkbox" id="check" />
               <label id="check" htmlFor="check" />
               <span> Agree to terms & conditions</span>
-              <button type="button" className="register_btn">
+              <button
+                type="button"
+                className="register_btn"
+                onClick={onClickLogin}
+              >
                 Submit
               </button>
             </form>
