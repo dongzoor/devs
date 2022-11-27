@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Raleway:400,700");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard-std.css");
 
 .screen {
   background: linear-gradient(90deg, #5d54a4, #7c78b8);

@@ -1,16 +1,17 @@
 import "../login/Login.css";
 
 import { FaLock, FaUser } from "react-icons/fa";
+import React, { useState } from "react";
 import { SiGithub, SiGoogle, SiKakaotalk } from "react-icons/si";
 
 import { Link } from "react-router-dom";
-import React from "react";
+import UserApi from "../../api/UserApi";
 import styled from "styled-components";
 
 const Box = styled.div`
   margin: 0;
   padding: 0;
-  font-family: Raleway, sans-serif;
+  font-family: Raleway, Pretendard Std Variable;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
@@ -22,6 +23,35 @@ const Container = styled.div`
 `;
 
 function Login() {
+  // 키보드 입력
+  const [inputId, setInputId] = useState("");
+  const [inputPw, setInputPw] = useState("");
+
+  const onChangeId = (e) => {
+    setInputId(e.target.value);
+  };
+
+  const onChangePw = (e) => {
+    const passwordCurrent = e.target.value;
+    setInputPw(passwordCurrent);
+  };
+
+  const onClickLogin = async () => {
+    try {
+      // 로그인을 위한 axios 호출
+      const res = await UserApi.userLogin(inputId, inputPw);
+      console.log(res.data);
+
+      if (res.data !== null) {
+        sessionStorage.setItem("userEmail", res.data.userEmail);
+        sessionStorage.setItem("userNickname", res.data.userNickname);
+        window.location.replace("/Profile");
+      }
+    } catch (e) {
+      console.log("로그인 에러..");
+    }
+  };
+
   return (
     <Box>
       <Container>
@@ -34,6 +64,8 @@ function Login() {
                   type="text"
                   className="login__input"
                   placeholder="User name / Email"
+                  value={inputId}
+                  onChange={onChangeId}
                 />
               </div>
               <div class="login__field">
@@ -42,10 +74,12 @@ function Login() {
                   type="password"
                   className="login__input"
                   placeholder="Password"
+                  value={inputPw}
+                  onChange={onChangePw}
                 />
               </div>
               <Link to="/Profile">
-                <button class="button login__submit">
+                <button class="button login__submit" onClick={onClickLogin}>
                   <span class="button__text">Log In Now</span>
                 </button>
               </Link>

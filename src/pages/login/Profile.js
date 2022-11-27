@@ -29,7 +29,7 @@ function Profile() {
           <div className="profile"></div>
         </div>
         <div className="user_container">
-          <h2 className="userName">닉네임</h2>
+          <h2 className="userName">{sessionStorage.getItem("userNickname")}</h2>
           <FaRegEdit size="30" style={{ margin: "5" }} />
         </div>
         <div className="todays_info">

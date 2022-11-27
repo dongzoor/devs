@@ -32,7 +32,7 @@ const Content = styled.div`
 `;
 
 function Register() {
-  const [userid, setUserid] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [userNickname, setUserNickname] = useState("");
   const [password, setPassword] = useState("");
   const [inputConPw, setInputConPw] = useState("");
@@ -49,7 +49,7 @@ function Register() {
   const [isConPhone, setIsConPhone] = useState(false);
   const [ConPhoneMessage, setConPhoneMessage] = useState("");
 
-  //이미지 파일 저장
+  //이미지 보여주기
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
     const reader = new FileReader();
@@ -61,7 +61,7 @@ function Register() {
 
   const onChangeId = (e) => {
     const idCheck = e.target.value;
-    setUserid(idCheck);
+    setUserEmail(idCheck);
 
     const regExp =
       /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
@@ -124,16 +124,27 @@ function Register() {
     if (true) {
       console.log("가입된 아이디가 없습니다. 다음 단계 진행 합니다.");
       const memberReg = await UserApi.memberReg(
-        userid,
+        userEmail,
         password,
         userNickname,
         phone
       );
-      console.log(memberReg.data.result);
-      if (memberReg.data.result === "OK") {
-        window.location.replace("/");
-      } else {
+      console.log(memberReg.statusText);
+      if (memberReg.statusText === "OK") {
+        const fd = new FormData();
+        const file = imgRef.current.files[0];
+
+        fd.append("file", file);
+        fd.append("userEmail", userEmail);
+
+        const uploadChk = await UserApi.imageUpload(fd);
+
+        if (uploadChk.statusText === "OK") {
+        } else {
+          window.alert("이미지 업로드 실패했습니다.");
+        }
         window.alert("회원 가입되었습니다.");
+        window.location.replace("/");
       }
     } else {
       window.alert("이미 가입된 회원 입니다.");
@@ -177,7 +188,7 @@ function Register() {
               <input
                 type="text"
                 placeholder="ID(EMAIL)"
-                value={userid}
+                value={userEmail}
                 onChange={onChangeId}
               />
               <span
