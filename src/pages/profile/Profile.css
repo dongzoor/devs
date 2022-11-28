@@ -1,6 +1,6 @@
 .profile_container {
   aspect-ratio: 1/1;
-  width: min(400px, 90%);
+  width: min(300px, 90%);
   position: relative;
   text-align: center;
 }

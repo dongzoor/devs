@@ -1,8 +1,9 @@
-import "../login/Profile.css";
+import "../profile/Profile.css";
 
 import { FaRegEdit } from "react-icons/fa";
 import React from "react";
 import styled from "styled-components";
+import Quote from "../quote/Quote";
 
 const Box = styled.div`
   margin: 0;
@@ -34,7 +35,7 @@ function Profile() {
         </div>
         <div className="todays_info">
           <h1 className="todays_schedule">오늘은 n개의 일정이 있습니다.</h1>
-          <h2 className="todays_quote">"명언명언"</h2>
+          <Quote />
         </div>
       </Container>
     </Box>

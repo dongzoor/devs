@@ -86,6 +86,9 @@ function Login() {
               <Link to="/Register" style={{ margin: 10 }}>
                 Register
               </Link>
+              <Link to="/FindInfo" style={{ margin: 10 }}>
+                Find Id/Pw
+              </Link>
             </form>
             <div className="social-login">
               <h3>log in via</h3>
