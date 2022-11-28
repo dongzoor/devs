@@ -59,6 +59,13 @@
   padding: 5px 0;
 }
 
+.register-form > input :active,
+.register-form > input:focus,
+.register-form > input:hover {
+  outline: none;
+  border-bottom-color: #6a679e;
+}
+
 .register_btn {
   background: #fff;
   font-size: 14px;

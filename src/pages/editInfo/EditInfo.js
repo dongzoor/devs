@@ -1,4 +1,6 @@
-import "./Register.css";
+// 회원정보 수정페이지
+
+import "./EditInfo.css";
 
 import React, { useRef, useState } from "react";
 
@@ -31,7 +33,7 @@ const Content = styled.div`
   box-shadow: 0px 0px 24px #5c5696;
 `;
 
-function Register() {
+function EditInfo() {
   const [userEmail, setUserEmail] = useState("");
   const [userNickname, setUserNickname] = useState("");
   const [password, setPassword] = useState("");
@@ -113,9 +115,9 @@ function Register() {
     }
   };
 
-  // 회원가입
-  const onClickLogin = async () => {
-    console.log("Click 회원가입");
+  // 회원정보 수정
+  const onClickEdit = async () => {
+    console.log("Click 회원정보 수정");
     // 가입 여부 우선 확인
     // const memberCheck = await UserApi.memberRegCheck(userid);
     // console.log("가입 가능 여부 확인 : ", memberCheck.data);
@@ -158,9 +160,9 @@ function Register() {
           <Link to="/">
             <MdArrowBack size="24" style={{ margin: 10 }} />
           </Link>
-          <h1 class="form-title">Register Here</h1>
+          <h1 class="form-title">Edit Account Information</h1>
           <div>
-            <form className="register-form">
+            <form className="edit-form">
               <img
                 className="profile-img"
                 src={
@@ -200,7 +202,7 @@ function Register() {
               <input
                 type="text"
                 placeholder="NICKNAME"
-                value={userNickname}
+                value={sessionStorage.getItem("userNickname")}
                 onChange={onChangeNickname}
               />
               <input
@@ -208,12 +210,6 @@ function Register() {
                 placeholder="PASSWORD"
                 value={password}
                 onChange={onChangePassword}
-              />
-              <input
-                type="password"
-                placeholder="VERIFY PASSWORD"
-                value={inputConPw}
-                onChange={onChangeConPw}
               />
               <span
                 className={`message ${isConPw ? "success" : "error"}`}
@@ -235,14 +231,11 @@ function Register() {
                   {ConPhoneMessage}
                 </span>
               </div>
-              {/* <input type="text" placeholder="CODE" /> */}
-              <input type="checkbox" id="check" />
-              <label id="check" htmlFor="check" />
-              <span> Agree to terms & conditions</span>
+              {/* <input type="text" placeholder="CODE" />  */}
               <button
                 type="button"
-                className="register_btn"
-                onClick={onClickLogin}
+                className="submit_btn"
+                onClick={onClickEdit}
               >
                 Submit
               </button>
@@ -254,4 +247,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default EditInfo;

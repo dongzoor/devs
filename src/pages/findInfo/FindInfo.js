@@ -1,3 +1,5 @@
+// 아이디, 비밀번호 찾기 페이지
+
 import "../findInfo/FindInfo.css";
 
 import React, { useState } from "react";
@@ -10,7 +12,7 @@ import styled from "styled-components";
 const Box = styled.div`
   margin: 0;
   padding: 0;
-  font-family: Raleway, Pretendard Std Variable;
+  font-family: Raleway, Pretendard Std;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
@@ -56,6 +58,7 @@ function FindInfo() {
                   <input
                     type="text"
                     placeholder="PHONE NUMBER"
+                    className="find__input"
                     style={{
                       border: "none",
                       borderBottom: "1px solid black",
@@ -73,6 +76,7 @@ function FindInfo() {
                   <div style={{ verticalAlign: "center" }}>
                     <input
                       type="text"
+                      className="find__input"
                       placeholder="ID(EMAIL)"
                       style={{
                         border: "none",
@@ -82,6 +86,7 @@ function FindInfo() {
                     />
                     <input
                       type="text"
+                      className="find__input"
                       placeholder="PHONE NUMBER"
                       style={{
                         border: "none",

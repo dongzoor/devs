@@ -11,7 +11,7 @@ import styled from "styled-components";
 const Box = styled.div`
   margin: 0;
   padding: 0;
-  font-family: Raleway, Pretendard Std Variable;
+  font-family: Raleway, Pretendard Std;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
@@ -63,7 +63,7 @@ function Login() {
                 <input
                   type="text"
                   className="login__input"
-                  placeholder="User name / Email"
+                  placeholder="Email"
                   value={inputId}
                   onChange={onChangeId}
                 />

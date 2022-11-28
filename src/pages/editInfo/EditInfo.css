@@ -4,11 +4,11 @@
   padding: 20px 40px 10px;
 }
 
-.findInfo-form {
+.edit-form {
   padding: 10px 40px 0px;
 }
 
-.findInfo-form label {
+.edit-form label {
   margin: 20px 20px 0;
   font-weight: bold;
   font-size: 13px;
@@ -17,7 +17,16 @@
   cursor: pointer;
 }
 
-.findInfo_form > input[type="text"] {
+.edit-form input[type="file"] {
+  display: none;
+}
+
+.edit-form > input[type="file"] {
+  display: none;
+}
+
+.edit-form > input[type="text"],
+[type="email"] {
   border: none;
   border-bottom: 1px solid black;
   outline: none;
@@ -26,11 +35,13 @@
   padding: 10px 0;
 }
 
-.find__input:active,
-.find__input:focus,
-.find__input:hover {
+.edit-form > input[type="password"] {
+  border: none;
+  border-bottom: 1px solid black;
   outline: none;
-  border-bottom-color: #6a679e;
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px 0;
 }
 
 .submit_btn {
@@ -45,7 +56,7 @@
   font-weight: 700;
   display: flex;
   align-items: center;
-  width: 80%;
+  width: 100%;
   color: #4c489d;
   box-shadow: 0px 2px 2px #5c5696;
   cursor: pointer;
