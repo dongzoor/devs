@@ -1,10 +1,10 @@
 import "../profile/Profile.css";
 
 import { FaRegEdit } from "react-icons/fa";
-import React from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import Quote from "../quote/Quote";
+import React from "react";
+import styled from "styled-components";
 
 const Box = styled.div`
   margin: 0;
@@ -12,6 +12,8 @@ const Box = styled.div`
   font-family: Raleway, Pretendard Std;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
+
+const imgFile = sessionStorage.getItem("profileImage");
 
 const Container = styled.div`
   display: flex;
@@ -28,7 +30,20 @@ function Profile() {
       <Container>
         <div className="profile_container">
           <div className="profile-bg"></div>
-          <div className="profile"></div>
+          <img
+            className="profile-img"
+            src={
+              imgFile
+                ? imgFile
+                : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+            }
+            alt="프로필 이미지"
+            style={{
+              width: "300px",
+              height: "300px",
+              borderRadius: "50%",
+            }}
+          />
         </div>
         <div className="user_container">
           <h2 className="userName">{sessionStorage.getItem("userNickname")}</h2>

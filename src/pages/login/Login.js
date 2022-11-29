@@ -3,10 +3,14 @@ import "../login/Login.css";
 import { FaLock, FaUser } from "react-icons/fa";
 import React, { useState } from "react";
 import { SiGithub, SiGoogle, SiKakaotalk } from "react-icons/si";
+import { getDownloadURL, ref } from "@firebase/storage";
 
 import { Link } from "react-router-dom";
 import UserApi from "../../api/UserApi";
+import { storageService } from "../../lib/api/fbase";
 import styled from "styled-components";
+
+// import { getDownloadURL } from "@firebase/storage";
 
 const Box = styled.div`
   margin: 0;
@@ -43,8 +47,15 @@ function Login() {
       console.log(res.data);
 
       if (res.data !== null) {
+        // 로그인 성공 시 이미지 불러오기
+        let attachmentUrl = ref(
+          storageService,
+          `/INTELLIJ2/${res.data.profileImage}`
+        );
+        let ss = await getDownloadURL(attachmentUrl);
         sessionStorage.setItem("userEmail", res.data.userEmail);
         sessionStorage.setItem("userNickname", res.data.userNickname);
+        sessionStorage.setItem("profileImage", ss);
         window.location.replace("/Profile");
       }
     } catch (e) {

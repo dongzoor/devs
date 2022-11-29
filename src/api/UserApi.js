@@ -1,23 +1,18 @@
 import axios from "axios";
 
 const HEADER = { "Content-type": "application/json; charset=UTF-8" };
-const HEADERFILE = { "Content-type": "multipart/form-data" };
 
 const UserApi = {
   //회원가입
-  memberReg: async function (id, pwd, nickname, phone) {
+  memberReg: async function (id, pwd, nickname, phone, profileImage) {
     const userObj = {
       userEmail: id,
       password: pwd,
       userNickname: nickname,
       phone: phone,
+      profileImage: profileImage,
     };
     return await axios.post("register", userObj, HEADER);
-  },
-
-  //이미지 업로드
-  imageUpload: async function (fd) {
-    return await axios.post("imageUpload", fd, HEADERFILE);
   },
 
   //로그인
