@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Nav from '../src/containers/common/Nav'
 import Login from './pages/Login';
-import Study from './pages/Study';
+import StudyList from './pages/StudyList';
+import StudyWrite from './pages/StudyWrite'
+import StudyDetail from './pages/StudyDetail';
 
 
 function App() {
@@ -12,7 +14,9 @@ function App() {
       <Nav />
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/Study" element={<Study />} />
+        <Route path="/study" element={<StudyList />} />
+        <Route path="/study/write" element={<StudyWrite />} />
+        <Route path='/study/detail' element={<StudyDetail />} />
       </Routes>
     </Router>
   );
