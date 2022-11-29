@@ -5,7 +5,6 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Nav from '../src/containers/common/Nav'
-import Login from './pages/Login';
 import StudyList from './pages/StudyList';
 import StudyWrite from './pages/StudyWrite'
 import StudyDetail from './pages/StudyDetail';
