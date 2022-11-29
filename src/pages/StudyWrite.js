@@ -49,7 +49,7 @@ const StudyWrite = (studyObj) => {
     //이미지 첨부하지 않은 경우엔 attachmentUrl=""이 된다.
     if (attachment !== "") {
       //파일 경로 참조 만들기
-      const attachmentRef = ref(storageService, `/files/${uuidv4()}`); //const fileRef = ref(storageService, `${ studyObj.studyId } / ${ uuidv4() }`);
+      const attachmentRef = ref(storageService, `/INTELLIJ2/${uuidv4()}`); //const fileRef = ref(storageService, `${ studyObj.studyId } / ${ uuidv4() }`);
       //storage 참조 경로로 파일 업로드 하기                                            위의 거로 바꿔주어야 스터디 아이디에 맞게 저장됨
       const response = await uploadString(attachmentRef, attachment, "data_url");
       //storage 참조 경로에 있는 파일의 URL을 다운로드해서 attachmentUrl 변수에 넣어서 업데이트
