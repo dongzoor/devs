@@ -1,13 +1,12 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
-import Nav from '../src/containers/common/Nav'
-import StudyList from './pages/StudyList';
-import StudyWrite from './pages/StudyWrite'
-import StudyDetail from './pages/StudyDetail';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+import Nav from "../src/containers/common/Nav";
+import StudyList from "./pages/StudyList";
+import StudyWrite from "./pages/StudyWrite";
+import StudyDetail from "./pages/StudyDetail";
 import Admin from "./pages/admin/Admin";
 import Login from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
@@ -22,15 +21,14 @@ function App() {
       <Routes>
         {/* <Route path= "/AdminBoarList"  element={<AdminBoardList />} />
       <Route path= "/AdminMemberList"  element={<AdminMemberList/>} /> */}
-        {/* 작업하느라 주석처리 했습니다... 죄송합니다... - J2 */}
         <Route path="/" element={<Login />} />
-        <Route path="/Register" element={<Register />} />
-        <Route path="/Profile" element={<Profile />} />
-        <Route path="/FindInfo" element={<FindInfo />} />
-        <Route path="/EditInfo" element={<EditInfo />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/account/find" element={<FindInfo />} />
+        <Route path="/account/edit" element={<EditInfo />} />
         <Route path="/study" element={<StudyList />} />
         <Route path="/study/write" element={<StudyWrite />} />
-        <Route path='/study/detail' element={<StudyDetail />} />
+        <Route path="/study/detail" element={<StudyDetail />} />
         {/* <Login/>   */}
         {/* <Admin /> */}
       </Routes>

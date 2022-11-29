@@ -5,6 +5,15 @@ import { Link } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
 import UserApi from "../../api/UserApi";
 import styled from "styled-components";
+import { v4 as uuidv4, v4 } from "uuid";
+import {
+  ref,
+  uploadString,
+  getDownloadURL,
+  deleteObject,
+} from "@firebase/storage";
+import { storageService } from "../../lib/api/fbase";
+import { async } from "@firebase/util";
 
 const Box = styled.div`
   margin: 0;
@@ -39,6 +48,7 @@ function Register() {
   const phoneRef = useRef();
 
   const [imgFile, setImgFile] = useState("");
+  let attachmentUrl = "";
   const imgRef = useRef();
 
   const [isConId, setIsConId] = useState(false);
@@ -47,14 +57,38 @@ function Register() {
   const [isConPw, setIsConPw] = useState(false);
   const [conPwMessage, setConPwMessage] = useState("");
 
-  //이미지 보여주기
-  const saveImgFile = () => {
-    const file = imgRef.current.files[0];
+  //이미지 firebase 저장 및 미리 보여주기
+  const saveImgFile = (e) => {
+    const {
+      target: { files },
+    } = e;
+    const theFile = files[0];
+    console.log(theFile);
+
     const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setImgFile(reader.result);
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setImgFile(result);
     };
+    reader.readAsDataURL(theFile);
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    //이미지 첨부하지 않고 텍스트만 올리고 싶을 때도 있기 때문에 attachment가 있을때만 아래 코드 실행
+    //이미지 첨부하지 않은 경우엔 attachmentUrl=""이 된다.
+    if (imgFile !== "") {
+      //파일 경로 참조 만들기
+      const attachmentRef = ref(storageService, `/INTELLIJ2/${uuidv4()}`); //const fileRef = ref(storageService, `${ studyObj.studyId } / ${ uuidv4() }`);
+      //storage 참조 경로로 파일 업로드 하기                                            위의 거로 바꿔주어야 회원 아이디에 맞게 저장됨
+      const response = await uploadString(attachmentRef, imgFile, "data_url");
+      //storage 참조 경로에 있는 파일의 URL을 다운로드해서 attachmentUrl 변수에 넣어서 업데이트
+      attachmentUrl = await getDownloadURL(response.ref);
+      console.log(attachmentUrl);
+    }
   };
 
   const onChangeId = (e) => {
@@ -121,7 +155,7 @@ function Register() {
   };
 
   // 회원가입
-  const onClickLogin = async () => {
+  const onClickReg = async () => {
     console.log("Click 회원가입");
     // 가입 여부 우선 확인
     // const memberCheck = await UserApi.memberRegCheck(userid);
@@ -243,7 +277,7 @@ function Register() {
               <button
                 type="button"
                 className="register_btn"
-                onClick={onClickLogin}
+                onClick={onClickReg}
               >
                 Submit
               </button>

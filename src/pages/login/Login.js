@@ -78,15 +78,21 @@ function Login() {
                   onChange={onChangePw}
                 />
               </div>
-              <Link to="/Profile">
+              <Link to="/Profile" style={{ textDecoration: "none" }}>
                 <button class="button login__submit" onClick={onClickLogin}>
                   <span class="button__text">Log In Now</span>
                 </button>
               </Link>
-              <Link to="/Register" style={{ margin: 10 }}>
+              <Link
+                to="/Register"
+                style={{ textDecoration: "none", margin: "10px" }}
+              >
                 Register
               </Link>
-              <Link to="/FindInfo" style={{ margin: 10 }}>
+              <Link
+                to="/FindInfo"
+                style={{ textDecoration: "none", margin: "10px" }}
+              >
                 Find Id/Pw
               </Link>
             </form>
