@@ -1,7 +1,6 @@
 import "./Register.css";
 
 import React, { useRef, useState } from "react";
-
 import { Link } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
 import UserApi from "../../api/UserApi";
@@ -37,6 +36,8 @@ function Register() {
   const [password, setPassword] = useState("");
   const [inputConPw, setInputConPw] = useState("");
   const [phone, setPhone] = useState("");
+  const phoneRef = useRef();
+
   const [imgFile, setImgFile] = useState("");
   const imgRef = useRef();
 
@@ -45,9 +46,6 @@ function Register() {
 
   const [isConPw, setIsConPw] = useState(false);
   const [conPwMessage, setConPwMessage] = useState("");
-
-  const [isConPhone, setIsConPhone] = useState(false);
-  const [ConPhoneMessage, setConPhoneMessage] = useState("");
 
   //이미지 보여주기
   const saveImgFile = () => {
@@ -83,21 +81,30 @@ function Register() {
     setPassword(e.target.value);
   };
 
+  // 휴대폰 번호 오토하이픈
   const onChangePhone = (e) => {
-    const phoneCheck = e.target.value;
-    setPhone(phoneCheck);
+    const value = phoneRef.current.value.replace(/\D+/g, "");
+    const numberLength = 11;
 
-    const regExp = /^\d{2,3}-\d{3,4}-\d{4}$/;
+    var result = "";
 
-    if (regExp.test(phoneCheck) !== true) {
-      setConPhoneMessage(
-        "전화번호가 올바르지 않습니다. 하이픈(-)을 포함한 숫자만 입력하세요."
-      );
-      setIsConPhone(false);
-    } else {
-      setConPhoneMessage("");
-      setIsConPhone(true);
+    for (let i = 0; i < value.length && i < numberLength; i++) {
+      switch (i) {
+        case 3:
+          result += "-";
+          break;
+
+        case 7:
+          result += "-";
+          break;
+
+        default:
+          break;
+      }
+      result += value[i];
     }
+    phoneRef.current.value = result;
+    setPhone(e.target.value);
   };
 
   // 유효성 검사
@@ -224,17 +231,11 @@ function Register() {
               <input
                 type="text"
                 placeholder="PHONE NUMBER"
+                ref={phoneRef}
                 value={phone}
                 onChange={onChangePhone}
               />
-              <div>
-                <span
-                  className={`message ${isConPhone ? "success" : "error"}`}
-                  style={{ color: "#ff0000" }}
-                >
-                  {ConPhoneMessage}
-                </span>
-              </div>
+              <div></div>
               {/* <input type="text" placeholder="CODE" /> */}
               <input type="checkbox" id="check" />
               <label id="check" htmlFor="check" />
