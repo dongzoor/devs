@@ -10,8 +10,10 @@ import StudyWrite from './pages/StudyWrite'
 import StudyDetail from './pages/StudyDetail';
 import Admin from "./pages/admin/Admin";
 import Login from "./pages/login/Login";
-import Profile from "./pages/login/Profile";
-import Register from "./pages/login/Register";
+import Profile from "./pages/profile/Profile";
+import Register from "./pages/register/Register";
+import FindInfo from "./pages/findInfo/FindInfo";
+import EditInfo from "./pages/editInfo/EditInfo";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/Profile" element={<Profile />} />
+        <Route path="/FindInfo" element={<FindInfo />} />
+        <Route path="/EditInfo" element={<EditInfo />} />
         <Route path="/study" element={<StudyList />} />
         <Route path="/study/write" element={<StudyWrite />} />
         <Route path='/study/detail' element={<StudyDetail />} />
@@ -31,7 +35,6 @@ function App() {
         {/* <Admin /> */}
       </Routes>
     </Router>
-
   );
 }
 

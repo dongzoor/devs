@@ -4,11 +4,28 @@
   padding: 20px 40px 10px;
 }
 
-.register-form {
+.edit-form {
   padding: 10px 40px 0px;
 }
 
-.register-form > input[type="text"],
+.edit-form label {
+  margin: 20px 20px 0;
+  font-weight: bold;
+  font-size: 13px;
+  color: #0095f6;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.edit-form input[type="file"] {
+  display: none;
+}
+
+.edit-form > input[type="file"] {
+  display: none;
+}
+
+.edit-form > input[type="text"],
 [type="email"] {
   border: none;
   border-bottom: 1px solid black;
@@ -17,23 +34,17 @@
   margin: 8px 0;
   padding: 10px 0;
 }
-.register-form > input[type="number"] {
+
+.edit-form > input[type="password"] {
   border: none;
   border-bottom: 1px solid black;
   outline: none;
+  width: 100%;
   margin: 8px 0;
-  padding: 5px 0;
+  padding: 10px 0;
 }
 
-.register-form > input[type="checkbox"] {
-  border: none;
-  border-bottom: 1px solid black;
-  outline: none;
-  margin: 8px 0;
-  padding: 5px 0;
-}
-
-.register_btn {
+.submit_btn {
   background: #fff;
   font-size: 14px;
   margin-top: 30px;
@@ -51,9 +62,9 @@
   cursor: pointer;
   transition: 0.2s;
 }
-.register_btn:hover,
-.register_btn:focus,
-.register_btn:active {
+.submit_btn:hover,
+.submit_btn:focus,
+.submit_btn:active {
   border-color: #6a679e;
   outline: none;
 }
