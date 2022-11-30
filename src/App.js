@@ -15,13 +15,12 @@ function App() {
       <Routes>
       <Route path= "/AdminBoarList"  element={<AdminBoardList />} />
       <Route path= "/AdminMemberList"  element={<AdminMemberList/>} />
-      <Route path="/" element={<Login />} />
-        <Route path="/Register" element={<Register />} />
+      {/* <Route path="/" element={<Login />} />
+        <Route path="/Register" element={<Register />} /> */}
       </Routes>
     </Router>
-    {/* <Login/>   */}
-    {/* 화면에 제꺼 출력이안되서 잠시 막아놨어요 */}
-      <Admin/>
+    
+      {/* <Admin/> */}
     </>
   );
 }

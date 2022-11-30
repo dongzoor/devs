@@ -1,6 +1,4 @@
 
-
-
 #adminNav {
     background-color: #C7C5F4;
     position: fixed;
@@ -23,3 +21,18 @@
    justify-content: center;
    min-height: 100vh;
 }
+.table_admemberlist {
+  margin-top: 100px;
+  
+  /* align-items: center;
+  justify-content: center; */
+
+}
+.table_adboardlist{
+  margin-top: 100px;
+
+}
+
+
+
+
