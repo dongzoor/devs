@@ -1,3 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+/* :root {
+  --button-color: #ffffff;
+  --button-bg-color: #0d6efd;
+  --button-hover-bg-color: #025ce2;
+} */
+
+.adbutton {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  
+  background: var(--button-bg-color);
+  color: var(--button-color);
+  
+  margin: 0;
+  padding: 0.5rem 1rem;
+  
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: center;
+  text-decoration: none;
+  
+  border: none;
+  border-radius: 4px;
+  
+  display: inline-block;
+  width: auto;
+  
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  
+  cursor: pointer;
+  
+  transition: 0.5s;
+}
+
+.adbutton.success {
+  --button-bg-color: #28a745;
+  --button-hover-bg-color: #218838;
+}
+
+.adbutton.delete {
+  
+  --button-bg-color: #9691db;
+  --button-hover-bg-color: #b753a5;
+}
+
+.adbutton.warning {
+  --button-color: #212529;
+  --button-bg-color: #ffc107;
+  --button-hover-bg-color: #e0a800;
+}
+
+.adbutton:active,
+.adbutton:hover,
+.adbutton:focus {
+  background: var(--button-hover-bg-color);
+  outline: 0;
+}
+.adbutton:disabled {
+  opacity: 0.5;
+}
+
 
 #adminNav {
     background-color: #C7C5F4;
@@ -22,14 +87,14 @@
    min-height: 100vh;
 }
 .table_admemberlist {
-  margin-top: 100px;
+ background-color: #ddddef;
   
   /* align-items: center;
   justify-content: center; */
 
 }
 .table_adboardlist{
-  margin-top: 100px;
+  background-color: #ddddef;
 
 }
 
