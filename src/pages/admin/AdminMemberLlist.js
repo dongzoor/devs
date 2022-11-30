@@ -1,6 +1,7 @@
 
 import Table from 'react-bootstrap/Table';
 import './admin.css'
+import styled from "styled-components";
 
 
 
@@ -27,12 +28,22 @@ function AdminMemberList() {
         MemberData();
     }, []);
 
-
+    const Adcontainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(90deg, #ffe7e8, #8da4d0);
+  `;
+  
+  
 
     return (
 
- <div className='table_admemberlist'>
-       <Table striped bordered hover size="sm">
+<Adcontainer>
+   
+          
+       <Table striped bordered hover size="sm" className='table_admemberlist'>
       <thead>
         <tr>
           
@@ -52,7 +63,7 @@ function AdminMemberList() {
       <td>{list.name}</td>
        <td>{list.address}</td>
        <td>가입시간</td>
-       <td><button onClick>삭제</button></td>
+       <td><button className='adbutton delete'>삭제</button></td>
         </tr>
          ))}
         {/* <tr>
@@ -68,8 +79,11 @@ function AdminMemberList() {
         </tr> */}
       </tbody>
     </Table>
+  
+
+    </Adcontainer>
    
- </div>
+
    
   );
 }
