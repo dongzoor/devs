@@ -15,14 +15,17 @@ import FindInfo from "./pages/findInfo/FindInfo";
 import EditInfo from "./pages/editInfo/EditInfo";
 import AdminBoardList from "./pages/admin/AdminBoarList";
 import AdminMemberList from "./pages/admin/AdminMemberLlist";
+import SocialList from "./pages/social/SocialList";
+import SocialDetail from "./pages/social/SocialDetail";
+import SocialWrite from "./pages/social/SocialWrite";
 
 function App() {
   return (
     <Router>
       {/* <Nav /> */}
       <Routes>
-        <Route path= "/AdminBoarList"  element={<AdminBoardList />} />
-        <Route path= "/AdminMemberList"  element={<AdminMemberList/>} />
+        <Route path="/AdminBoarList" element={<AdminBoardList />} />
+        <Route path="/AdminMemberList" element={<AdminMemberList />} />
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
@@ -31,11 +34,13 @@ function App() {
         <Route path="/study" element={<StudyList />} />
         <Route path="/study/write" element={<StudyWrite />} />
         <Route path="/study/detail" element={<StudyDetail />} />
+        <Route path="/social" element={<SocialList />} />
+        <Route path="/social/detail" element={<SocialDetail />} />
+        <Route path="/social/write" element={<SocialWrite />} />
         {/* <Login/>   */}
       </Routes>
       {/* <Admin></Admin> */}
     </Router>
-    
   );
 }
 
