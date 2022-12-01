@@ -53,10 +53,7 @@ function Login() {
 
     if (res.data !== false) {
       // 로그인 성공 시 이미지 불러오기
-      let attachmentUrl = ref(
-        storageService,
-        `/INTELLIJ2/${res.data.profileImage}`
-      );
+      let attachmentUrl = ref(storageService, `/USER/${res.data.profileImage}`);
       let profileImage = await getDownloadURL(attachmentUrl);
       sessionStorage.setItem("userEmail", res.data.userEmail);
       sessionStorage.setItem("userNickname", res.data.userNickname);

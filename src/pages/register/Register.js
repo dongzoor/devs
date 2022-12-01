@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 const Box = styled.div`
   margin: 0;
   padding: 0;
-  font-family: Raleway, Pretendard Std;
+  font-family: Raleway, Segoe UI;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
@@ -52,6 +52,7 @@ function Register() {
   const [isConPw, setIsConPw] = useState(false);
   const [conPwMessage, setConPwMessage] = useState("");
 
+  let profileImage = " ";
   //프로필 이미지 firebase 저장 및 미리 보여주기
   const saveImgFile = (e) => {
     const {
@@ -145,12 +146,10 @@ function Register() {
       let profileImage = null;
 
       if (imgFile !== "") {
-        //이미지 첨부하지 않고 텍스트만 올리고 싶을 때도 있기 때문에 attachment가 있을때만 아래 코드 실행
-        //이미지 첨부하지 않은 경우엔 attachmentUrl=""이 된다.
         //파일 경로 참조 만들기
         profileImage = uuidv4();
-        const attachmentRef = ref(storageService, `/INTELLIJ2/${profileImage}`); //const fileRef = ref(storageService, `${ studyObj.studyId } / ${ uuidv4() }`);
-        //storage 참조 경로로 파일 업로드 하기                                            위의 거로 바꿔주어야 회원 아이디에 맞게 저장됨
+        const attachmentRef = ref(storageService, `/USER/${profileImage}`);
+        //storage 참조 경로로 파일 업로드 하기
         await uploadString(attachmentRef, imgFile, "data_url");
       }
       console.log(profileImage);
