@@ -6,14 +6,14 @@ import Quote from "../quote/Quote";
 import React from "react";
 import styled from "styled-components";
 
+const imgFile = sessionStorage.getItem("profileImage");
+
 const Box = styled.div`
   margin: 0;
   padding: 0;
   font-family: Raleway, Pretendard Std;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
-
-const imgFile = sessionStorage.getItem("profileImage");
 
 const Container = styled.div`
   display: flex;

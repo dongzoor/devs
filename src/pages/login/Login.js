@@ -1,20 +1,22 @@
 import "../login/Login.css";
 
-import { FaLock, FaUser } from "react-icons/fa";
-import React, { useState } from "react";
-import { SiGithub, SiGoogle, SiKakaotalk } from "react-icons/si";
 import { getDownloadURL, ref } from "@firebase/storage";
+import React, { useState } from "react";
+import { FaLock, FaUser } from "react-icons/fa";
+import { SiGithub, SiGoogle, SiKakaotalk } from "react-icons/si";
 
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 import UserApi from "../../api/UserApi";
 import { storageService } from "../../lib/api/fbase";
-import styled from "styled-components";
-
-// import { getDownloadURL } from "@firebase/storage";
 
 const Box = styled.div`
-  margin: 0;
-  padding: 0;
+  height: auto;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   font-family: Raleway, Pretendard Std;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
@@ -27,6 +29,10 @@ const Container = styled.div`
 `;
 
 function Login() {
+  if (sessionStorage.getItem("userEmail") !== null) {
+    window.location.replace("/Profile");
+  }
+
   // 키보드 입력
   const [inputId, setInputId] = useState("");
   const [inputPw, setInputPw] = useState("");
@@ -41,25 +47,24 @@ function Login() {
   };
 
   const onClickLogin = async () => {
-    try {
-      // 로그인을 위한 axios 호출
-      const res = await UserApi.userLogin(inputId, inputPw);
-      console.log(res.data);
+    // 로그인을 위한 axios 호출
+    const res = await UserApi.userLogin(inputId, inputPw);
+    console.log(res.data);
 
-      if (res.data !== null) {
-        // 로그인 성공 시 이미지 불러오기
-        let attachmentUrl = ref(
-          storageService,
-          `/INTELLIJ2/${res.data.profileImage}`
-        );
-        let ss = await getDownloadURL(attachmentUrl);
-        sessionStorage.setItem("userEmail", res.data.userEmail);
-        sessionStorage.setItem("userNickname", res.data.userNickname);
-        sessionStorage.setItem("profileImage", ss);
-        window.location.replace("/Profile");
-      }
-    } catch (e) {
-      console.log("로그인 에러..");
+    if (res.data !== false) {
+      // 로그인 성공 시 이미지 불러오기
+      let attachmentUrl = ref(
+        storageService,
+        `/INTELLIJ2/${res.data.profileImage}`
+      );
+      let profileImage = await getDownloadURL(attachmentUrl);
+      sessionStorage.setItem("userEmail", res.data.userEmail);
+      sessionStorage.setItem("userNickname", res.data.userNickname);
+      sessionStorage.setItem("profileImage", profileImage);
+      sessionStorage.setItem("phone", res.data.phone);
+      window.location.replace("/Profile");
+    } else if (res.data === false) {
+      window.alert("이메일이나 비밀번호를 확인해주세요.");
     }
   };
 
@@ -89,11 +94,15 @@ function Login() {
                   onChange={onChangePw}
                 />
               </div>
-              <Link to="/Profile" style={{ textDecoration: "none" }}>
-                <button class="button login__submit" onClick={onClickLogin}>
-                  <span class="button__text">Log In Now</span>
-                </button>
-              </Link>
+
+              <button
+                type="button"
+                className="login_btn"
+                onClick={onClickLogin}
+              >
+                Log in now
+              </button>
+
               <Link
                 to="/Register"
                 style={{ textDecoration: "none", margin: "10px" }}

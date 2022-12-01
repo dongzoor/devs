@@ -31,6 +31,7 @@ const Content = styled.div`
   justify-content: center;
   background-color: white;
   width: 50vw;
+  min-height: 100vh;
   box-shadow: 0px 0px 24px #5c5696;
 `;
 
@@ -43,7 +44,6 @@ function Register() {
   const phoneRef = useRef();
 
   const [imgFile, setImgFile] = useState("");
-  let attachmentUrl = "";
   const imgRef = useRef();
 
   const [isConId, setIsConId] = useState(false);
@@ -128,7 +128,7 @@ function Register() {
       setConPwMessage("비밀 번호가 일치하지 않습니다.");
       setIsConPw(false);
     } else {
-      setConPwMessage("비밀 번호가 일치 합니다. )");
+      setConPwMessage("비밀 번호가 일치 합니다.");
       setIsConPw(true);
     }
   };
@@ -142,7 +142,6 @@ function Register() {
     // 가입 여부 확인 후 가입 절차 진행
 
     if (true) {
-      console.log("가입된 아이디가 없습니다. 다음 단계 진행 합니다.");
       let profileImage = null;
 
       if (imgFile !== "") {
@@ -167,7 +166,8 @@ function Register() {
       if (memberReg.statusText === "OK")
         //storage 참조 경로에 있는 파일의 URL을 다운로드해서 attachmentUrl 변수에 넣어서 업데이트
         // attachmentUrl = await getDownloadURL(response.ref);
-        window.location.replace("/");
+        window.confirm("회원가입이 완료되었습니다.");
+      window.location.replace("/");
     }
   };
 
