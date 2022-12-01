@@ -137,7 +137,7 @@ function Register() {
   const onClickReg = async () => {
     console.log("Click 회원가입");
     // 가입 여부 우선 확인
-    // const memberCheck = await UserApi.memberRegCheck(userid);
+    // const memberCheck = await UserApi.userRegCheck(userid);
     // console.log("가입 가능 여부 확인 : ", memberCheck.data);
     // 가입 여부 확인 후 가입 절차 진행
 
@@ -155,15 +155,15 @@ function Register() {
       }
       console.log(profileImage);
 
-      const memberReg = await UserApi.memberReg(
+      const userReg = await UserApi.userReg(
         userEmail,
         password,
         userNickname,
         phone,
         profileImage
       );
-      console.log(memberReg.statusText);
-      if (memberReg.statusText === "OK")
+      console.log(userReg.statusText);
+      if (userReg.statusText === "OK")
         //storage 참조 경로에 있는 파일의 URL을 다운로드해서 attachmentUrl 변수에 넣어서 업데이트
         // attachmentUrl = await getDownloadURL(response.ref);
         window.confirm("회원가입이 완료되었습니다.");

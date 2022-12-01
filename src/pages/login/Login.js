@@ -1,14 +1,14 @@
 import "../login/Login.css";
 
-import { getDownloadURL, ref } from "@firebase/storage";
-import React, { useState } from "react";
 import { FaLock, FaUser } from "react-icons/fa";
+import React, { useState } from "react";
 import { SiGithub, SiGoogle, SiKakaotalk } from "react-icons/si";
+import { getDownloadURL, ref } from "@firebase/storage";
 
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import UserApi from "../../api/UserApi";
 import { storageService } from "../../lib/api/fbase";
+import styled from "styled-components";
 
 const Box = styled.div`
   height: auto;
