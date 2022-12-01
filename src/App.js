@@ -24,6 +24,7 @@ function App() {
     <Router>
       {/* <Nav /> */}
       <Routes>
+      {/* <Route path="/Admin" element={<Admin />} /> */}
         <Route path="/AdminBoarList" element={<AdminBoardList />} />
         <Route path="/AdminMemberList" element={<AdminMemberList />} />
         <Route path="/" element={<Login />} />
