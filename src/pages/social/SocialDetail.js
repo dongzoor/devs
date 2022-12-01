@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Photo from "./pic/짱난.gif";
 import CommentList from "./components/CommentList";
 import CommentWriter from "./components/CommentWriter";
+import Nav from "../../containers/common/Nav";
 import {
   IoEyeOutline,
   IoHeartOutline,
@@ -12,8 +13,8 @@ import {
 const SocialDetail = () => {
   return (
     <div>
+           <Nav />
       <DetailBox>
-        <div className="LOGO">Dev's</div>
         <div className="subtitle">Board Detail Page</div>
         <div className="parentBox">
           <div className="content-title">
@@ -65,15 +66,6 @@ const DetailBox = styled.div`
   }
   margin: 0px auto;
   /* background-color: rgba(211, 188, 230, 0.25); */
-
-  .LOGO {
-    // 메인 로고
-    font-family: "Alfa Slab One", cursive;
-    text-align: center;
-    padding: 20px;
-    font-size: 40px;
-    border: 3px solid black;
-  }
   .subtitle {
     font-family: "Alfa Slab One", cursive;
     text-align: center;

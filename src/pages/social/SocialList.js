@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Photo from "./pic/짱난.gif";
 import InsertImg from "./pic/coffee.jpg";
+import Nav from "../../containers/common/Nav";
 import {
   IoEyeOutline,
   IoHeartOutline,
@@ -10,7 +11,7 @@ import {
 const Social = () => {
   return (
     <ListBlock>
-      <div className="LOGO">Dev's</div>
+      <Nav />
       <div className="subtitle">Dev' Social</div>
       <div className="inducer"> Share anything you want 👩🏻‍💻✨</div>
 
@@ -49,17 +50,10 @@ const Social = () => {
 };
 
 const ListBlock = styled.div`
+  /* background: linear-gradient(90deg, #ffe7e8, #8da4d0); */
   * {
     margin: 0;
     padding: 0;
-  }
-  .LOGO {
-    // 메인 로고
-    text-align: center;
-    font-family: "Alfa Slab One", cursive;
-    padding: 20px 0;
-    font-size: 40px;
-    border: 3px solid black;
   }
   .subtitle {
     text-align: center;
