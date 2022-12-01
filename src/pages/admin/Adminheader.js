@@ -6,7 +6,7 @@ import './admin.css'
 
 function Adminheader() {
   return (
-    <Navbar id='adminNav'  expand="lg" >
+    <Navbar id='adminNav' expand="lg" >
       <Container>
         <Navbar.Brand href="#home">DEVS 관리페이지</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

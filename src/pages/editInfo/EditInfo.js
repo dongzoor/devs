@@ -2,25 +2,30 @@
 
 import "./EditInfo.css";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Link } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
 import UserApi from "../../api/UserApi";
 import styled from "styled-components";
 
+// 원래 설정한 이미지를 세션 스토리지에서 가져옴
+const originImgFile = sessionStorage.getItem("profileImage");
+
 const Box = styled.div`
-  margin: 0;
-  padding: 0;
+  height: auto;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   font-family: Raleway, Pretendard Std;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
 const Container = styled.div`
-  height: 100%;
+  height: auto;
   display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
 `;
 
@@ -28,8 +33,9 @@ const Content = styled.div`
   display: block;
   align-items: center;
   justify-content: center;
+  height: auto;
   background-color: white;
-  width: 50vw;
+  width: 40vw;
   box-shadow: 0px 0px 24px #5c5696;
 `;
 
@@ -50,10 +56,19 @@ function EditInfo() {
   const [isConPw, setIsConPw] = useState(false);
   const [conPwMessage, setConPwMessage] = useState("");
 
-  const [isConPhone, setIsConPhone] = useState(false);
-  const [ConPhoneMessage, setConPhoneMessage] = useState("");
+  // 초기값 설정
+  useEffect(() => {
+    const originEmail = sessionStorage.getItem("userEmail");
+    const originNickname = sessionStorage.getItem("userNickname");
+    const originPhone = sessionStorage.getItem("phone");
+    if (originEmail || originNickname || originPhone) {
+      setUserEmail(originEmail);
+      setUserNickname(originNickname);
+      setPhone(originPhone);
+    }
+  }, []);
 
-  //이미지 보여주기
+  //이미지 업로드 후 보여주기
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
     const reader = new FileReader();
@@ -63,14 +78,14 @@ function EditInfo() {
     };
   };
 
-  const onChangeId = (e) => {
-    const idCheck = e.target.value;
-    setUserEmail(idCheck);
+  const onChangeEmail = (e) => {
+    const emailCheck = e.target.value;
+    setUserEmail(emailCheck);
 
     const regExp =
       /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
-    if (regExp.test(idCheck) !== true) {
+    if (regExp.test(emailCheck) !== true) {
       setConIdMessage("이메일주소 형식이 올바르지 않습니다.");
       setIsConId(false);
     } else {
@@ -87,7 +102,7 @@ function EditInfo() {
     setPassword(e.target.value);
   };
 
-  // 휴대폰 번호 오토하이픈
+  // 휴대폰 번호 오토하이픈 추가
   const onChangePhone = (e) => {
     const value = phoneRef.current.value.replace(/\D+/g, "");
     const numberLength = 11;
@@ -113,7 +128,7 @@ function EditInfo() {
     setPhone(e.target.value);
   };
 
-  // 유효성 검사
+  // 비밀번호 일치 여부 검사
   const onChangeConPw = (e) => {
     const passwordCurrent = e.target.value;
     setInputConPw(passwordCurrent);
@@ -121,7 +136,7 @@ function EditInfo() {
       setConPwMessage("비밀 번호가 일치하지 않습니다.");
       setIsConPw(false);
     } else {
-      setConPwMessage("비밀 번호가 일치 합니다. )");
+      setConPwMessage("비밀 번호가 일치 합니다.");
       setIsConPw(true);
     }
   };
@@ -168,7 +183,7 @@ function EditInfo() {
     <Box>
       <Container>
         <Content>
-          <Link to="/">
+          <Link to="/Profile">
             <MdArrowBack size="24" style={{ margin: 10 }} />
           </Link>
           <h1 class="form-title">Edit Account Information</h1>
@@ -176,11 +191,7 @@ function EditInfo() {
             <form className="edit-form">
               <img
                 className="profile-img"
-                src={
-                  imgFile
-                    ? imgFile
-                    : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                }
+                src={imgFile ? imgFile : originImgFile}
                 alt="프로필 이미지"
                 style={{
                   width: "150px",
@@ -202,7 +213,7 @@ function EditInfo() {
                 type="text"
                 placeholder="ID(EMAIL)"
                 value={userEmail}
-                onChange={onChangeId}
+                onChange={onChangeEmail}
               />
               <span
                 className={`message ${isConId ? "success" : "error"}`}
@@ -213,14 +224,20 @@ function EditInfo() {
               <input
                 type="text"
                 placeholder="NICKNAME"
-                value={sessionStorage.getItem("userNickname")}
+                value={userNickname}
                 onChange={onChangeNickname}
               />
               <input
                 type="password"
-                placeholder="PASSWORD"
+                placeholder="NEW PASSWORD"
                 value={password}
                 onChange={onChangePassword}
+              />
+              <input
+                type="password"
+                placeholder="VERIFY PASSWORD"
+                value={inputConPw}
+                onChange={onChangeConPw}
               />
               <span
                 className={`message ${isConPw ? "success" : "error"}`}
@@ -228,6 +245,9 @@ function EditInfo() {
               >
                 {conPwMessage}
               </span>
+              {/* <input type="text" placeholder="CODE" />  */}
+              {/* 휴대폰이나 이메일 인증 기능 구현 시 사용 예정 */}
+
               <input
                 type="text"
                 placeholder="PHONE NUMBER"
@@ -236,7 +256,6 @@ function EditInfo() {
                 onChange={onChangePhone}
               />
               <div></div>
-              {/* <input type="text" placeholder="CODE" />  */}
               <button
                 type="button"
                 className="submit_btn"
