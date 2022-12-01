@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useState, useEffect } from "react";
 import Photo from "./pic/짱난.gif";
 import InsertImg from "./pic/coffee.jpg";
 import Nav from "../../containers/common/Nav";
@@ -8,7 +9,29 @@ import {
   IoHeartOutline,
   IoChatboxOutline,
 } from "react-icons/io5";
+import SocialApi from "../../api/SocialApi";
+
 const Social = () => {
+  const [socialList, setSocialList] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const socialData = async () => {
+      setLoading(true);
+      try {
+        const response = await SocialApi.socialList();
+        setSocialList(response.data);
+        console.log(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+      setLoading(false);
+    };
+    socialData();
+  }, []);
+  if (loading) {
+    return <ListBlock>조금만 기다려주세요...👩‍💻</ListBlock>;
+  }
   return (
     <ListBlock>
       <Nav />
@@ -16,41 +39,41 @@ const Social = () => {
       <div className="inducer"> Share anything you want 👩🏻‍💻✨</div>
 
       <div className="parentBox">
-        <div className="childBox">
-          <div className="flex-box2">
-            <img className="insertImg" src={InsertImg} alt="첨부사진"></img>
-          </div>
-          <div className="flex-box1">
-            <div className="content-title">
-              백엔드 신입으로 입사했는데, 프론트엔드 일을 시킵니다..
-            </div>
-            <div className="hashtag-box">
-              <span className="hashtag">#해시태그</span>
-            </div>
-            <div className="flex-box3">
-              <div className="publisher-info">
-                <img className="photos" src={Photo} alt="프로필 사진"></img>
-                <span className="nickName">NickName</span>
-                <span className="date">| 22.11.22</span>
+        {socialList &&
+          socialList.map((social) => (
+            <div className="childBox" key={social.socialId}>
+              <div className="flex-box2">
+                <img className="insertImg" src={InsertImg} alt="첨부사진"></img>
               </div>
-              <div className="icon-box">
-                <IoEyeOutline />
-                <span className="count">5</span>
-                <IoHeartOutline />
-                <span className="count">5</span>
-                <IoChatboxOutline />
-                <span className="count">5</span>
+              <div className="flex-box1">
+                <div className="content-title">{social.title}</div>
+                <div className="hashtag-box">
+                  <span className="hashtag">{social.tag}</span>
+                </div>
+                <div className="flex-box3">
+                  <div className="publisher-info">
+                    <img className="photos" src={Photo} alt="프로필 사진"></img>
+                    <span className="nickName">{social.user}</span>
+                    <span className="date">| {social.postDate}</span>
+                  </div>
+                  <div className="icon-box">
+                    <IoEyeOutline />
+                    <span className="count">{social.view}</span>
+                    <IoHeartOutline />
+                    <span className="count">{social.like}</span>
+                    <IoChatboxOutline />
+                    <span className="count">{social.comment}</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          ))}
       </div>
     </ListBlock>
   );
 };
 
 const ListBlock = styled.div`
-  /* background: linear-gradient(90deg, #ffe7e8, #8da4d0); */
   * {
     margin: 0;
     padding: 0;

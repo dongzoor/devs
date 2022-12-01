@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const HEADER = "application/json";
-const WN_DOMAIN = "http://localhost:8211";
+const WN_DOMAIN = "http://localhost:8211/";
 
 const AdminApi = {
   // 어드민이 멤버 조회 api
@@ -10,7 +10,7 @@ const AdminApi = {
     //     cmd: "admemlist"
 
     //   };
-    return await axios.get(WN_DOMAIN + "/employee/list", HEADER);
+    return await axios.get(WN_DOMAIN + "employee/list", HEADER);
   },
 
   // 어드민이 게시판 조회
