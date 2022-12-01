@@ -8,7 +8,7 @@ const CommentList = () => {
   const getBoardId = window.localStorage.getItem("fb_id");
   const getUserId = window.localStorage.getItem("userId"); // 삭제시 현 유저아이디 대조용
 
-  console.log("자유게시판 게시물 ID : " + getBoardId);
+  console.log("Social 게시물 ID : " + getBoardId);
   const [commentDetail, setCommentDetail] = useState("");
   const [inputContent, setInputContent] = useState(""); // 댓글 내용 입력 받을 객체
   const [deleteComplete, setDeleteComplete] = useState(false);

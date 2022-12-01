@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+import SocialApi from "../../api/SocialApi";
 import Photo from "./pic/짱난.gif";
 import InsertImg from "./pic/coffee.jpg";
 import Nav from "../../containers/common/Nav";
@@ -9,7 +10,6 @@ import {
   IoHeartOutline,
   IoChatboxOutline,
 } from "react-icons/io5";
-import SocialApi from "../../api/SocialApi";
 
 const Social = () => {
   const [socialList, setSocialList] = useState("");
@@ -37,7 +37,6 @@ const Social = () => {
       <Nav />
       <div className="subtitle">Dev' Social</div>
       <div className="inducer"> Share anything you want 👩🏻‍💻✨</div>
-
       <div className="parentBox">
         {socialList &&
           socialList.map((social) => (
@@ -95,9 +94,9 @@ const ListBlock = styled.div`
     font-family: "Song Myung", serif;
     width: 1024px;
     padding: 5px;
-    border: 1px solid black;
+    border-radius: 10px;
     margin: 0px auto;
-    background-color: rgba(211, 188, 230, 0.1);
+    background-color: rgba(255, 255, 255, 0.35);
   }
   .childBox {
     display: flex;

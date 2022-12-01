@@ -8,8 +8,15 @@ const SocialApi = {
   socialList: async function () {
     return await axios.get(DOMAIN + "social", HEADER);
   },
+  // social detail page 조회
+  socialDetail: async function (socialId) {
+    const detailObj = {
+      socialId: parseInt(socialId),
+    };
+    return await axios.get(DOMAIN + "social/", detailObj, HEADER);
+  },
 
-  // ---------------------------------------------댓글--------------------------------------------------------
+  // --------------------------------------댓글 수정 전--------------------------------------------------------
   // 댓글 조회 api
   commentList: async function (boardId) {
     const cmtObj = {
