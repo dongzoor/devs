@@ -6,7 +6,7 @@ import './admin.css'
 
 function Adminheader() {
   return (
-    <Navbar id='adminNav'  expand="lg" >
+    <Navbar id='adminNav' expand="lg" >
       <Container>
         <Navbar.Brand href="#home">DEVS 관리페이지</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -17,9 +17,9 @@ function Adminheader() {
             <NavDropdown title="관리도구" id="basic-nav-dropdown">
               <NavDropdown.Item href="/AdminMemberList">회원 관리</NavDropdown.Item>
               <NavDropdown.Item href="/AdminBoarList">
-                게시물 관리
+                스터디게시판 관리
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">회원탈퇴</NavDropdown.Item>
+              <NavDropdown.Item href="/AdminScBoarList">자유게시판 관리</NavDropdown.Item>
               {/* <NavDropdown.Divider />
               <NavDropdown.Item href="#action/3.4">
                 Separated link

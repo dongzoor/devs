@@ -3,19 +3,22 @@ import "../login/Login.css";
 import { FaLock, FaUser } from "react-icons/fa";
 import React, { useState } from "react";
 import { SiGithub, SiGoogle, SiKakaotalk } from "react-icons/si";
+import { getDownloadURL, ref } from "@firebase/storage";
 
 import { Link } from "react-router-dom";
 import UserApi from "../../api/UserApi";
+import { storageService } from "../../lib/api/fbase";
 import styled from "styled-components";
 
 const Box = styled.div`
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
-  font-family: Raleway, Pretendard Std;
+  font-family: Raleway, Segoe UI;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
 const Container = styled.div`
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,6 +26,10 @@ const Container = styled.div`
 `;
 
 function Login() {
+  if (sessionStorage.getItem("userEmail") !== null) {
+    window.location.replace("/Profile");
+  }
+
   // 키보드 입력
   const [inputId, setInputId] = useState("");
   const [inputPw, setInputPw] = useState("");
@@ -37,18 +44,27 @@ function Login() {
   };
 
   const onClickLogin = async () => {
-    try {
-      // 로그인을 위한 axios 호출
-      const res = await UserApi.userLogin(inputId, inputPw);
-      console.log(res.data);
+    // 로그인을 위한 axios 호출
+    const res = await UserApi.userLogin(inputId, inputPw);
+    console.log(res.data);
 
-      if (res.data !== null) {
-        sessionStorage.setItem("userEmail", res.data.userEmail);
-        sessionStorage.setItem("userNickname", res.data.userNickname);
-        window.location.replace("/Profile");
+    if (res.data !== false) {
+      // 로그인 성공 시 이미지 불러오기
+      if (res.data.profileImage !== null) {
+        let attachmentUrl = ref(
+          storageService,
+          `/USER/${res.data.profileImage}`
+        );
+        let profileImage = await getDownloadURL(attachmentUrl);
+        sessionStorage.setItem("profileImage", profileImage);
+        sessionStorage.setItem("profileImagePath", res.data.profileImage);
       }
-    } catch (e) {
-      console.log("로그인 에러..");
+      sessionStorage.setItem("userEmail", res.data.userEmail);
+      sessionStorage.setItem("userNickname", res.data.userNickname);
+      sessionStorage.setItem("phone", res.data.phone);
+      window.location.replace("/Profile");
+    } else if (res.data === false) {
+      window.alert("이메일이나 비밀번호를 확인해주세요.");
     }
   };
 
@@ -78,15 +94,25 @@ function Login() {
                   onChange={onChangePw}
                 />
               </div>
-              <Link to="/Profile">
-                <button class="button login__submit" onClick={onClickLogin}>
-                  <span class="button__text">Log In Now</span>
-                </button>
-              </Link>
-              <Link to="/Register" style={{ margin: 10 }}>
+
+              <button
+                type="button"
+                className="login_btn"
+                onClick={onClickLogin}
+              >
+                Log in now
+              </button>
+
+              <Link
+                to="/Register"
+                style={{ textDecoration: "none", margin: "10px" }}
+              >
                 Register
               </Link>
-              <Link to="/FindInfo" style={{ margin: 10 }}>
+              <Link
+                to="/FindInfo"
+                style={{ textDecoration: "none", margin: "10px" }}
+              >
                 Find Id/Pw
               </Link>
             </form>

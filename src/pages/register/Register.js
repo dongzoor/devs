@@ -1,15 +1,19 @@
 import "./Register.css";
 
 import React, { useRef, useState } from "react";
+import { ref, uploadString } from "@firebase/storage";
+
 import { Link } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
 import UserApi from "../../api/UserApi";
+import { storageService } from "../../lib/api/fbase";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 
 const Box = styled.div`
   margin: 0;
   padding: 0;
-  font-family: Raleway, Pretendard Std;
+  font-family: Raleway, Segoe UI;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
@@ -27,6 +31,7 @@ const Content = styled.div`
   justify-content: center;
   background-color: white;
   width: 50vw;
+  min-height: 100vh;
   box-shadow: 0px 0px 24px #5c5696;
 `;
 
@@ -47,14 +52,23 @@ function Register() {
   const [isConPw, setIsConPw] = useState(false);
   const [conPwMessage, setConPwMessage] = useState("");
 
-  //이미지 보여주기
-  const saveImgFile = () => {
-    const file = imgRef.current.files[0];
+  let profileImage = " ";
+  //프로필 이미지 firebase 저장 및 미리 보여주기
+  const saveImgFile = (e) => {
+    const {
+      target: { files },
+    } = e;
+    const theFile = files[0];
+    console.log(theFile);
+
     const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setImgFile(reader.result);
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setImgFile(result);
     };
+    reader.readAsDataURL(theFile);
   };
 
   const onChangeId = (e) => {
@@ -115,46 +129,44 @@ function Register() {
       setConPwMessage("비밀 번호가 일치하지 않습니다.");
       setIsConPw(false);
     } else {
-      setConPwMessage("비밀 번호가 일치 합니다. )");
+      setConPwMessage("비밀 번호가 일치 합니다.");
       setIsConPw(true);
     }
   };
 
   // 회원가입
-  const onClickLogin = async () => {
+  const onClickReg = async () => {
     console.log("Click 회원가입");
     // 가입 여부 우선 확인
-    // const memberCheck = await UserApi.memberRegCheck(userid);
+    // const memberCheck = await UserApi.userRegCheck(userid);
     // console.log("가입 가능 여부 확인 : ", memberCheck.data);
     // 가입 여부 확인 후 가입 절차 진행
 
     if (true) {
-      console.log("가입된 아이디가 없습니다. 다음 단계 진행 합니다.");
-      const memberReg = await UserApi.memberReg(
+      let profileImage = null;
+
+      if (imgFile !== "") {
+        //파일 경로 참조 만들기
+        profileImage = uuidv4();
+        const attachmentRef = ref(storageService, `/USER/${profileImage}`);
+        //storage 참조 경로로 파일 업로드 하기
+        await uploadString(attachmentRef, imgFile, "data_url");
+      }
+      console.log(profileImage);
+
+      const userReg = await UserApi.userReg(
         userEmail,
         password,
         userNickname,
-        phone
+        phone,
+        profileImage
       );
-      console.log(memberReg.statusText);
-      if (memberReg.statusText === "OK") {
-        const fd = new FormData();
-        const file = imgRef.current.files[0];
-
-        fd.append("file", file);
-        fd.append("userEmail", userEmail);
-
-        const uploadChk = await UserApi.imageUpload(fd);
-
-        if (uploadChk.statusText === "OK") {
-        } else {
-          window.alert("이미지 업로드 실패했습니다.");
-        }
-        window.alert("회원 가입되었습니다.");
-        window.location.replace("/");
-      }
-    } else {
-      window.alert("이미 가입된 회원 입니다.");
+      console.log(userReg.statusText);
+      if (userReg.statusText === "OK")
+        //storage 참조 경로에 있는 파일의 URL을 다운로드해서 attachmentUrl 변수에 넣어서 업데이트
+        // attachmentUrl = await getDownloadURL(response.ref);
+        window.confirm("회원가입이 완료되었습니다.");
+      window.location.replace("/");
     }
   };
 
@@ -243,7 +255,7 @@ function Register() {
               <button
                 type="button"
                 className="register_btn"
-                onClick={onClickLogin}
+                onClick={onClickReg}
               >
                 Submit
               </button>
