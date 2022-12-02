@@ -11,17 +11,14 @@ import { storageService } from "../../lib/api/fbase";
 import styled from "styled-components";
 
 const Box = styled.div`
-  height: auto;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: Raleway, Pretendard Std;
+  padding: 0;
+  font-family: Raleway, Segoe UI;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
 const Container = styled.div`
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,11 +50,17 @@ function Login() {
 
     if (res.data !== false) {
       // 로그인 성공 시 이미지 불러오기
-      let attachmentUrl = ref(storageService, `/USER/${res.data.profileImage}`);
-      let profileImage = await getDownloadURL(attachmentUrl);
+      if (res.data.profileImage !== null) {
+        let attachmentUrl = ref(
+          storageService,
+          `/USER/${res.data.profileImage}`
+        );
+        let profileImage = await getDownloadURL(attachmentUrl);
+        sessionStorage.setItem("profileImage", profileImage);
+        sessionStorage.setItem("profileImagePath", res.data.profileImage);
+      }
       sessionStorage.setItem("userEmail", res.data.userEmail);
       sessionStorage.setItem("userNickname", res.data.userNickname);
-      sessionStorage.setItem("profileImage", profileImage);
       sessionStorage.setItem("phone", res.data.phone);
       window.location.replace("/Profile");
     } else if (res.data === false) {
