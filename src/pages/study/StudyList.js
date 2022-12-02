@@ -4,6 +4,7 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StudyApi from "../../lib/api/StudyApi";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Box = styled.div`
   margin: -50px;
@@ -54,38 +55,47 @@ const Study = () => {
         </div>
         {studyList &&
           studyList.map((list) =>
-            // 이미지 url이 있으면 -> 이미지 Card, 없으면 노말 Card 로 뿌려주면 된다,
-            <li key={list.id}>
-              <CardContainer>
-                <div className="card" style={{ "width": "40vw", "margin": "0 auto", "boxShadow": "0px 0px 24px #5c5696" }}>
-                  <div className="card-body">
-                    <h5 className="card-title">{`${list.title}`}</h5>
-                    <h6 className="card-subtitle mb-2 text-muted" style={{ "float": "right" }}>{`${list.writer}`}</h6>
-                    <br />
-                    <p className="card-text"> {`${list.content}`}</p>
-                    <p style={{ "float": "right" }}><FontAwesomeIcon icon={faHeart} /></p>
-                  </div>
-                </div>
-              </CardContainer>
-            </li>
+            list.imgUrl ?
+              <li key={list.id}>
+                <Link to={`/study/${list.id}`} style={{ "textDecoration": "none" }}>
+                  <CardContainer>
+                    <div className="card mb-3" style={{ "width": "40vw", "margin": "0 auto", "boxShadow": "0px 0px 24px #5c5696" }}>
+                      <div className="row g-0">
+                        <div className="col-md-6">
+                          <img src={`${list.imgUrl}`} className="img-fluid rounded-start" alt="..." />
+                        </div>
+                        <div className="col-md-5">
+                          <div className="card-body">
+                            <h5 className="card-title">{`${list.title}`}</h5>
+                            <h6 className="card-subtitle mb-2 text-muted" style={{ "float": "right" }}>{`${list.writer}`}</h6>
+                            <br />
+                            <p className="card-text">{`${list.content}`}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContainer>
+                </Link>
+              </li>
+              :
+              <li key={list.id}>
+                <Link to={`/study/${list.id}`} style={{ "textDecoration": "none" }}>
+                  <CardContainer>
+                    <div className="card" style={{ "width": "40vw", "margin": "0 auto", "boxShadow": "0px 0px 24px #5c5696" }}>
+                      <div className="card-body">
+                        <h5 className="card-title">{`${list.title}`}
+                          <Link to={`/study/${list.studyId}`} />
+                        </h5>
+                        <h6 className="card-subtitle mb-2 text-muted" style={{ "float": "right" }}>{`${list.writer}`}</h6>
+                        <br />
+                        <p className="card-text"> {`${list.content}`}</p>
+                        <p style={{ "float": "right" }}><FontAwesomeIcon icon={faHeart} /></p>
+                      </div>
+                    </div>
+                  </CardContainer>
+                </Link>
+              </li>
           )}
-        <CardContainer>
-          <div className="card mb-3" style={{ "width": "40vw", "margin": "0 auto", "boxShadow": "0px 0px 24px #5c5696" }}>
-            <div className="row g-0">
-              <div className="col-md-6">
-                <img src="https://res.cloudinary.com/dci1eujqw/image/upload/v1616769558/Codepen/waldemar-brandt-aThdSdgx0YM-unsplash_cnq4sb.jpg" className="img-fluid rounded-start" alt="..." />
-              </div>
-              <div className="col-md-5">
-                <div className="card-body">
-                  <h5 className="card-title">이미지 들어간 카드</h5>
-                  <h6 className="card-subtitle mb-2 text-muted" style={{ "float": "right" }}>작성자</h6>
-                  <br />
-                  <p className="card-text"> 내용입니다~~</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContainer>
       </Box>
     </>
   );

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid"
 import { ref, uploadString, getDownloadURL, deleteObject } from "@firebase/storage";
 import { storageService } from "../../lib/api/fbase";
+import StudyApi from "../../lib/api/StudyApi";
 
 const Box = styled.div`
   margin: 0;
@@ -21,9 +22,26 @@ const InputContainer = styled.div`
 `;
 const StudyWrite = (studyObj) => {
   const [attachment, setAttachment] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
   let attachmentUrl = "";
   //사진 첨부 없이 텍스트만 트윗하고 싶을 때도 있으므로 기본 값을 ""로 해야한다.
   //트윗할 때 텍스트만 입력시 이미지 url ""로 비워두기 위함
+
+  const titleChange = (e) => {
+    const {
+      target: { value }
+    } = e;
+    setTitle(value);
+  };
+
+  const contentChange = (e) => {
+    const {
+      target: { value }
+    } = e;
+    setContent(value);
+  };
 
   const imgChange = (e) => {
     const {
@@ -43,7 +61,10 @@ const StudyWrite = (studyObj) => {
   };
 
   const onSubmit = async (e) => {
+
     e.preventDefault();
+
+    const userNickname = sessionStorage.getItem("userNickname");
 
     //이미지 첨부하지 않고 텍스트만 올리고 싶을 때도 있기 때문에 attachment가 있을때만 아래 코드 실행
     //이미지 첨부하지 않은 경우엔 attachmentUrl=""이 된다.
@@ -60,6 +81,19 @@ const StudyWrite = (studyObj) => {
       attachmentUrl = await getDownloadURL(response.ref);
       console.log(attachmentUrl);
     }
+
+    const studyReg = await StudyApi.studyWrite(
+      userNickname,
+      title,
+      content,
+      attachmentUrl
+    );
+    console.log(studyReg);
+
+    console.log(studyReg.statusText);
+    if (studyReg.statusText === "OK")
+      window.confirm("스터디 모집이 시작되었습니다.");
+    window.location.replace("/");
   };
 
   const onDelete = async () => {
@@ -78,11 +112,11 @@ const StudyWrite = (studyObj) => {
       <InputContainer style={{ "marginTop": "5vh" }}>
         <div className="mb-3">
           <label htmlFor="title-input" className="form-label">Title</label>
-          <input type="email" className="form-control" id="title-input" placeholder="제목을 입력하세요." />
+          <input type="email" className="form-control" id="title-input" placeholder="제목을 입력하세요." onChange={titleChange} />
         </div>
         <div className="mb-3" style={{}}>
           <label htmlFor="content-textarea" className="form-label">Content</label>
-          <textarea className="form-control" id="content-textarea" rows="20" placeholder="내용을 입력하세요."></textarea>
+          <textarea className="form-control" id="content-textarea" rows="20" placeholder="내용을 입력하세요." onChange={contentChange}></textarea>
         </div>
         <div className="mb-3">
           <label htmlFor="formFile" className="form-label">Upload Image</label>
@@ -94,5 +128,5 @@ const StudyWrite = (studyObj) => {
       </InputContainer>
     </Box>
   )
-
-  export default StudyWrite;
+}
+export default StudyWrite;

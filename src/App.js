@@ -16,15 +16,15 @@ import AdminScBoardList from "./pages/admin/AdminScBoardList";
 import SocialDetail from "./pages/social/SocialDetail";
 import SocialList from "./pages/social/SocialList";
 import SocialWrite from "./pages/social/SocialWrite";
-import StudyDetail from "./pages/StudyDetail";
-import StudyList from "./pages/StudyList";
-import StudyWrite from "./pages/StudyWrite";
+import StudyDetail from "./pages/study/StudyDetail";
+import StudyList from "./pages/study/StudyList";
+import StudyWrite from "./pages/study/StudyWrite";
 
 
 function App() {
   return (
     <Router>
-      {/* <Nav /> */}
+      <Nav />
       <Routes>
         {/* <Route path="/Admin" element={<Admin />} /> */}
         <Route path="/AdminScBoarList" element={<AdminScBoardList />} />
@@ -36,8 +36,8 @@ function App() {
         <Route path="/FindInfo" element={<FindInfo />} />
         <Route path="/EditInfo" element={<EditInfo />} />
         <Route path="/studies" element={<StudyList />} />
-        <Route path="/studies/Write" element={<StudyWrite />} />
-        <Route exact path="/studies/:studyId" element={<StudyDetail />} />
+        <Route path="/study/write" element={<StudyWrite />} />
+        <Route exact path="/study/:studyId" element={<StudyDetail />} />
         <Route path="/Socket" element={<SocketTest />} />
         <Route path="/social" element={<SocialList />} />
         <Route path="/social/detail" element={<SocialDetail />} />

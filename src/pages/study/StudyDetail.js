@@ -43,7 +43,7 @@ const StudyDetail = () => {
     <>
       {studyDetail &&
         <div className="card" style={{ "width": "40vw", "margin": "0 auto", "marginTop": "5vh", "boxShadow": "0px 0px 10px -2px #FFF" }}>
-          <img src="https://res.cloudinary.com/dci1eujqw/image/upload/v1616769558/Codepen/waldemar-brandt-aThdSdgx0YM-unsplash_cnq4sb.jpg" className="card-img-top" alt="" />
+          <img src={`${studyDetail.imgUrl}`} className="card-img-top" alt="" />
           <div className="card-body">
             <h5 className="card-title">{`${studyDetail.title}`}</h5>
             <h6 className="card-subtitle mb2 text-muted" style={{ "float": "right" }}>{`${studyDetail.writer}`}</h6>
