@@ -2,7 +2,7 @@ import React from 'react'
 import { useRef } from "react";
 import styled from "styled-components";
 
-const ContentWriter = () => {
+const CommentWriter = () => {
   return (
     <WriteBlock>
       <div className="parentBox">
@@ -50,4 +50,4 @@ const WriteBlock = styled.div`
     }
   }
 `;
-export default ContentWriter;
+export default CommentWriter;

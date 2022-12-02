@@ -5,6 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import { Link } from "react-router-dom";
 
 function OffcanvasExample() {
   return (
@@ -47,8 +48,8 @@ function OffcanvasExample() {
                       내 스터디 보기
                     </NavDropdown.Item>
                   </NavDropdown>
-                  <Nav.Link href="#action2">스터디</Nav.Link>
-                  <Nav.Link href="#action2">자유게시판</Nav.Link>
+                  <Nav.Link href="/study">스터디</Nav.Link>
+                  <Nav.Link href="/social">Social</Nav.Link>
                 </Nav>
                 <Form className="d-flex" style={{ marginTop: "20px" }}>
                   <Form.Control

@@ -6,7 +6,7 @@ import CommentWriter from "./components/CommentWriter";
 import Nav from "../../containers/common/Nav";
 import { useState, useEffect } from "react";
 import SocialApi from "../../api/SocialApi";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   IoEyeOutline,
   IoHeartOutline,
@@ -14,17 +14,31 @@ import {
 } from "react-icons/io5";
 
 const SocialDetail = () => {
-  let { socialId } = useParams();
+  const params = useParams().socialId; // router에서 지정한 :social 을 붙여줘야함!!
   const [socialDetail, setSocialDetail] = useState("");
   const [loading, setLoading] = useState(false);
+  // web storage get/set
+  const getUserId = window.sessionStorage.getItem("userId");
+  const setSocialId = window.sessionStorage.setItem(
+    "social_id",
+    socialDetail.socialId
+  );
 
+  const onClickDelete = async () => {
+    const res = await SocialApi.socialDelete(params);
+    console.log("삭제 버튼 클릭");
+    if (res.data.result === "OK") {
+      console.log("삭제 완료 !");
+    } else {
+      console.log("삭제 실패 ㅜ");
+    }
+  };
   useEffect(() => {
     const socialData = async () => {
       setLoading(true);
       try {
-        console.log(socialId);
-        console.log(typeof(socialId));
-        const response = await SocialApi.socialDetail(socialId);
+        console.log(params);
+        const response = await SocialApi.socialDetail(params);
         setSocialDetail(response.data);
         console.log(response.data);
       } catch (e) {
@@ -40,39 +54,40 @@ const SocialDetail = () => {
   return (
     <div>
       <Nav />
-      <p>현재 페이지의 파라미터는 {socialId} 입니다.</p>
       <DetailBox>
         <div className="subtitle">Board Detail Page</div>
         <div className="parentBox">
-          {socialDetail &&
-            socialDetail.map((social) => (
-              <div key={social.socialId}>
-                <div className="content-title">{social.title}</div>
-                <div className="post-info">
-                  <div className="publisher-info">
-                    <img className="photos" src={Photo} alt="프로필 사진"></img>
-                    <span className="nickName">{social.user}</span>
-                    <span className="date">| {social.postDate}</span>
-                  </div>
-                  <div className="icon-box">
-                    <IoEyeOutline />
-                    <span className="count">{social.view}</span>
-                    <IoHeartOutline />
-                    <span className="count">{social.like}</span>
-                    <IoChatboxOutline />
-                    <span className="count">{social.comment}</span>
-                  </div>
-                </div>
-                <hr />
-                <div className="content-text">{social.content}</div>
-                <div className="hashtag-box">
-                  <span className="hashtag">{social.tag}</span>
-                </div>
-                <hr />
-                {/* <CommentWriter />
-                <CommentList /> */}
+          <div key={socialDetail.socialId}>
+            <div className="content-title">{socialDetail.title}</div>
+            <div className="post-info">
+              <div className="publisher-info">
+                <img className="photos" src={Photo} alt="프로필 사진"></img>
+                <span className="nickName">{socialDetail.user}</span>
+                <span className="date">| {socialDetail.postDate}</span>
               </div>
-            ))}
+              <div className="icon-box">
+                <IoEyeOutline />
+                <span className="count">{socialDetail.view}</span>
+                <IoHeartOutline />
+                <span className="count">{socialDetail.like}</span>
+                <IoChatboxOutline />
+                <span className="count">{socialDetail.comment}</span>
+              </div>
+            </div>
+            <hr />
+            <div className="content-text">{socialDetail.content}</div>
+            <div className="hashtag-box">
+              <Link to="/social">
+                <button className="deleteBt" onClick={onClickDelete}>
+                  삭제
+                </button>
+              </Link>
+              <span className="hashtag">{socialDetail.tag}</span>
+            </div>
+            <hr />
+            <CommentWriter />
+            <CommentList />
+          </div>
         </div>
       </DetailBox>
     </div>

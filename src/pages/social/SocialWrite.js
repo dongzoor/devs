@@ -1,8 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import SocialApi from "../../api/SocialApi";
 import Nav from "../../containers/common/Nav";
 
 const SocialWrite = () => {
+  const getUserId = "임시아이디";
+  // const getUserId = window.sessionStorage.getItem("userId");
+
+  const [titleInput, setTitleInput] = useState("");
+  const [contentInput, setContentInput] = useState("");
+  const [tagInput, setTagInput] = useState("");
+
+  const onChangeTitle = (title) => setTitleInput(title.target.value);
+  const onChangeContent = (content) => setContentInput(content.target.value);
+  const onChangeTag = (tag) => setTagInput(tag.target.value);
+
+  const onClickBt = async () => {
+    const res = await SocialApi.socialWrite(
+      getUserId,
+      titleInput,
+      contentInput,
+      tagInput
+    );
+    console.log("제출 버튼 클릭");
+    if (res.data.result === "OK") {
+      // 왜 안되징 ??
+      console.log("제출 완료 !!");
+    } else {
+      console.log("제출 실패 ...ㅜㅜ");
+    }
+  };
+
   return (
     <WriteBox>
       <Nav />
@@ -12,17 +41,31 @@ const SocialWrite = () => {
         <textarea
           className="title"
           placeholder="게시글의 제목을 입력해주세요."
+          value={titleInput}
+          onChange={onChangeTitle}
         ></textarea>
         <hr />
         <label>내용</label>
         <textarea
           className="content"
           placeholder="개발, 비개발 무엇이든 작성해주세요 (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧^"
+          value={contentInput}
+          onChange={onChangeContent}
         />
         <hr />
         <label>#해시태그</label>
-        <textarea className="hashTag" placeholder="#이직 #프리랜서" />
-        <input type="file" className="hashTag-input" />
+        <textarea
+          className="hashTag"
+          placeholder="#이직 #프리랜서"
+          value={tagInput}
+          onChange={onChangeTag}
+        />
+        <input type="file" />
+        <Link to="/social">
+          <button className="submitBt" onClick={onClickBt}>
+            제 출
+          </button>
+        </Link>
       </div>
     </WriteBox>
   );
@@ -86,6 +129,23 @@ const WriteBox = styled.div`
   }
   .hashTag-input {
     margin: 5px 20px;
+  }
+  .submitBt {
+    width: 25rem;
+    height: 40px;
+    margin: 10px auto;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 255, 0.2);
+    transition-duration: 0.3s;
+    &:hover {
+      color: white;
+      background-color: rgba(190, 100, 255, 0.5);
+      box-shadow: 5px 5px 10px rgba(190, 100, 255, 0.2);
+      left: 5px;
+      margin-top: 5px;
+      box-shadow: none;
+    }
   }
 `;
 export default SocialWrite;

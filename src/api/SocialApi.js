@@ -4,26 +4,36 @@ const DOMAIN = "http://localhost:8211/";
 const HEADER = "application/json";
 
 const SocialApi = {
-  // social 메인 : 게시글 ALL 조회
+  // social 메인 : 게시글 전체 조회
   socialList: async function () {
     return await axios.get(DOMAIN + "social", HEADER);
   },
-  // social detail page 조회
+
+  // 게시글 조회
   socialDetail: async function (socialId) {
-    const detailObj = {
-      socialId: parseInt(socialId),
-    };
-    return await axios.get(DOMAIN + "social/", detailObj, HEADER);
+    return await axios.get(DOMAIN + "social/" + socialId, HEADER);
   },
 
-  // --------------------------------------댓글 수정 전--------------------------------------------------------
-  // 댓글 조회 api
-  commentList: async function (boardId) {
-    const cmtObj = {
-      cmd: "CommentList",
-      id: boardId,
+  // 게시글 작성
+  socialWrite: async function (user, title, content, tag, image) {
+    const writeObj = {
+      user: user,
+      title: title,
+      content: content,
+      tag: tag,
+      // image: image, // firebase 성공하면
     };
-    return await axios.post(DOMAIN + "comment", cmtObj, HEADER);
+    return await axios.post(DOMAIN + "social/write", writeObj, HEADER);
+  },
+
+  // 게시글 삭제
+  socialDelete: async function (socialId) {
+    return await axios.delete(DOMAIN + "social/" + socialId, HEADER);
+  },
+
+  // 댓글 조회 api
+  commentList: async function (socialId) {
+    return await axios.get(DOMAIN + "social/" + socialId, HEADER);
   },
   // 댓글 입력 api
   insertComment: async function (id, content, boardId) {
