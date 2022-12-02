@@ -3,14 +3,19 @@
 import "./EditInfo.css";
 
 import React, { useEffect, useRef, useState } from "react";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadString,
+} from "@firebase/storage";
 
 import { Link } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
 import UserApi from "../../api/UserApi";
+import { storageService } from "../../lib/api/fbase";
 import styled from "styled-components";
-
-// 원래 설정한 이미지를 세션 스토리지에서 가져옴
-const originImgFile = sessionStorage.getItem("profileImage");
+import { v4 as uuidv4 } from "uuid";
 
 const Box = styled.div`
   height: auto;
@@ -44,6 +49,7 @@ function EditInfo() {
   const [userNickname, setUserNickname] = useState("");
   const [password, setPassword] = useState("");
   const [inputConPw, setInputConPw] = useState("");
+  const [inputPwNow, setInputPwNow] = useState("");
   const [phone, setPhone] = useState("");
   const phoneRef = useRef();
 
@@ -61,41 +67,39 @@ function EditInfo() {
     const originEmail = sessionStorage.getItem("userEmail");
     const originNickname = sessionStorage.getItem("userNickname");
     const originPhone = sessionStorage.getItem("phone");
-    if (originEmail || originNickname || originPhone) {
+    const profileImage = sessionStorage.getItem("profileImage");
+    if (originEmail || originNickname || originPhone || profileImage) {
       setUserEmail(originEmail);
       setUserNickname(originNickname);
       setPhone(originPhone);
+      // 원래 설정한 이미지를 세션 스토리지에서 가져옴
+      setImgFile(profileImage);
     }
   }, []);
 
-  //이미지 업로드 후 보여주기
-  const saveImgFile = () => {
-    const file = imgRef.current.files[0];
+  const saveImgFile = (e) => {
+    const {
+      target: { files },
+    } = e;
+    const theFile = files[0];
+    console.log(theFile);
+
     const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setImgFile(reader.result);
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setImgFile(result);
     };
-  };
-
-  const onChangeEmail = (e) => {
-    const emailCheck = e.target.value;
-    setUserEmail(emailCheck);
-
-    const regExp =
-      /^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-
-    if (regExp.test(emailCheck) !== true) {
-      setConIdMessage("이메일주소 형식이 올바르지 않습니다.");
-      setIsConId(false);
-    } else {
-      setConIdMessage("");
-      setIsConId(true);
-    }
+    reader.readAsDataURL(theFile);
   };
 
   const onChangeNickname = (e) => {
     setUserNickname(e.target.value);
+  };
+
+  const onNowPassword = (e) => {
+    setInputPwNow(e.target.value);
   };
 
   const onChangePassword = (e) => {
@@ -143,39 +147,63 @@ function EditInfo() {
 
   // 회원정보 수정
   const onClickEdit = async () => {
-    console.log("Click 회원정보 수정");
-    // 가입 여부 우선 확인
-    // const memberCheck = await UserApi.memberRegCheck(userid);
-    // console.log("가입 가능 여부 확인 : ", memberCheck.data);
-    // 가입 여부 확인 후 가입 절차 진행
+    if (window.confirm("회원정보를 수정하시겠습니까?")) {
+      // 가입 여부 우선 확인
+      // const memberCheck = await UserApi.memberRegCheck(userid);
+      // console.log("가입 가능 여부 확인 : ", memberCheck.data);
+      // 가입 여부 확인 후 가입 절차 진행
 
-    if (true) {
-      console.log("가입된 아이디가 없습니다. 다음 단계 진행 합니다.");
-      const memberReg = await UserApi.memberReg(
-        userEmail,
-        password,
-        userNickname,
-        phone
-      );
-      console.log(memberReg.statusText);
-      if (memberReg.statusText === "OK") {
-        const fd = new FormData();
-        const file = imgRef.current.files[0];
+      if (true) {
+        let profileImage = uuidv4();
 
-        fd.append("file", file);
-        fd.append("userEmail", userEmail);
+        const userUpdate = await UserApi.userUpdate(
+          userEmail,
+          password,
+          inputPwNow,
+          userNickname,
+          phone,
+          profileImage
+        );
+        console.log(userUpdate.statusText);
+        if (userUpdate.data !== false) {
+          if (imgFile !== "") {
+            let profileImagePath = sessionStorage.getItem("profileImagePath");
 
-        const uploadChk = await UserApi.imageUpload(fd);
+            // 기존 이미지가 존재하면 삭제
+            if (profileImagePath !== null) {
+              const attachmentRefDelete = ref(
+                storageService,
+                `/USER/${profileImagePath}`
+              );
+              //storage 참조 경로로 기존 이미지 삭제
+              await deleteObject(attachmentRefDelete);
+            }
 
-        if (uploadChk.statusText === "OK") {
-        } else {
-          window.alert("이미지 업로드 실패했습니다.");
+            // 현재 이미지 업로드
+            const attachmentRefUpload = ref(
+              storageService,
+              `/USER/${profileImage}`
+            );
+            await uploadString(attachmentRefUpload, imgFile, "data_url");
+          }
+
+          window.alert("회원정보 수정이 완료되었습니다.");
+          if (userUpdate.data.profileImage !== null) {
+            let attachmentUrl = ref(
+              storageService,
+              `/USER/${userUpdate.data.profileImage}`
+            );
+            let profileImageNow = await getDownloadURL(attachmentUrl);
+            sessionStorage.setItem("profileImage", profileImageNow);
+          }
+          sessionStorage.setItem("userEmail", userUpdate.data.userEmail);
+          sessionStorage.setItem("userNickname", userUpdate.data.userNickname);
+          sessionStorage.setItem("phone", userUpdate.data.phone);
+          window.location.replace("/Profile");
         }
-        window.alert("회원 가입되었습니다.");
-        window.location.replace("/");
       }
     } else {
-      window.alert("이미 가입된 회원 입니다.");
+      return;
     }
   };
 
@@ -191,7 +219,11 @@ function EditInfo() {
             <form className="edit-form">
               <img
                 className="profile-img"
-                src={imgFile ? imgFile : originImgFile}
+                src={
+                  imgFile
+                    ? imgFile
+                    : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                }
                 alt="프로필 이미지"
                 style={{
                   width: "150px",
@@ -213,7 +245,7 @@ function EditInfo() {
                 type="text"
                 placeholder="ID(EMAIL)"
                 value={userEmail}
-                onChange={onChangeEmail}
+                readOnly
               />
               <span
                 className={`message ${isConId ? "success" : "error"}`}
@@ -226,6 +258,12 @@ function EditInfo() {
                 placeholder="NICKNAME"
                 value={userNickname}
                 onChange={onChangeNickname}
+              />
+              <input
+                type="password"
+                placeholder="NOW PASSWORD"
+                value={inputPwNow}
+                onChange={onNowPassword}
               />
               <input
                 type="password"
