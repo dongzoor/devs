@@ -17,7 +17,7 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: Raleway, Pretendard Std;
+  font-family: Raleway, GmarketSansMedium;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
@@ -111,42 +111,40 @@ function FindInfo() {
             <form className="findInfo-form">
               <Tabs
                 defaultActiveKey="FindId"
-                //   transition={false}
+                transition={false}
                 id="noanim-tab-example"
                 className="findInfo-tab"
               >
-                <Tab eventKey="FindId" title="Find Id" className="findId-tab">
-                  <input
-                    type="text"
-                    placeholder="PHONE NUMBER"
-                    ref={phoneRef}
-                    value={phone}
-                    onChange={onChangePhone}
-                    className="find__input"
-                    style={{
-                      border: "none",
-                      borderBottom: "1px solid black",
-                      margin: "10px",
-                    }}
-                  />
-                  <button className="submit_btn">submit</button>
+                <Tab
+                  eventKey="FindId"
+                  title="Find Id"
+                  className="findId-tab"
+                  style={{ margin: "20px" }}
+                >
+                  <div className="findId">
+                    <input
+                      type="text"
+                      placeholder="PHONE NUMBER"
+                      ref={phoneRef}
+                      value={phone}
+                      onChange={onChangePhone}
+                      className="find__input"
+                    />
+                    <button className="submit_btn">submit</button>
+                  </div>
                 </Tab>
 
                 <Tab
                   eventKey="FindPassword"
                   title="Find Password"
                   className="findPwd-tab"
+                  style={{ margin: "20px" }}
                 >
-                  <div style={{ verticalAlign: "center" }}>
+                  <div className="findPwd">
                     <input
                       type="text"
                       className="find__input"
                       placeholder="ID(EMAIL)"
-                      style={{
-                        border: "none",
-                        borderBottom: "1px solid black",
-                        margin: "10px",
-                      }}
                     />
                     <input
                       type="text"
@@ -155,14 +153,9 @@ function FindInfo() {
                       ref={phonePwRef}
                       value={pwPhone}
                       onChange={onChangePwPhone}
-                      style={{
-                        border: "none",
-                        borderBottom: "1px solid black",
-                        margin: "10px",
-                      }}
                     />
+                    <button className="submit_btn">submit</button>
                   </div>
-                  <button className="submit_btn">submit</button>
                 </Tab>
               </Tabs>
             </form>

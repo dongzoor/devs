@@ -48,7 +48,11 @@ function Quote() {
     return parseInt(Math.random() * length);
   };
 
-  return <div>{quotes[getRandomIndex(quotes.length)]}</div>;
+  return (
+    <div style={{ fontSize: "1.2rem" }}>
+      {quotes[getRandomIndex(quotes.length)]}
+    </div>
+  );
 }
 
 export default Quote;

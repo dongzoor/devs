@@ -11,7 +11,7 @@ const imgFile = sessionStorage.getItem("profileImage");
 const Box = styled.div`
   margin: 0;
   padding: 0;
-  font-family: Raleway, Pretendard Std;
+  font-family: Raleway, GmarketSansMedium;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
@@ -47,8 +47,8 @@ function Profile() {
         </div>
         <div className="user_container">
           <h2 className="userName">{sessionStorage.getItem("userNickname")}</h2>
-          <Link to="/EditInfo">
-            <FaRegEdit size="30" style={{ margin: "5" }} />
+          <Link to="/CheckPwd">
+            <FaRegEdit size="30" style={{ marginLeft: "5" }} />
           </Link>
         </div>
         <div className="todays_info">
