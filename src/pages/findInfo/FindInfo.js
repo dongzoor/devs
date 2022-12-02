@@ -2,16 +2,21 @@
 
 import "../findInfo/FindInfo.css";
 
-import React, { useState, useRef } from "react";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
+import React, { useRef, useState } from "react";
+
 import { Link } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 import styled from "styled-components";
 
 const Box = styled.div`
-  margin: 0;
-  padding: 0;
+  height: auto;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   font-family: Raleway, Pretendard Std;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;

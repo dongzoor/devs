@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import Nav from "../../containers/common/Nav";
 
 const SocialWrite = () => {
   return (
     <WriteBox>
-      <div className="LOGO">Dev's</div>
+      <Nav />
       <div className="subtitle">Write anything you want 👩🏻‍💻✨</div>
       <div className="parentBox">
         <label>제목</label>
@@ -32,13 +33,6 @@ const WriteBox = styled.div`
     margin: 0;
     padding: 0;
     font-size: 20px;
-  }
-  .LOGO {
-    font-family: "Alfa Slab One", cursive;
-    text-align: center;
-    padding: 20px;
-    font-size: 40px;
-    border: 3px solid black;
   }
   .subtitle {
     font-family: "Alfa Slab One", cursive;

@@ -34,6 +34,14 @@ function Quote() {
     "The more technology you learn, the more you realize how little you know.",
     "All applications are pretty when your screen is off.",
     "Commit or do not commit, there is no try",
+    "A poor programmer blames the language.",
+    "Don't put all your logic in one method basket",
+    "Diff before you Push",
+    "Anger and stubborness make bad allies in code review",
+    "There is no test without first a failure",
+    "Small bug becomes a huge problem.",
+    "Your code might be perfect but you aren't",
+    "Learn a programming language, become a new developer.",
   ];
 
   const getRandomIndex = (length) => {
