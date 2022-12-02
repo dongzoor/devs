@@ -13,9 +13,10 @@ const AdminApi = {
     return await axios.get(WN_DOMAIN + "employee/list", HEADER);
   },
 
-  // 어드민이 게시판 조회
-  adboardList: async function () {
-    return await axios.get(WN_DOMAIN + "boardlist", HEADER);
+
+  // 어드민이 스터디게시판 조회
+  adstudyboardList: async function () {
+    return await axios.get(WN_DOMAIN + "studies", HEADER);
   },
 
   // 어드민이 멤버삭제

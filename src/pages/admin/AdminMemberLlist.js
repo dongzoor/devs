@@ -70,7 +70,9 @@ function AdminMemberList() {
                   <td>{list.name}</td>
                   <td>{list.address}</td>
                   <td>가입시간</td>
-                  <td><button className='adbutton delete'onClick={clickDelMem}>삭제</button></td>
+                  <td><button className='adbutton delete'onClick={clickDelMem}>삭제</button>
+                  
+                  </td>
                 </tr>
               ))}
             {/* <tr>
