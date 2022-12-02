@@ -5,15 +5,16 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Nav from '../src/containers/common/Nav'
-import StudyList from './pages/StudyList';
-import StudyWrite from './pages/StudyWrite'
-import StudyDetail from './pages/StudyDetail';
+import StudyList from './pages/study/StudyList';
+import StudyWrite from './pages/study/StudyWrite'
+import StudyDetail from './pages/study/StudyDetail';
 import Admin from "./pages/admin/Admin";
 import Login from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
 import Register from "./pages/register/Register";
 import FindInfo from "./pages/findInfo/FindInfo";
 import EditInfo from "./pages/editInfo/EditInfo";
+import SocketTest from "./pages/chat/SocketTest";
 
 function App() {
   return (
@@ -28,9 +29,10 @@ function App() {
         <Route path="/Profile" element={<Profile />} />
         <Route path="/FindInfo" element={<FindInfo />} />
         <Route path="/EditInfo" element={<EditInfo />} />
-        <Route path="/study" element={<StudyList />} />
-        <Route path="/study/write" element={<StudyWrite />} />
-        <Route path='/study/detail' element={<StudyDetail />} />
+        <Route path="/studies" element={<StudyList />} />
+        <Route path="/studies/Write" element={<StudyWrite />} />
+        <Route exact path="/studies/:studyId" element={<StudyDetail />} />
+        <Route path="/Socket" element={<SocketTest />} />
         {/* <Login/>   */}
         {/* <Admin /> */}
       </Routes>

@@ -1,17 +1,22 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { v4 as uuidv4, v4 } from "uuid"
+import { v4 as uuidv4 } from "uuid"
 import { ref, uploadString, getDownloadURL, deleteObject } from "@firebase/storage";
-import { storageService } from "../lib/api/fbase";
-import { async } from "@firebase/util";
+import { storageService } from "../../lib/api/fbase";
 
-
+const Box = styled.div`
+  margin: 0;
+  padding: 0;
+  font-family: Raleway, Pretendard Std;
+  background: linear-gradient(90deg, #ffe7e8, #8da4d0);
+`;
 const InputContainer = styled.div`
   width: 40vw;
   height: 80vh;
   margin: 0 auto;
   padding: 15px;
   background-color: #FFF;
+  box-shadow: 0px 0px 24px #5c5696;
   border-radius: 25px;
 `
 const StudyWrite = (studyObj) => {
@@ -70,23 +75,25 @@ const StudyWrite = (studyObj) => {
   }
 
   return (
-    <InputContainer style={{ "marginTop": "5vh", "boxShadow": "0px 0px 10px -2px #FFF" }}>
-      <div className="mb-3">
-        <label htmlFor="title-input" className="form-label">Title</label>
-        <input type="email" className="form-control" id="title-input" placeholder="제목을 입력하세요." />
-      </div>
-      <div className="mb-3" style={{}}>
-        <label htmlFor="content-textarea" className="form-label">Content</label>
-        <textarea className="form-control" id="content-textarea" rows="20" placeholder="내용을 입력하세요."></textarea>
-      </div>
-      <div className="mb-3">
-        <label htmlFor="formFile" className="form-label">Upload Image</label>
-        <input className="form-control" type="file" id="formFile" onChange={imgChange} />
-      </div>
-      <button type="button" className="btn btn-light" style={{ "float": "right" }} onClick={onSubmit}>
-        Submit
-      </button>
-    </InputContainer>
+    <Box>
+      <InputContainer style={{ "marginTop": "5vh" }}>
+        <div className="mb-3">
+          <label htmlFor="title-input" className="form-label">Title</label>
+          <input type="email" className="form-control" id="title-input" placeholder="제목을 입력하세요." />
+        </div>
+        <div className="mb-3" style={{}}>
+          <label htmlFor="content-textarea" className="form-label">Content</label>
+          <textarea className="form-control" id="content-textarea" rows="20" placeholder="내용을 입력하세요."></textarea>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="formFile" className="form-label">Upload Image</label>
+          <input className="form-control" type="file" id="formFile" onChange={imgChange} />
+        </div>
+        <button type="button" className="btn btn-light" style={{ "float": "right" }} onClick={onSubmit}>
+          Submit
+        </button>
+      </InputContainer>
+    </Box>
   )
 
 }
