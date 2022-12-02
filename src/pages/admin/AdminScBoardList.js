@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Adminheader from './Adminheader';
 import { useEffect, useState } from 'react';
 import AdminApi from '../../api/AdminApi';
+import Loading from '../../utill/Loading';
 
 
 const Adcontainer = styled.div`
@@ -26,6 +27,7 @@ justify-content: center;
 function AdminScBoardList() {
 
     const [adstudyboard, setAdstudyboard] = useState([]); // 스터디게시판 조회
+    const [loading, setLoading] = useState(false);
 
     // 게시판 아이디별 조회
     const onClickBoardList = (val) => {
@@ -37,6 +39,7 @@ function AdminScBoardList() {
 
     useEffect(() => {
         const BoardData = async () => {
+            setLoading(true);
             try {
                 const response = await AdminApi.adstudyboardList()
                 setAdstudyboard(response.data);
@@ -44,10 +47,16 @@ function AdminScBoardList() {
             } catch (e) {
                 console.log(e);
             }
+            setLoading(false);
         };
 
         BoardData();
     }, []);
+
+    if (loading) {
+        return <Loading></Loading>;
+    }
+
 
 
 
@@ -56,7 +65,7 @@ function AdminScBoardList() {
             <Adminheader></Adminheader>
             <Adcontainer>
                 <div>
-                    <h1 className='adTitle'> 게시물  리스트</h1>
+                    <h1 className='adTitle'> 자유 게시판  리스트</h1>
                     <Table striped bordered hover size="sm" className='table_adboardlist'>
                         <thead>
                             <tr>

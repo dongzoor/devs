@@ -3,7 +3,7 @@ import "./App.css";
 
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Nav from '../src/containers/common/Nav'
-import Admin from "./pages/admin/Admin";
+// import Admin from "./pages/admin/Admin";
 import Login from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
 import Register from "./pages/register/Register";

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Adminheader from './Adminheader';
 import { useEffect, useState } from 'react';
 import AdminApi from '../../api/AdminApi';
+import Loading from '../../utill/Loading';
 
 const Adcontainer = styled.div`
 display: flex;
@@ -24,6 +25,7 @@ justify-content: center;
 function AdminBoardList() {
 
   const [adstudyboard, setAdstudyboard] = useState([]); // 스터디게시판 조회
+  const [loading, setLoading] = useState(false);
 
   // 게시판 아이디별 조회
   const onClickBoardList = (val) => {
@@ -35,6 +37,7 @@ function AdminBoardList() {
 
   useEffect(() => {
     const BoardData = async () => {
+      setLoading(true);
       try {
         const response = await AdminApi.adstudyboardList()
         setAdstudyboard(response.data);
@@ -42,11 +45,15 @@ function AdminBoardList() {
       } catch (e) {
         console.log(e);
       }
+      setLoading(false);
     };
 
     BoardData();
   }, []);
 
+  if (loading) {
+    return <Loading></Loading>;
+  }
 
 
 
