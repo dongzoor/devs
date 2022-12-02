@@ -13,7 +13,7 @@ import styled from "styled-components";
 const Box = styled.div`
   margin: 0 auto;
   padding: 0;
-  font-family: Raleway, Segoe UI;
+  font-family: Raleway, GmarketSansMedium;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 

@@ -24,13 +24,15 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: Raleway, Pretendard Std;
+  font-family: Raleway, GmarketSansMedium;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
 const Container = styled.div`
-  height: auto;
+  height: 100%;
   display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 100vh;
 `;
 
@@ -38,7 +40,7 @@ const Content = styled.div`
   display: block;
   align-items: center;
   justify-content: center;
-  height: auto;
+  height: 100%;
   background-color: white;
   width: 40vw;
   box-shadow: 0px 0px 24px #5c5696;
@@ -47,9 +49,9 @@ const Content = styled.div`
 function EditInfo() {
   const [userEmail, setUserEmail] = useState("");
   const [userNickname, setUserNickname] = useState("");
-  const [password, setPassword] = useState("");
-  const [inputConPw, setInputConPw] = useState("");
-  const [inputPwNow, setInputPwNow] = useState("");
+  const [inputPwNow, setInputPwNow] = useState(""); // 기존 비밀번호
+  const [password, setPassword] = useState(""); // 새로운 비밀번호
+  const [inputConPw, setInputConPw] = useState(""); // 비밀번호 확인
   const [phone, setPhone] = useState("");
   const phoneRef = useRef();
 
@@ -245,6 +247,7 @@ function EditInfo() {
                 type="text"
                 placeholder="ID(EMAIL)"
                 value={userEmail}
+                style={{ background: "#F2F3F4" }}
                 readOnly
               />
               <span

@@ -5,6 +5,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import AdminBoardList from "./pages/admin/AdminBoardList";
 import AdminMemberList from "./pages/admin/AdminMemberList";
+import CheckPwd from "./pages/editInfo/CheckPwd";
 import EditInfo from "./pages/editInfo/EditInfo";
 import FindInfo from "./pages/findInfo/FindInfo";
 import Login from "./pages/login/Login";
@@ -28,8 +29,9 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/FindInfo" element={<FindInfo />} />
-        <Route path="/EditInfo" element={<EditInfo />} />
+        <Route path="/findInfo" element={<FindInfo />} />
+        <Route path="/checkPwd" element={<CheckPwd />} />
+        <Route path="/editinfo" element={<EditInfo />} />
         <Route path="/study" element={<StudyList />} />
         <Route path="/study/write" element={<StudyWrite />} />
         <Route path="/study/detail" element={<StudyDetail />} />

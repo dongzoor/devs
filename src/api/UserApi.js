@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// const DOMAIN = "http://localhost:8211/";
 const HEADER = { "Content-type": "application/json; charset=UTF-8" };
 
 const UserApi = {
@@ -26,7 +27,7 @@ const UserApi = {
 
   //회원정보 수정
   userUpdate: async function (
-    userEmail,
+    id,
     pwd,
     inputPwNow,
     nickname,
@@ -34,7 +35,7 @@ const UserApi = {
     profileImage
   ) {
     const UpdateObj = {
-      userEmail: userEmail,
+      userEmail: id,
       password: pwd,
       inputPwNow: inputPwNow,
       userNickname: nickname,
