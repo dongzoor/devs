@@ -26,18 +26,10 @@ const UserApi = {
   },
 
   //회원정보 수정
-  userUpdate: async function (
-    id,
-    pwd,
-    inputPwNow,
-    nickname,
-    phone,
-    profileImage
-  ) {
+  userUpdate: async function (id, pwd, nickname, phone, profileImage) {
     const UpdateObj = {
       userEmail: id,
       password: pwd,
-      inputPwNow: inputPwNow,
       userNickname: nickname,
       phone: phone,
       profileImage: profileImage,

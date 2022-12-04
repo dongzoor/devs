@@ -26,6 +26,7 @@ const Container = styled.div`
 `;
 
 function Login() {
+  // 세션이 존재하는 경우 프로필 화면으로
   if (sessionStorage.getItem("userEmail") !== null) {
     window.location.replace("/Profile");
   }
@@ -46,19 +47,24 @@ function Login() {
   const onClickLogin = async () => {
     // 로그인을 위한 axios 호출
     const res = await UserApi.userLogin(inputId, inputPw);
-    console.log(res.data);
 
+    // 로그인을 성공하는 경우
     if (res.data !== false) {
-      // 로그인 성공 시 이미지 불러오기
+      // 사람정보에 이미지가 존재하는 경우
       if (res.data.profileImage !== null) {
+        //FireBase에서 이미지를 불러올 경로 참고 생성
         let attachmentUrl = ref(
           storageService,
           `/USER/${res.data.profileImage}`
         );
-        let profileImage = await getDownloadURL(attachmentUrl);
-        sessionStorage.setItem("profileImage", profileImage);
-        sessionStorage.setItem("profileImagePath", res.data.profileImage);
+
+        // 경로 참고를 가지고 이미지 경로를 불러온다.
+        let profileImagePath = await getDownloadURL(attachmentUrl);
+
+        sessionStorage.setItem("profileImage", res.data.profileImage);
+        sessionStorage.setItem("profileImagePath", profileImagePath);
       }
+
       sessionStorage.setItem("userEmail", res.data.userEmail);
       sessionStorage.setItem("userNickname", res.data.userNickname);
       sessionStorage.setItem("phone", res.data.phone);

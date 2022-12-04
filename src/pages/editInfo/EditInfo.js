@@ -49,13 +49,13 @@ const Content = styled.div`
 function EditInfo() {
   const [userEmail, setUserEmail] = useState("");
   const [userNickname, setUserNickname] = useState("");
-  const [inputPwNow, setInputPwNow] = useState(""); // 기존 비밀번호
   const [password, setPassword] = useState(""); // 새로운 비밀번호
   const [inputConPw, setInputConPw] = useState(""); // 비밀번호 확인
   const [phone, setPhone] = useState("");
   const phoneRef = useRef();
 
   const [imgFile, setImgFile] = useState("");
+  const [changeImgFile, setChangeImgFile] = useState("");
   const imgRef = useRef();
 
   const [isConId, setIsConId] = useState(false);
@@ -69,13 +69,13 @@ function EditInfo() {
     const originEmail = sessionStorage.getItem("userEmail");
     const originNickname = sessionStorage.getItem("userNickname");
     const originPhone = sessionStorage.getItem("phone");
-    const profileImage = sessionStorage.getItem("profileImage");
-    if (originEmail || originNickname || originPhone || profileImage) {
+    const profileImagePath = sessionStorage.getItem("profileImagePath");
+    if (originEmail || originNickname || originPhone || profileImagePath) {
       setUserEmail(originEmail);
       setUserNickname(originNickname);
       setPhone(originPhone);
       // 원래 설정한 이미지를 세션 스토리지에서 가져옴
-      setImgFile(profileImage);
+      setImgFile(profileImagePath);
     }
   }, []);
 
@@ -92,16 +92,13 @@ function EditInfo() {
         currentTarget: { result },
       } = finishedEvent;
       setImgFile(result);
+      setChangeImgFile(result);
     };
     reader.readAsDataURL(theFile);
   };
 
   const onChangeNickname = (e) => {
     setUserNickname(e.target.value);
-  };
-
-  const onNowPassword = (e) => {
-    setInputPwNow(e.target.value);
   };
 
   const onChangePassword = (e) => {
@@ -150,43 +147,48 @@ function EditInfo() {
   // 회원정보 수정
   const onClickEdit = async () => {
     if (window.confirm("회원정보를 수정하시겠습니까?")) {
-      // 가입 여부 우선 확인
-      // const memberCheck = await UserApi.memberRegCheck(userid);
-      // console.log("가입 가능 여부 확인 : ", memberCheck.data);
-      // 가입 여부 확인 후 가입 절차 진행
-
       if (true) {
-        let profileImage = uuidv4();
+        let profileImage = null;
+        let nowProfileImage = sessionStorage.getItem("profileImage");
+
+        // 이미지가 바뀌는 경우
+        if (changeImgFile !== "") {
+          //새로운 파일이름 생성
+          profileImage = uuidv4();
+        } else {
+          //기존이미지이름 넣기
+          profileImage = nowProfileImage;
+        }
 
         const userUpdate = await UserApi.userUpdate(
           userEmail,
           password,
-          inputPwNow,
           userNickname,
           phone,
           profileImage
         );
-        console.log(userUpdate.statusText);
+
         if (userUpdate.data !== false) {
           if (imgFile !== "") {
-            let profileImagePath = sessionStorage.getItem("profileImagePath");
+            // 기존 이미지가 존재하는 경우
+            if (nowProfileImage !== null) {
+              // 이미지가 바뀌는 경우
+              if (changeImgFile !== "") {
+                const attachmentRefDelete = ref(
+                  storageService,
+                  `/USER/${nowProfileImage}`
+                );
+                //storage 참조 경로로 기존 이미지 삭제
+                await deleteObject(attachmentRefDelete);
 
-            // 기존 이미지가 존재하면 삭제
-            if (profileImagePath !== null) {
-              const attachmentRefDelete = ref(
-                storageService,
-                `/USER/${profileImagePath}`
-              );
-              //storage 참조 경로로 기존 이미지 삭제
-              await deleteObject(attachmentRefDelete);
+                // 바꿀 이미지 업로드
+                const attachmentRefUpload = ref(
+                  storageService,
+                  `/USER/${profileImage}`
+                );
+                await uploadString(attachmentRefUpload, imgFile, "data_url");
+              }
             }
-
-            // 현재 이미지 업로드
-            const attachmentRefUpload = ref(
-              storageService,
-              `/USER/${profileImage}`
-            );
-            await uploadString(attachmentRefUpload, imgFile, "data_url");
           }
 
           window.alert("회원정보 수정이 완료되었습니다.");
@@ -195,8 +197,15 @@ function EditInfo() {
               storageService,
               `/USER/${userUpdate.data.profileImage}`
             );
+            // 이미지 불러오기
             let profileImageNow = await getDownloadURL(attachmentUrl);
-            sessionStorage.setItem("profileImage", profileImageNow);
+            // 불러온 이미지 이름 저장
+            sessionStorage.setItem(
+              "profileImage",
+              userUpdate.data.profileImage
+            );
+            // 불러온 이미지 경로 세션에 저장
+            sessionStorage.setItem("profileImagePath", profileImageNow);
           }
           sessionStorage.setItem("userEmail", userUpdate.data.userEmail);
           sessionStorage.setItem("userNickname", userUpdate.data.userNickname);
@@ -261,12 +270,6 @@ function EditInfo() {
                 placeholder="NICKNAME"
                 value={userNickname}
                 onChange={onChangeNickname}
-              />
-              <input
-                type="password"
-                placeholder="NOW PASSWORD"
-                value={inputPwNow}
-                onChange={onNowPassword}
               />
               <input
                 type="password"
