@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic+Coding:400');
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 
 /* :root {
   --button-color: #ffffff;
@@ -10,29 +13,29 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  
+
   background: var(--button-bg-color);
   color: var(--button-color);
-  
-  margin: 0;
+
+  margin: 3px;
   padding: 0.5rem 1rem;
-  
-  font-family: 'Noto Sans KR', sans-serif;
+
+  /* font-family: 'Noto Sans KR', sans-serif; */
   font-size: 1rem;
   font-weight: 400;
   text-align: center;
   text-decoration: none;
-  
+
   border: none;
   border-radius: 4px;
-  
+
   display: inline-block;
   width: auto;
-  
+
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  
+
   cursor: pointer;
-  
+
   transition: 0.5s;
 }
 
@@ -42,7 +45,7 @@
 }
 
 .adbutton.delete {
-  
+
   --button-bg-color: #9691db;
   --button-hover-bg-color: #b753a5;
 }
@@ -59,45 +62,65 @@
   background: var(--button-hover-bg-color);
   outline: 0;
 }
+
 .adbutton:disabled {
   opacity: 0.5;
 }
 
 
 #adminNav {
-    background-color: #C7C5F4;
-    position: fixed;
+  background-color: #C7C5F4;
+  position: fixed;
   top: 0;
   /* width: 100% */
   left: 0;
   right: 0;
-  
+
 }
-.adminBoardlist{
-    display: flex;
-   align-items: center;
-   justify-content: center;
-   min-height: 100vh;
-   
+
+.adminBoardlist {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+
 }
+
 .adminMemberlist {
-    display: flex;
-   align-items: center;
-   justify-content: center;
-   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
+
 .table_admemberlist {
- background-color: #ddddef;
-  
+  background-color: #ddddef;
+
   /* align-items: center;
   justify-content: center; */
 
 }
-.table_adboardlist{
+
+.table_adboardlist {
   background-color: #ddddef;
+  width: 1020px;
+  margin-bottom: 18rem;
 
 }
 
+.table_adboardlist td {
+  justify-content: center;
+  text-align: center;
+}
 
+.table_adboardlist th {
+  justify-content: center;
+  text-align: center;
+}
 
-
+.adTitle {
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  margin-bottom: 1rem;
+}

@@ -2,11 +2,19 @@
 import Table from 'react-bootstrap/Table';
 import './admin.css'
 import styled from "styled-components";
-
-
 import { useEffect, useState } from "react";
 import Adminheader from './Adminheader';
 import AdminApi from '../../api/AdminApi';
+
+
+const Adcontainer = styled.div`
+display: flex;
+align-items: center;
+justify-content: center;
+min-height: 100vh;
+background: linear-gradient(90deg, #ffe7e8, #8da4d0);
+font-family: 'Jua', sans-serif;
+`;
 
 function AdminMemberList() {
 
@@ -36,13 +44,7 @@ function AdminMemberList() {
     } else setDeleteadmem(false);
   };
 
-  const Adcontainer = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background: linear-gradient(90deg, #ffe7e8, #8da4d0);
-  `;
+
 
 
 
@@ -50,32 +52,33 @@ function AdminMemberList() {
     <>
       <Adminheader></Adminheader>
       <Adcontainer>
-        <Table striped bordered hover size="sm" className='table_admemberlist'>
-          <thead>
-            <tr>
+        <div>
+          <h1 className='adTitle'> 회원 리스트</h1>
+          <Table striped bordered hover size="sm" className='table_admemberlist'>
+            <thead>
+              <tr>
 
-              <th>이메일아이디</th>
-              <th>이름</th>
-              <th>전화번호</th>
-              <th>가입시간</th>
-              <th>관리</th>
-            </tr>
-          </thead>
-          <tbody>
-            {members &&
-              members.map((list) => (
-                <tr key={list.id}>
+                <th>이메일아이디</th>
+                <th>이름</th>
+                <th>전화번호</th>
+                <th>가입시간</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody>
+              {members &&
+                members.map((list) => (
+                  <tr key={list.id}>
 
-                  <td>{list.companyId}</td>
-                  <td>{list.name}</td>
-                  <td>{list.address}</td>
-                  <td>가입시간</td>
-                  <td><button className='adbutton delete'onClick={clickDelMem}>삭제</button>
-                  
-                  </td>
-                </tr>
-              ))}
-            {/* <tr>
+                    <td>{list.companyId}</td>
+                    <td>{list.name}</td>
+                    <td>{list.address}</td>
+                    <td>가입시간</td>
+                    <td><button className='adbutton delete' onClick={clickDelMem}>삭제</button>
+                    </td>
+                  </tr>
+                ))}
+              {/* <tr>
           <td>2</td>
           <td>Jacob</td>
           <td>Thornton</td>
@@ -86,10 +89,10 @@ function AdminMemberList() {
           <td colSpan={2}>Larry the Bird</td>
           <td>@twitter</td>
         </tr> */}
-          </tbody>
-        </Table>
+            </tbody>
+          </Table>
 
-
+        </div>
       </Adcontainer>
 
     </>

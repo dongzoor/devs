@@ -64,7 +64,8 @@ function OffcanvasExample() {
             </Navbar.Offcanvas>
           </Container>
         </Navbar>
-      ))}
+      ))
+      }
     </>
   );
 }

@@ -19,7 +19,7 @@ function Adminheader() {
               <NavDropdown.Item href="/AdminBoarList">
                 스터디게시판 관리
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">자유게시판 관리</NavDropdown.Item>
+              <NavDropdown.Item href="/AdminScBoarList">자유게시판 관리</NavDropdown.Item>
               {/* <NavDropdown.Divider />
               <NavDropdown.Item href="#action/3.4">
                 Separated link

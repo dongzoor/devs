@@ -11,9 +11,9 @@ import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 
 const Box = styled.div`
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
-  font-family: Raleway, Segoe UI;
+  font-family: Raleway, GmarketSansMedium;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
@@ -30,8 +30,7 @@ const Content = styled.div`
   align-items: center;
   justify-content: center;
   background-color: white;
-  width: 50vw;
-  min-height: 100vh;
+  width: 40vw;
   box-shadow: 0px 0px 24px #5c5696;
 `;
 
@@ -121,7 +120,7 @@ function Register() {
     setPhone(e.target.value);
   };
 
-  // 유효성 검사
+  // 비밀번호 일치여부
   const onChangeConPw = (e) => {
     const passwordCurrent = e.target.value;
     setInputConPw(passwordCurrent);
@@ -137,10 +136,6 @@ function Register() {
   // 회원가입
   const onClickReg = async () => {
     console.log("Click 회원가입");
-    // 가입 여부 우선 확인
-    // const memberCheck = await UserApi.userRegCheck(userid);
-    // console.log("가입 가능 여부 확인 : ", memberCheck.data);
-    // 가입 여부 확인 후 가입 절차 진행
 
     if (true) {
       let profileImage = null;
