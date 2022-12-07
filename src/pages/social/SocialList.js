@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import SocialApi from "../../api/SocialApi";
 import Photo from "./pic/짱난.gif";
 import InsertImg from "./pic/coffee.jpg";
-import Nav from "../../containers/common/Nav";
 import {
   IoEyeOutline,
   IoHeartOutline,
@@ -35,11 +34,12 @@ const Social = () => {
   }
   return (
     <ListBlock>
-      <Nav />
       <div className="subtitle">Dev' Social</div>
       <div className="inducer"> Share anything you want 👩🏻‍💻✨</div>
       <div className="parentBox">
-        <Link to="/social/write"><button className="postBt">P O S T</button></Link>
+        <Link to="/social/write">
+          <button className="postBt">P O S T</button>
+        </Link>
         {socialList &&
           socialList.map((social) => (
             <Link to={`/social/${social.socialId}`}>

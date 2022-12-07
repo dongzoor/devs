@@ -19,6 +19,7 @@ import SocialWrite from "./pages/social/SocialWrite";
 import StudyDetail from "./pages/study/StudyDetail";
 import StudyList from "./pages/study/StudyList";
 import StudyWrite from "./pages/study/StudyWrite";
+import SocialUpdate from "./pages/social/SocialUpdate";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
         <Route path="/Socket" element={<SocketTest />} />
         <Route path="/social" element={<SocialList />} />
         <Route exact path="/social/:socialId" element={<SocialDetail />} />
+        <Route exact path="/social/:socialId/update" element={<SocialUpdate />} />
         <Route path="/social/write" element={<SocialWrite />} />
         {/* <Login/>   */}
       </Routes >

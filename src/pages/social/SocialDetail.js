@@ -1,9 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 import Photo from "./pic/짱난.gif";
 import CommentList from "./components/CommentList";
 import CommentWriter from "./components/CommentWriter";
-import Nav from "../../containers/common/Nav";
 import { useState, useEffect } from "react";
 import SocialApi from "../../api/SocialApi";
 import { Link, useParams } from "react-router-dom";
@@ -14,7 +14,9 @@ import {
 } from "react-icons/io5";
 
 const SocialDetail = () => {
+  const navigate = useNavigate();
   const params = useParams().socialId; // router에서 지정한 :social 을 붙여줘야함!!
+
   const [socialDetail, setSocialDetail] = useState("");
   const [loading, setLoading] = useState(false);
   // web storage get/set
@@ -24,13 +26,19 @@ const SocialDetail = () => {
     socialDetail.socialId
   );
 
+  const onClickUpdate = async () => {
+    navigate(`/social/${params}/update`);
+  };
+
   const onClickDelete = async () => {
     const res = await SocialApi.socialDelete(params);
     console.log("삭제 버튼 클릭");
-    if (res.data.result === "OK") {
+    if (res.data.result === "SUCCESS") {
       console.log("삭제 완료 !");
+      alert("삭제 완료");
     } else {
       console.log("삭제 실패 ㅜ");
+      console.log(res.data.result);
     }
   };
   useEffect(() => {
@@ -53,7 +61,6 @@ const SocialDetail = () => {
   }
   return (
     <div>
-      <Nav />
       <DetailBox>
         <div className="subtitle">Board Detail Page</div>
         <div className="parentBox">
@@ -77,12 +84,15 @@ const SocialDetail = () => {
             <hr />
             <div className="content-text">{socialDetail.content}</div>
             <div className="hashtag-box">
+              <span className="hashtag">{socialDetail.tag}</span>
               <Link to="/social">
                 <button className="deleteBt" onClick={onClickDelete}>
                   삭제
                 </button>
               </Link>
-              <span className="hashtag">{socialDetail.tag}</span>
+              <button className="updateBt" onClick={onClickUpdate}>
+                수정
+              </button>
             </div>
             <hr />
             <CommentWriter />
