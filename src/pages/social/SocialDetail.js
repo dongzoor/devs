@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 import Photo from "./pic/짱난.gif";
 import CommentList from "./components/CommentList";
 import CommentWriter from "./components/CommentWriter";
-import Nav from "../../containers/common/Nav";
+import { useState, useEffect } from "react";
+import SocialApi from "../../api/SocialApi";
+import { Link, useParams } from "react-router-dom";
 import {
   IoEyeOutline,
   IoHeartOutline,
@@ -11,47 +14,90 @@ import {
 } from "react-icons/io5";
 
 const SocialDetail = () => {
+  const navigate = useNavigate();
+  const params = useParams().socialId; // router에서 지정한 :social 을 붙여줘야함!!
+
+  const [socialDetail, setSocialDetail] = useState("");
+  const [loading, setLoading] = useState(false);
+  // web storage get/set
+  const getUserId = window.sessionStorage.getItem("userId");
+  const setSocialId = window.sessionStorage.setItem(
+    "social_id",
+    socialDetail.socialId
+  );
+
+  const onClickUpdate = async () => {
+    navigate(`/social/${params}/update`);
+  };
+
+  const onClickDelete = async () => {
+    const res = await SocialApi.socialDelete(params);
+    console.log("삭제 버튼 클릭");
+    if (res.data.result === "SUCCESS") {
+      console.log("삭제 완료 !");
+      alert("삭제 완료");
+    } else {
+      console.log("삭제 실패 ㅜ");
+      console.log(res.data.result);
+    }
+  };
+  useEffect(() => {
+    const socialData = async () => {
+      setLoading(true);
+      try {
+        console.log(params);
+        const response = await SocialApi.socialDetail(params);
+        setSocialDetail(response.data);
+        console.log(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+      setLoading(false);
+    };
+    socialData();
+  }, []);
+  if (loading) {
+    return <DetailBox>조금만 기다려주세요...👩‍💻</DetailBox>;
+  }
   return (
     <div>
-           <Nav />
       <DetailBox>
         <div className="subtitle">Board Detail Page</div>
         <div className="parentBox">
-          <div className="content-title">
-            백엔드 신입으로 입사했는데, 프론트엔드 일을 시킵니다
-          </div>
-          <div className="post-info">
-            <div className="publisher-info">
-              <img className="photos" src={Photo} alt="프로필 사진"></img>
-              <span className="nickName">곰돌이사육사</span>
-              <span className="date">| 22.11.22</span>
+          <div key={socialDetail.socialId}>
+            <div className="content-title">{socialDetail.title}</div>
+            <div className="post-info">
+              <div className="publisher-info">
+                <img className="photos" src={Photo} alt="프로필 사진"></img>
+                <span className="nickName">{socialDetail.user}</span>
+                <span className="date">| {socialDetail.postDate}</span>
+              </div>
+              <div className="icon-box">
+                <IoEyeOutline />
+                <span className="count">{socialDetail.view}</span>
+                <IoHeartOutline />
+                <span className="count">{socialDetail.like}</span>
+                <IoChatboxOutline />
+                <span className="count">{socialDetail.comment}</span>
+              </div>
             </div>
-            <div className="icon-box">
-              <IoEyeOutline />
-              <span className="count">5</span>
-              <IoHeartOutline />
-              <span className="count">5</span>
-              <IoChatboxOutline />
-              <span className="count">5</span>
+            <hr />
+            <div className="content-text">{socialDetail.content}</div>
+            <div className="hashtag-box">
+              <span className="hashtag">{socialDetail.tag}</span>
+              <Link to="/social">
+                <button className="deleteBt" onClick={onClickDelete}>
+                  삭제
+                </button>
+              </Link>
+              <button className="updateBt" onClick={onClickUpdate}>
+                수정
+              </button>
             </div>
+            <hr />
+            <CommentWriter />
+            <CommentList />
           </div>
-          <hr />
-          <div className="content-text">
-            백엔드 직무로 지원해 합격하였는데, 입사하고 나니 갑자기 프론트엔드
-            일을 하라네요.... 저는 백엔드 개발자로 커리어를 쌓고 싶어요. 지금껏
-            프론트가 잘 맞지도 않았구요.. 신입으로 다시 취업을
-            준비할지(첫직장입니다), 프론트 업무와 토이프로젝트를 병행하며
-            백엔드로 이직을 노려볼지... 고민이 많네요... 선배님들의 조언을
-            부탁드립니다ㅠㅠ
-          </div>
-          <div className="hashtag-box">
-            <span className="hashtag">#이직</span>
-            <span className="hashtag">#신입</span>
-            <span className="hashtag">#백앤드</span>
-          </div>
-          <hr />
-          <CommentWriter />
-          <CommentList />
         </div>
       </DetailBox>
     </div>

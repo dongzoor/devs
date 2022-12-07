@@ -5,11 +5,11 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 const CommentList = () => {
-  const getBoardId = window.localStorage.getItem("fb_id");
-  const getUserId = window.localStorage.getItem("userId"); // 삭제시 현 유저아이디 대조용
+  const getSocialId = window.sessionStorage.getItem("social_id");
+  const getUserId = window.sessionStorage.getItem("userId"); // 삭제시 현 유저아이디 대조용
 
-  console.log("자유게시판 게시물 ID : " + getBoardId);
-  const [commentDetail, setCommentDetail] = useState("");
+  console.log("Social 게시물 ID : " + getSocialId);
+  const [commentList, setCommentList] = useState("");
   const [inputContent, setInputContent] = useState(""); // 댓글 내용 입력 받을 객체
   const [deleteComplete, setDeleteComplete] = useState(false);
 
@@ -17,8 +17,9 @@ const CommentList = () => {
   useEffect(() => {
     const CommentData = async () => {
       try {
-        const response = await SocialApi.commentList(getBoardId);
-        setCommentDetail(response.data);
+        // const response = await SocialApi.commentList(getSocialId);
+        const response = await SocialApi.commentList();
+        setCommentList(response.data);
       } catch (e) {
         console.log(e);
       }
@@ -49,26 +50,17 @@ const CommentList = () => {
         삭제
       </button> */}
       <div className="comment-box">
-        <div className="child-box">
-          <img className="photos" src={Photo} alt="프로필 사진"></img>
-          <span className="comment-writer">아이스킹</span>
-          <span className="comment-date">| 22.11.28</span>
-        </div>
-        <p className="comment-text">
-          이건 회사 생각도 궁금하네요. 회사에 면담 해보시는게 좋아보여요. 이야기
-          해보고 아니다 싶으면 이직이죠.
-        </p>
-      </div>
-      <div className="comment-box">
-        <div className="child-box">
-          <img className="photos" src={Photo} alt="프로필 사진"></img>
-          <span className="comment-writer">손흥민</span>
-          <span className="comment-date">| 22.11.29</span>
-        </div>
-        <p className="comment-text">
-          아 아무리 신입이래도 프론트만 시킨다면... 이직 준비 시작하시는게 좋을
-          것 같네요 ㅜ,,
-        </p>
+        {commentList &&
+          commentList.map((comment) => (
+            <div className="parent-box" key={comment.id}>
+              <div className="child-box">
+                <img className="photos" src={Photo} alt="프로필 사진"></img>
+                <span className="comment-writer">{comment.user}</span>
+                <span className="comment-date">| {comment.postDate}</span>
+              </div>
+              <p className="comment-text">{comment.content}</p>
+            </div>
+          ))}
       </div>
     </BOX>
   );

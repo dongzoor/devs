@@ -1,10 +1,23 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+<<<<<<< HEAD
 
 import AdminBoardList from "./pages/admin/AdminBoardList";
 import AdminMemberList from "./pages/admin/AdminMemberList";
+=======
+import AdminBoardList from "./pages/admin/AdminBoardList";
+import AdminMemberList from "./pages/admin/AdminMemberList";
+import CheckPwd from "./pages/editInfo/CheckPwd";
+import EditInfo from "./pages/editInfo/EditInfo";
+import FindInfo from "./pages/findInfo/FindInfo";
+import Nav from '../src/containers/common/Nav'
+// import Admin from "./pages/admin/Admin";
+import Login from "./pages/login/Login";
+import Profile from "./pages/profile/Profile";
+import Register from "./pages/register/Register";
+import SocketTest from "./pages/chat/SocketTest";
+>>>>>>> JY
 import AdminScBoardList from "./pages/admin/AdminScBoardList";
 import CheckPwd from "./pages/editInfo/CheckPwd";
 import EditInfo from "./pages/editInfo/EditInfo";
@@ -20,6 +33,7 @@ import SocketTest from "./pages/chat/SocketTest";
 import StudyDetail from "./pages/study/StudyDetail";
 import StudyList from "./pages/study/StudyList";
 import StudyWrite from "./pages/study/StudyWrite";
+import SocialUpdate from "./pages/social/SocialUpdate";
 
 function App() {
   return (
@@ -41,7 +55,8 @@ function App() {
         <Route exact path="/study/:studyId" element={<StudyDetail />} />
         <Route path="/Socket" element={<SocketTest />} />
         <Route path="/social" element={<SocialList />} />
-        <Route path="/social/detail" element={<SocialDetail />} />
+        <Route exact path="/social/:socialId" element={<SocialDetail />} />
+        <Route exact path="/social/:socialId/update" element={<SocialUpdate />} />
         <Route path="/social/write" element={<SocialWrite />} />
       </Routes>
       {/* <Admin></Admin> */}

@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import SocialApi from "../../api/SocialApi";
 
-const SocialWrite = () => {
-  const getUserId = "3";
-  // const getUserId = window.sessionStorage.getItem("userId");
+const SocialUpdate = () => {
+  const [loading, setLoading] = useState(false);
+  const params = useParams().socialId;
+  const getUserId = window.sessionStorage.getItem("userId");
+
+  const [socialDetail, setSocialDetail] = useState(""); // 기존 데이터 가져옴
 
   const [titleInput, setTitleInput] = useState("");
   const [contentInput, setContentInput] = useState("");
@@ -15,23 +19,45 @@ const SocialWrite = () => {
   const onChangeContent = (content) => setContentInput(content.target.value);
   const onChangeTag = (tag) => setTagInput(tag.target.value);
 
-  const onClickBt = async () => {
-    const res = await SocialApi.socialWrite(
-      getUserId,
+  // 수정 버튼 클릭 시
+  const onClickEdit = async () => {
+    const res = await SocialApi.socialUpdate(
+      params,
       titleInput,
       contentInput,
       tagInput
     );
-    console.log("제출 버튼 클릭");
+    console.log("수정 버튼 클릭");
     if (res.data === true) {
-      console.log("제출 완료 !!");
-      window.alert("Social 게시글 작성 완료 !");
+      console.log("수정 완료 !!");
+      alert("Social 게시글 수정 완료 !");
     } else {
-      console.log("제출 실패 ㅜㅜ");
+      console.log("수정 실패 ㅜㅜ");
       console.log(res.data);
     }
   };
 
+  useEffect(() => {
+    const socialData = async () => {
+      setLoading(true);
+      try {
+        console.log(params);
+        const response = await SocialApi.socialDetail(params);
+        // 기존 데이터를 useState 값에 다 따로 받아주기 !
+        setTitleInput(response.data.title);
+        setContentInput(response.data.content);
+        setTagInput(response.data.tag);
+        console.log(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+      setLoading(false);
+    };
+    socialData();
+  }, []);
+  if (loading) {
+    return <WriteBox>조금만 기다려주세요...👩‍💻</WriteBox>;
+  }
   return (
     <WriteBox>
       <div className="subtitle">Write anything you want 👩🏻‍💻✨</div>
@@ -39,7 +65,6 @@ const SocialWrite = () => {
         <label>제목</label>
         <textarea
           className="title"
-          placeholder="게시글의 제목을 입력해주세요."
           value={titleInput}
           onChange={onChangeTitle}
         ></textarea>
@@ -47,22 +72,16 @@ const SocialWrite = () => {
         <label>내용</label>
         <textarea
           className="content"
-          placeholder="개발, 비개발 무엇이든 작성해주세요 (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧^"
           value={contentInput}
           onChange={onChangeContent}
         />
         <hr />
         <label>#해시태그</label>
-        <textarea
-          className="hashTag"
-          placeholder="#이직 #프리랜서"
-          value={tagInput}
-          onChange={onChangeTag}
-        />
+        <textarea className="hashTag" value={tagInput} onChange={onChangeTag} />
         <input type="file" />
         <Link to="/social">
-          <button className="submitBt" onClick={onClickBt}>
-            제 출
+          <button className="editBt" onClick={onClickEdit}>
+            수 정
           </button>
         </Link>
       </div>
@@ -129,7 +148,7 @@ const WriteBox = styled.div`
   .hashTag-input {
     margin: 5px 20px;
   }
-  .submitBt {
+  .editBt {
     width: 25rem;
     height: 40px;
     margin: 10px auto;
@@ -147,4 +166,4 @@ const WriteBox = styled.div`
     }
   }
 `;
-export default SocialWrite;
+export default SocialUpdate;
