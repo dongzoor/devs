@@ -5,8 +5,9 @@ import Adminheader from './Adminheader';
 import { useEffect, useState } from 'react';
 import AdminApi from '../../api/AdminApi';
 import Loading from '../../utill/Loading';
-import { Link, useParams } from 'react-router-dom';
-import SocialApi from "../../api/SocialApi";
+import { Link, useNavigate, useParams } from 'react-router-dom';
+
+
 
 const Adcontainer = styled.div`
 display: flex;
@@ -21,29 +22,13 @@ font-family: 'Gowun Dodum', sans-serif;
 
 function AdminScBoardList() {
 
+    const navigate = useNavigate();
     const params = useParams().socialId;
-    const [adSocialboard, setAdSocialboard] = useState([]); // 스터디게시판 조회
+    const [adSocialboard, setAdSocialboard] = useState(); // 스터디게시판 조회
     const [loading, setLoading] = useState(false);
 
-    // 게시판 아이디별 조회
-    const onClickBoardList = (val) => {
-        console.log("게시판 이동 : " + val);
-        window.localStorage.setItem("Detail", val);
-        window.location.replace("/study/detail");
-    };
 
-    const onClickDelete = async () => {
-        const res = await SocialApi.socialDelete(params);
-        console.log("삭제 버튼 클릭");
-        if (res.data.result === "SUCCESS") {
-          console.log("삭제 완료 !");
-          alert("삭제 완료");
-        } else {
-          console.log("삭제 실패 ㅜ");
-          console.log(res.data.result);
-        }
-      };
-
+    
 
     useEffect(() => {
         const BoardData = async () => {
@@ -52,6 +37,8 @@ function AdminScBoardList() {
                 const response = await AdminApi.adSocialboardList()
                 setAdSocialboard(response.data);
                 console.log(response.data);
+               
+               
             } catch (e) {
                 console.log(e);
             }
@@ -59,13 +46,37 @@ function AdminScBoardList() {
         };
 
         BoardData();
-    }, []);
+    }, [loading]);
 
     if (loading) {
         return <Loading></Loading>;
     }
+    const onClickUpdate = async (e) => {
+        console.log("클릭 : ", e);
+        navigate(`/social/${e}/update`);
+      };
 
 
+    const onClickDelete = async (e) => {
+        const res = await AdminApi.socialAdDelete(e);
+        console.log("삭제 버튼 클릭");
+        
+        if (res.data.result === "SUCCESS") {
+            
+          console.log("삭제 완료!");
+          setLoading(true);
+        //   navigate("/AdminScBoarList")
+        //   alert("삭제 완료");
+        // window.location.reload();
+        } else {
+          console.log("삭제 실패 ");
+          console.log(res.data.result);
+          setLoading(false);
+        }
+
+      };
+
+    
 
 
     return (
@@ -88,17 +99,17 @@ function AdminScBoardList() {
                         <tbody>
                             {adSocialboard &&
                                 adSocialboard.map((list) => (
-                                    <tr key={list.social_id}>
+                                    <tr key={list.socialId}>
 
-                                        <td>{list.social_title}</td>
-                                        <td>{list.social_content.substr(0, 7)}...</td>
-                                        <td>{list.user_id}</td>
-                                        <td>{list.social_view}</td>
-                                        <td>{list.social_update}</td>
+                                        <td>{list.title}</td>
+                                        <td>{list.content.substr(0, 7)}...</td>
+                                        <td>{list.user}</td>
+                                        <td>{list.view}</td>
+                                        <td>{list.postDate}</td>
                                         <td>
-                                            <button className='adbutton delete' onClick={onClickDelete}>삭제</button>
-                                            <Link to={`/social/${list.social_id}`} style={{ textDecoration: "none" , color : "inherit"}}><button className='adbutton serch' >조회</button></Link>
-                                            <button className='adbutton edit'>수정</button>
+                                           <button className='adbutton delete' onClick={()=>onClickDelete(list.socialId)}>삭제</button>
+                                            <Link to={`/social/${list.socialId}`} style={{ textDecoration: "none" , color : "inherit"}}><button className='adbutton serch' >조회</button></Link>
+                                            <button className='adbutton edit'onClick={()=>onClickUpdate(list.socialId)}>수정</button>
                                             <button className='adbutton warning'>미정</button>
                                         </td>
                                     </tr>

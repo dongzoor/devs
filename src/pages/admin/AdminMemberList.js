@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import Adminheader from './Adminheader';
 import AdminApi from '../../api/AdminApi';
+import { Link } from 'react-router-dom';
+import UserApi from '../../api/UserApi';
 
 
 const Adcontainer = styled.div`
@@ -35,15 +37,15 @@ function AdminMemberList() {
     MemberData();
   }, []);
 
-  const clickDelMem = async () => {
+  const clickDelMem = async (e) => {
     console.log("멤버 삭제 버튼 클릭");
-    const response = await AdminApi.deleteAdmem();
+    const response = await AdminApi.deleteAdmem(e);
     console.log(response.data.result);
     if (response.data.result === "OK") {
       setDeleteadmem(true);
     } else setDeleteadmem(false);
   };
-
+  
 
 
 
@@ -59,6 +61,7 @@ function AdminMemberList() {
               <tr>
 
                 <th>이메일아이디</th>
+                <th>비밀번호</th>
                 <th>이름</th>
                 <th>전화번호</th>
                 <th>가입시간</th>
@@ -68,13 +71,17 @@ function AdminMemberList() {
             <tbody>
               {members &&
                 members.map((list) => (
-                  <tr key={list.id}>
+                  <tr key={list.userId}>
 
-                    <td>{list.user_email}</td>
-                    <td>{list.user_nickname}</td>
+                    <td>{list.userEmail}</td>
+                    <td>{list.password}</td>
+                    <td>{list.userNickname}</td>
                     <td>{list.phone}</td>
-                    <td>{list.create_date}</td>
+                    <td>{list.createDate}</td>
                     <td><button className='adbutton delete' onClick={clickDelMem}>삭제</button>
+                    <Link to={`/study/${list.id}`} style={{ textDecoration: "none" , color : "inherit"}}><button className='adbutton serch' >조회</button></Link>
+                    <Link to={`/AdminMember/${list.userId}`} style={{ textDecoration: "none" , color : "inherit"}} ><button className='adbutton edit'>수정</button> </Link>
+                      <button className='adbutton delete'>미정</button>
                     </td>
                   </tr>
                 ))}

@@ -1,9 +1,12 @@
 import axios from "axios";
 
+
 const HEADER = "application/json";
 const WN_DOMAIN = "http://localhost:8211/";
 
 const AdminApi = {
+
+
   // 어드민이 멤버 조회 api
   admemberList: async function () {
     //   const admemCmd = {
@@ -23,9 +26,34 @@ const AdminApi = {
   adSocialboardList: async function () {
     return await axios.get(WN_DOMAIN + "adSocialList", HEADER);
   },
+// 어드민이 소셜게시판 별개 조회
+  socialDetail: async function (social_Id) {
+    return await axios.get(WN_DOMAIN + "social/" + social_Id, HEADER);
+  },
 
-  socialDetail: async function (socialId) {
-    return await axios.get(WN_DOMAIN + "social/" + socialId, HEADER);
+// 어드민이 소셜게시판 삭제
+  socialAdDelete: async function (socialId) {
+    console.log("소셜아이디 : " + socialId);
+    return await axios.delete(WN_DOMAIN + "adSocialList/" + socialId, HEADER);  
+  },
+  // socialAdDelete: async function (socialId) {
+  //   console.log("소셜아이디 : " + socialId);
+  //   return await axios.delete(WN_DOMAIN + "SocialList/" + socialId, HEADER);  
+  // },
+
+
+  socialUpdate: async function (socialId, title, content, tag, image) {
+    const updateObj = {
+      title: title,
+      content: content,
+      tag: tag,
+      // image: image, // firebase 성공하면
+    };
+    return await axios.put(
+      WN_DOMAIN + "adSocialList/" + socialId + "/update",
+      updateObj,
+      HEADER
+    );
   },
 
 
@@ -35,12 +63,10 @@ const AdminApi = {
       WN_DOMAIN + "Delete", HEADER);
   },
 
-  deleteBoard: async function (study_id) {
-    const deletStudyId = {
-      study_id : study_id,
-    };
+  //스터디 게시판 삭제
+  deleteBoard: async function (study_id) {  
     return await axios.delete(
-      WN_DOMAIN + "deleteAdStudy/{studyId}",deletStudyId , HEADER);
+      WN_DOMAIN + "deleteAdStudy/" + study_id , HEADER);
   }
 
 

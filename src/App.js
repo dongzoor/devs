@@ -20,6 +20,7 @@ import StudyDetail from "./pages/study/StudyDetail";
 import StudyList from "./pages/study/StudyList";
 import StudyWrite from "./pages/study/StudyWrite";
 import SocialUpdate from "./pages/social/SocialUpdate";
+import AdminEditUser from "./pages/admin/AdminEditUser";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/AdminScBoarList" element={<AdminScBoardList />} />
         <Route path="/AdminBoarList" element={<AdminBoardList />} />
         <Route path="/AdminMemberList" element={<AdminMemberList />} />
+        <Route exact path="/AdminMember/:userId" element={<AdminEditUser />} />
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />

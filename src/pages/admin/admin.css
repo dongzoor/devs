@@ -101,8 +101,8 @@
 .table_admemberlist {
   background-color: #ddddef;
 
-  /* align-items: center;
-  justify-content: center; */
+  width: 1020px;
+  margin-bottom: 18rem;
 
 }
 
@@ -111,6 +111,15 @@
   width: 1020px;
   margin-bottom: 18rem;
 
+}
+.table_admemberlist td{
+  justify-content: center;
+  text-align: center;
+}
+
+.table_admemberlist th{
+  justify-content: center;
+  text-align: center;
 }
 
 .table_adboardlist td {

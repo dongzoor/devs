@@ -5,7 +5,7 @@ import Adminheader from './Adminheader';
 import { useEffect, useState } from 'react';
 import AdminApi from '../../api/AdminApi';
 import Loading from '../../utill/Loading';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const Adcontainer = styled.div`
 display: flex;
@@ -25,19 +25,19 @@ justify-content: center;
 
 function AdminBoardList() {
 
+ 
+  const params = useParams().studyId;
   const [adstudyboard, setAdstudyboard] = useState([]); // 스터디게시판 조회
   const [loading, setLoading] = useState(false);
   const [deleteAdBoard, setDeleteAdBoard] = useState(false); //멤버삭제
 
-  // 게시판 아이디별 조회
-  const onClickBoardList = (val) => {
-    console.log("게시판 이동 : " + val);
-    window.localStorage.setItem("Detail", val);
-    window.location.replace("/study/detail");
-  };
+ 
 
+
+
+  // 스터디 게시판 삭제
   const clickDelBoard = async () => {
-    console.log("멤버 삭제 버튼 클릭");
+    console.log("삭제 버튼 클릭");
     const response = await AdminApi.deleteBoard();
     console.log(response.data.result);
     if (response.data.result === "OK") {
