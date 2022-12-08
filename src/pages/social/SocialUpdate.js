@@ -1,10 +1,20 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { storageService } from "../../lib/api/fbase";
+import { v4 as uuidv4 } from "uuid";
 import SocialApi from "../../api/SocialApi";
+import {
+  ref,
+  uploadString,
+  getDownloadURL,
+  deleteObject,
+} from "@firebase/storage";
 
 const SocialUpdate = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const params = useParams().socialId;
   const getUserId = window.sessionStorage.getItem("userId");
@@ -14,25 +24,61 @@ const SocialUpdate = () => {
   const [titleInput, setTitleInput] = useState("");
   const [contentInput, setContentInput] = useState("");
   const [tagInput, setTagInput] = useState("");
+  const [attachment, setAttachment] = useState("");
+
+  // 사진을 안올릴 경우 들어갈 수 있도록 빈 값 지정
+  let attachmentUrl = " ";
 
   const onChangeTitle = (title) => setTitleInput(title.target.value);
   const onChangeContent = (content) => setContentInput(content.target.value);
   const onChangeTag = (tag) => setTagInput(tag.target.value);
 
+  // 첨부이미지 firebase 저장&미리보기
+  const onFileChange = (e) => {
+    const {
+      target: { files },
+    } = e;
+    const theFile = files[0];
+    console.log(theFile);
+
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setAttachment(result);
+    };
+    reader.readAsDataURL(theFile);
+  };
+
   // 수정 버튼 클릭 시
   const onClickEdit = async () => {
+    if (attachment !== "") {
+      // 파일 저장 경로 지정
+      const attachmentRef = ref(storageService, `/SOCIAL/${uuidv4()}`);
+      // 파일 storage에 저장
+      const response = await uploadString(
+        attachmentRef,
+        attachment,
+        "data_url"
+      );
+      attachmentUrl = await getDownloadURL(response.ref);
+      console.log("이미지 주소 : " + attachmentUrl);
+    }
+
     const res = await SocialApi.socialUpdate(
       params,
       titleInput,
       contentInput,
-      tagInput
+      tagInput,
+      attachmentUrl
     );
     console.log("수정 버튼 클릭");
     if (res.data === true) {
-      console.log("수정 완료 !!");
+      navigate(`/social/${params}/update`);
       alert("Social 게시글 수정 완료 !");
     } else {
-      console.log("수정 실패 ㅜㅜ");
+      alert("Social 게시글 수정 실패 ");
       console.log(res.data);
     }
   };
@@ -47,6 +93,7 @@ const SocialUpdate = () => {
         setTitleInput(response.data.title);
         setContentInput(response.data.content);
         setTagInput(response.data.tag);
+        setAttachment(response.data.image);
         console.log(response.data);
       } catch (e) {
         console.log(e);
@@ -78,7 +125,12 @@ const SocialUpdate = () => {
         <hr />
         <label>#해시태그</label>
         <textarea className="hashTag" value={tagInput} onChange={onChangeTag} />
-        <input type="file" />
+        <input type="file" accept="image/*" onChange={onFileChange} />
+        {attachment && (
+          <div>
+            <img src={attachment} width="50px" height="50px" alt=""></img>
+          </div>
+        )}
         <Link to="/social">
           <button className="editBt" onClick={onClickEdit}>
             수 정

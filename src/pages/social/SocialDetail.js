@@ -29,12 +29,13 @@ const SocialDetail = () => {
   const onClickUpdate = async () => {
     navigate(`/social/${params}/update`);
   };
-
+  // 게시글 삭제
   const onClickDelete = async () => {
     const res = await SocialApi.socialDelete(params);
     console.log("삭제 버튼 클릭");
     if (res.data.result === "SUCCESS") {
       console.log("삭제 완료 !");
+      navigate(`/social`);
       alert("삭제 완료");
     } else {
       console.log("삭제 실패 ㅜ");

@@ -16,7 +16,6 @@ import AdminScBoardList from "./pages/admin/AdminScBoardList";
 import SocialDetail from "./pages/social/SocialDetail";
 import SocialList from "./pages/social/SocialList";
 import SocialWrite from "./pages/social/SocialWrite";
-import SocialWriteCopy from "./pages/social/SocialWriteCopy";
 import StudyDetail from "./pages/study/StudyDetail";
 import StudyList from "./pages/study/StudyList";
 import StudyWrite from "./pages/study/StudyWrite";
@@ -43,8 +42,7 @@ function App() {
         <Route path="/social" element={<SocialList />} />
         <Route exact path="/social/:socialId" element={<SocialDetail />} />
         <Route exact path="/social/:socialId/update" element={<SocialUpdate />} />
-        {/* <Route path="/social/write" element={<SocialWrite />} /> */}
-        <Route path="/social/write" element={<SocialWriteCopy />} />
+        <Route path="/social/write" element={<SocialWrite />} />
         {/* <Login/>   */}
       </Routes >
       {/* <Admin></Admin> */}

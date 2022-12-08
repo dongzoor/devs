@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -13,26 +14,28 @@ import {
 
 const SocialWrite = () => {
   const getUserId = "3";
+  const navigate = useNavigate();
   // const userNickname = sessionStorage.getItem("userNickname");
   // const getUserId = window.sessionStorage.getItem("userId");
   const [titleInput, setTitleInput] = useState("");
   const [contentInput, setContentInput] = useState("");
   const [tagInput, setTagInput] = useState("");
-  const { attachment, setAttachment } = useState();
-
-  let attachmentUrl = null;
+  const [attachment, setAttachment] = useState("");
 
   const onChangeTitle = (title) => setTitleInput(title.target.value);
   const onChangeContent = (content) => setContentInput(content.target.value);
   const onChangeTag = (tag) => setTagInput(tag.target.value);
-  
-  // 프로필 이미지 firebase 저장 및 미리 보여주기
+
+  // 사진을 안올릴 경우 들어갈 수 있도록 빈 값 지정
+  let attachmentUrl = " ";
+  // 첨부이미지 firebase 저장&미리보기
   const onFileChange = (e) => {
     const {
       target: { files },
     } = e;
     const theFile = files[0];
     console.log(theFile);
+
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
       const {
@@ -43,20 +46,21 @@ const SocialWrite = () => {
     reader.readAsDataURL(theFile);
   };
 
-  const onClickSubmit = async (e) => {
-    e.preventDefault();
+  const onClickSubmit = async () => {
+    let attachmentUrl = null;
 
     if (attachment !== "") {
+      // 파일 저장 경로 지정
       const attachmentRef = ref(storageService, `/SOCIAL/${uuidv4()}`);
+      // 파일 storage에 저장
       const response = await uploadString(
         attachmentRef,
         attachment,
         "data_url"
       );
       attachmentUrl = await getDownloadURL(response.ref);
-      console.log(attachmentUrl);
+      console.log("이미지 주소 : " + attachmentUrl);
     }
-
     const res = await SocialApi.socialWrite(
       getUserId,
       titleInput,
@@ -67,9 +71,21 @@ const SocialWrite = () => {
     console.log("제출 버튼 클릭");
     if (res.data === true) {
       window.alert("Social 게시글 작성 완료 !");
+      navigate(`/social/`);
     } else {
       window.alert("Social 게시글 작성 실패 ㅜ");
       console.log(res.data);
+    }
+  };
+  // 첨부사진 삭제 코드
+  const onDelete = async () => {
+    const urlRef = ref(storageService, attachmentUrl);
+    try {
+      if (attachmentUrl !== "") {
+        await deleteObject(urlRef);
+      }
+    } catch (error) {
+      window.alert("이미지를 삭제하는 데 실패했습니다!");
     }
   };
 
@@ -100,14 +116,10 @@ const SocialWrite = () => {
           value={tagInput}
           onChange={onChangeTag}
         />
-        <input type="file" accept="image/*" onChange={onFileChange}/>
+        <input type="file" accept="image/*" onChange={onFileChange} />
         {attachment && (
           <div>
-            <img
-              src={attachment}
-              width="50px"
-              height="50px"
-            ></img>
+            <img src={attachment} width="50px" height="50px" alt=""></img>
           </div>
         )}
         <Link to="/social">

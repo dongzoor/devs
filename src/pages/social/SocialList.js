@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import SocialApi from "../../api/SocialApi";
 import Photo from "./pic/짱난.gif";
-import InsertImg from "./pic/coffee.jpg";
 import {
   IoEyeOutline,
   IoHeartOutline,
@@ -29,6 +28,7 @@ const Social = () => {
     };
     socialData();
   }, []);
+
   if (loading) {
     return <ListBlock>조금만 기다려주세요...👩‍💻</ListBlock>;
   }
@@ -45,11 +45,13 @@ const Social = () => {
             <Link to={`/social/${social.socialId}`}>
               <div className="childBox" key={social.socialId}>
                 <div className="flex-box2">
+                  {/* {`${social.image}` !== null && ( */}
                   <img
                     className="insertImg"
-                    src={InsertImg}
+                    src={social.image}
                     alt="첨부사진"
-                  ></img>
+                  />
+                  {/* )} */}
                 </div>
                 <div className="flex-box1">
                   <div className="content-title">{social.title}</div>
