@@ -5,6 +5,7 @@ import Adminheader from './Adminheader';
 import { useEffect, useState } from 'react';
 import AdminApi from '../../api/AdminApi';
 import Loading from '../../utill/Loading';
+import { Link } from 'react-router-dom';
 
 const Adcontainer = styled.div`
 display: flex;
@@ -26,12 +27,22 @@ function AdminBoardList() {
 
   const [adstudyboard, setAdstudyboard] = useState([]); // 스터디게시판 조회
   const [loading, setLoading] = useState(false);
+  const [deleteAdBoard, setDeleteAdBoard] = useState(false); //멤버삭제
 
   // 게시판 아이디별 조회
   const onClickBoardList = (val) => {
     console.log("게시판 이동 : " + val);
     window.localStorage.setItem("Detail", val);
     window.location.replace("/study/detail");
+  };
+
+  const clickDelBoard = async () => {
+    console.log("멤버 삭제 버튼 클릭");
+    const response = await AdminApi.deleteBoard();
+    console.log(response.data.result);
+    if (response.data.result === "OK") {
+      setDeleteAdBoard(true);
+    } else setDeleteAdBoard(false);
   };
 
 
@@ -87,9 +98,9 @@ function AdminBoardList() {
                     <td>{list.updateTime}</td>
                     <td>{list.coordinate}</td>
                     <td>
-                      <button className='adbutton delete'>삭제</button>
-                      <button className='adbutton delete' onClick={() => onClickBoardList(list.id)} >조회</button>
-                      <button className='adbutton delete'>수정</button>
+                      <button className='adbutton delete' onClick={clickDelBoard} >삭제</button>
+                      <Link to={`/study/${list.id}`} style={{ textDecoration: "none" , color : "inherit"}}><button className='adbutton serch' >조회</button></Link>
+                      <button className='adbutton edit'>수정</button>
                       <button className='adbutton delete'>미정</button>
                     </td>
                   </tr>

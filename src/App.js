@@ -1,11 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-<<<<<<< HEAD
-
-import AdminBoardList from "./pages/admin/AdminBoardList";
-import AdminMemberList from "./pages/admin/AdminMemberList";
-=======
 import AdminBoardList from "./pages/admin/AdminBoardList";
 import AdminMemberList from "./pages/admin/AdminMemberList";
 import CheckPwd from "./pages/editInfo/CheckPwd";
@@ -17,19 +12,10 @@ import Login from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
 import Register from "./pages/register/Register";
 import SocketTest from "./pages/chat/SocketTest";
->>>>>>> JY
 import AdminScBoardList from "./pages/admin/AdminScBoardList";
-import CheckPwd from "./pages/editInfo/CheckPwd";
-import EditInfo from "./pages/editInfo/EditInfo";
-import FindInfo from "./pages/findInfo/FindInfo";
-import Login from "./pages/login/Login";
-import Nav from "../src/containers/common/Nav";
-import Profile from "./pages/profile/Profile";
-import Register from "./pages/register/Register";
 import SocialDetail from "./pages/social/SocialDetail";
 import SocialList from "./pages/social/SocialList";
 import SocialWrite from "./pages/social/SocialWrite";
-import SocketTest from "./pages/chat/SocketTest";
 import StudyDetail from "./pages/study/StudyDetail";
 import StudyList from "./pages/study/StudyList";
 import StudyWrite from "./pages/study/StudyWrite";

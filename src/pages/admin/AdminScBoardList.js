@@ -5,7 +5,8 @@ import Adminheader from './Adminheader';
 import { useEffect, useState } from 'react';
 import AdminApi from '../../api/AdminApi';
 import Loading from '../../utill/Loading';
-
+import { Link, useParams } from 'react-router-dom';
+import SocialApi from "../../api/SocialApi";
 
 const Adcontainer = styled.div`
 display: flex;
@@ -13,20 +14,15 @@ align-items: center;
 justify-content: center;
 min-height: 100vh;
 background: linear-gradient(90deg, #ffe7e8, #8da4d0);
-font-family: 'Noto Sans KR', sans-serif;
+font-family: 'Gowun Dodum', sans-serif;
 `;
 
-const AdTable = styled.div`
-display: flex;
-align-items: center;
-justify-content: center;
-
-`;
 
 
 function AdminScBoardList() {
 
-    const [adstudyboard, setAdstudyboard] = useState([]); // 스터디게시판 조회
+    const params = useParams().socialId;
+    const [adSocialboard, setAdSocialboard] = useState([]); // 스터디게시판 조회
     const [loading, setLoading] = useState(false);
 
     // 게시판 아이디별 조회
@@ -36,13 +32,25 @@ function AdminScBoardList() {
         window.location.replace("/study/detail");
     };
 
+    const onClickDelete = async () => {
+        const res = await SocialApi.socialDelete(params);
+        console.log("삭제 버튼 클릭");
+        if (res.data.result === "SUCCESS") {
+          console.log("삭제 완료 !");
+          alert("삭제 완료");
+        } else {
+          console.log("삭제 실패 ㅜ");
+          console.log(res.data.result);
+        }
+      };
+
 
     useEffect(() => {
         const BoardData = async () => {
             setLoading(true);
             try {
-                const response = await AdminApi.adstudyboardList()
-                setAdstudyboard(response.data);
+                const response = await AdminApi.adSocialboardList()
+                setAdSocialboard(response.data);
                 console.log(response.data);
             } catch (e) {
                 console.log(e);
@@ -74,26 +82,24 @@ function AdminScBoardList() {
                                 <th>작성자</th>
                                 <th>조회수</th>
                                 <th>생성시간</th>
-                                <th>모집현황</th>
                                 <th>관리</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {adstudyboard &&
-                                adstudyboard.map((list) => (
-                                    <tr key={list.id}>
+                            {adSocialboard &&
+                                adSocialboard.map((list) => (
+                                    <tr key={list.social_id}>
 
-                                        <td>{list.title}</td>
-                                        <td>{list.content.substr(0, 7)}...</td>
-                                        <td>{list.writer}</td>
-                                        <td>{list.cnt}</td>
-                                        <td>{list.updateTime}</td>
-                                        <td>{list.coordinate}</td>
+                                        <td>{list.social_title}</td>
+                                        <td>{list.social_content.substr(0, 7)}...</td>
+                                        <td>{list.user_id}</td>
+                                        <td>{list.social_view}</td>
+                                        <td>{list.social_update}</td>
                                         <td>
-                                            <button className='adbutton delete'>삭제</button>
-                                            <button className='adbutton delete' onClick={() => onClickBoardList(list.id)} >조회</button>
-                                            <button className='adbutton delete'>수정</button>
-                                            <button className='adbutton delete'>미정</button>
+                                            <button className='adbutton delete' onClick={onClickDelete}>삭제</button>
+                                            <Link to={`/social/${list.social_id}`} style={{ textDecoration: "none" , color : "inherit"}}><button className='adbutton serch' >조회</button></Link>
+                                            <button className='adbutton edit'>수정</button>
+                                            <button className='adbutton warning'>미정</button>
                                         </td>
                                     </tr>
                                 ))}

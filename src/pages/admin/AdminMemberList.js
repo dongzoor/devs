@@ -13,7 +13,7 @@ align-items: center;
 justify-content: center;
 min-height: 100vh;
 background: linear-gradient(90deg, #ffe7e8, #8da4d0);
-font-family: 'Jua', sans-serif;
+font-family: 'Gowun Dodum', sans-serif;
 `;
 
 function AdminMemberList() {
@@ -70,10 +70,10 @@ function AdminMemberList() {
                 members.map((list) => (
                   <tr key={list.id}>
 
-                    <td>{list.companyId}</td>
-                    <td>{list.name}</td>
-                    <td>{list.address}</td>
-                    <td>가입시간</td>
+                    <td>{list.user_email}</td>
+                    <td>{list.user_nickname}</td>
+                    <td>{list.phone}</td>
+                    <td>{list.create_date}</td>
                     <td><button className='adbutton delete' onClick={clickDelMem}>삭제</button>
                     </td>
                   </tr>

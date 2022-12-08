@@ -39,22 +39,26 @@
   transition: 0.5s;
 }
 
-.adbutton.success {
-  --button-bg-color: #28a745;
-  --button-hover-bg-color: #218838;
+.adbutton.serch {
+  --button-bg-color: #9691db;
+  --button-hover-bg-color: #5dd076;
 }
 
 .adbutton.delete {
 
   --button-bg-color: #9691db;
-  --button-hover-bg-color: #b753a5;
+  --button-hover-bg-color: #d662c1;
 }
 
-.adbutton.warning {
-  --button-color: #212529;
-  --button-bg-color: #ffc107;
-  --button-hover-bg-color: #e0a800;
+.adbutton.edit {
+  --button-bg-color: #9691db;
+  --button-hover-bg-color: #ecc85d;
 }
+.adbutton.warning {
+  --button-bg-color: #9691db;
+  --button-hover-bg-color: #5aa6e9;
+}
+
 
 .adbutton:active,
 .adbutton:hover,
@@ -75,6 +79,7 @@
   /* width: 100% */
   left: 0;
   right: 0;
+  font-family: 'Gowun Dodum', sans-serif;
 
 }
 

@@ -56,6 +56,7 @@ const SocialDetail = () => {
     };
     socialData();
   }, []);
+  
   if (loading) {
     return <DetailBox>조금만 기다려주세요...👩‍💻</DetailBox>;
   }
