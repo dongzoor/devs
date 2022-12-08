@@ -7,9 +7,11 @@ import { v4 as uuidv4 } from "uuid";
 import {
   ref,
   uploadString,
+  uploadBytes,
   getDownloadURL,
   deleteObject,
 } from "@firebase/storage";
+import { setDefaultEventParameters } from "firebase/analytics";
 
 const SocialWrite = () => {
   const getUserId = "3";
@@ -18,51 +20,44 @@ const SocialWrite = () => {
   const [titleInput, setTitleInput] = useState("");
   const [contentInput, setContentInput] = useState("");
   const [tagInput, setTagInput] = useState("");
-  const { attachment, setAttachment } = useState();
-
-  let attachmentUrl = null;
+  // 첨부 이미지
+  const { image, setImage } = useState(null);
+  const [url, setUrl] = useState(null);
 
   const onChangeTitle = (title) => setTitleInput(title.target.value);
   const onChangeContent = (content) => setContentInput(content.target.value);
   const onChangeTag = (tag) => setTagInput(tag.target.value);
-  
-  // 프로필 이미지 firebase 저장 및 미리 보여주기
-  const onFileChange = (e) => {
-    const {
-      target: { files },
-    } = e;
-    const theFile = files[0];
-    console.log(theFile);
-    const reader = new FileReader();
-    reader.onloadend = (finishedEvent) => {
-      const {
-        currentTarget: { result },
-      } = finishedEvent;
-      setAttachment(result);
-    };
-    reader.readAsDataURL(theFile);
-  };
 
-  const onClickSubmit = async (e) => {
-    e.preventDefault();
-
-    if (attachment !== "") {
-      const attachmentRef = ref(storageService, `/SOCIAL/${uuidv4()}`);
-      const response = await uploadString(
-        attachmentRef,
-        attachment,
-        "data_url"
-      );
-      attachmentUrl = await getDownloadURL(response.ref);
-      console.log(attachmentUrl);
+  // 이미지 변경시 함수
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0]);
     }
+  };
+  console.log(image);
+  // 제출 시 함수
+  const onClickSubmit = async (e) => {
+    const imageRef = ref(storageService, "image");
+    uploadBytes(imageRef, image)
+      .then(() => {
+        getDownloadURL(imageRef)
+          .then((url) => {
+            setUrl(url);
+          })
+          .catch((error) => {
+            console.log(error.message, "이미지 올리는 부분에서 에러났다 !!!");
+          });
+        setImage(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
 
     const res = await SocialApi.socialWrite(
       getUserId,
       titleInput,
       contentInput,
-      tagInput,
-      attachmentUrl
+      tagInput
     );
     console.log("제출 버튼 클릭");
     if (res.data === true) {
@@ -100,16 +95,8 @@ const SocialWrite = () => {
           value={tagInput}
           onChange={onChangeTag}
         />
-        <input type="file" accept="image/*" onChange={onFileChange}/>
-        {attachment && (
-          <div>
-            <img
-              src={attachment}
-              width="50px"
-              height="50px"
-            ></img>
-          </div>
-        )}
+        <input type="file" accept="image/*" onChange={handleImageChange} />
+        <img src={url} width="50px" height="50px"></img>
         <Link to="/social">
           <button className="submitBt" onClick={onClickSubmit}>
             제 출

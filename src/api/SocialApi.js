@@ -19,7 +19,7 @@ const SocialApi = {
       title: title,
       content: content,
       tag: tag,
-      // image: image, // firebase 성공하면
+      image: image,
     };
     return await axios.post(DOMAIN + "social/write", writeObj, HEADER);
   },
@@ -29,7 +29,7 @@ const SocialApi = {
       title: title,
       content: content,
       tag: tag,
-      // image: image, // firebase 성공하면
+      image: image,
     };
     return await axios.put(
       DOMAIN + "social/" + socialId + "/update",
