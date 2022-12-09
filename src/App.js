@@ -21,6 +21,7 @@ import StudyList from "./pages/study/StudyList";
 import StudyWrite from "./pages/study/StudyWrite";
 import SocialUpdate from "./pages/social/SocialUpdate";
 import AdminEditUser from "./pages/admin/AdminEditUser";
+import AdminLogin from "./pages/admin/AdminLogin";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
       <Nav />
       <Routes>
         {/* <Route path="/Admin" element={<Admin />} /> */}
+        <Route path="/AdminLogin" element={<AdminLogin />} />
         <Route path="/AdminScBoarList" element={<AdminScBoardList />} />
         <Route path="/AdminBoarList" element={<AdminBoardList />} />
         <Route path="/AdminMemberList" element={<AdminMemberList />} />

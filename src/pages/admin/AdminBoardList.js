@@ -36,13 +36,17 @@ function AdminBoardList() {
 
 
   // 스터디 게시판 삭제
-  const clickDelBoard = async () => {
+  const clickDelBoard = async (e) => {
     console.log("삭제 버튼 클릭");
-    const response = await AdminApi.deleteBoard();
-    console.log(response.data.result);
-    if (response.data.result === "OK") {
-      setDeleteAdBoard(true);
-    } else setDeleteAdBoard(false);
+    const response = await AdminApi.deleteStudyBoard(e);
+    setLoading(true);
+    setDeleteAdBoard(true)
+    // console.log(response.data);
+    // if (response.data) {
+    //   setLoading(true);
+    //   setDeleteAdBoard(true);
+    // } else setDeleteAdBoard(false);
+    // setLoading(false);
   };
 
 
@@ -60,7 +64,7 @@ function AdminBoardList() {
     };
 
     BoardData();
-  }, []);
+  }, [loading]);
 
   if (loading) {
     return <Loading></Loading>;
@@ -98,7 +102,7 @@ function AdminBoardList() {
                     <td>{list.updateTime}</td>
                     <td>{list.coordinate}</td>
                     <td>
-                      <button className='adbutton delete' onClick={clickDelBoard} >삭제</button>
+                      <button className='adbutton delete' onClick={()=>clickDelBoard(list.id)} >삭제</button>
                       <Link to={`/study/${list.id}`} style={{ textDecoration: "none" , color : "inherit"}}><button className='adbutton serch' >조회</button></Link>
                       <button className='adbutton edit'>수정</button>
                       <button className='adbutton delete'>미정</button>

@@ -16,6 +16,7 @@ justify-content: center;
 min-height: 100vh;
 background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 font-family: 'Gowun Dodum', sans-serif;
+
 `;
 
 function AdminMemberList() {
@@ -79,7 +80,7 @@ function AdminMemberList() {
                     <td>{list.phone}</td>
                     <td>{list.createDate}</td>
                     <td><button className='adbutton delete' onClick={clickDelMem}>삭제</button>
-                    <Link to={`/study/${list.id}`} style={{ textDecoration: "none" , color : "inherit"}}><button className='adbutton serch' >조회</button></Link>
+                    <Link to={'/Profile'} style={{ textDecoration: "none" , color : "inherit"}}><button className='adbutton serch' >조회</button></Link>
                     <Link to={`/AdminMember/${list.userId}`} style={{ textDecoration: "none" , color : "inherit"}} ><button className='adbutton edit'>수정</button> </Link>
                       <button className='adbutton delete'>미정</button>
                     </td>

@@ -8,12 +8,13 @@ import {
   uploadString,
 } from "@firebase/storage";
 
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
 import UserApi from "../../api/UserApi";
 import { storageService } from "../../lib/api/fbase";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
+import AdminApi from "../../api/AdminApi";
 
 const Box = styled.div`
   height: auto;
@@ -45,7 +46,9 @@ const Content = styled.div`
 `;
 
 function AdminEditUser() {
-  const [userEmail, setUserEmail] = useState("");
+
+  const params = useParams().userId;
+  const [userEmail, setUserEmail] = useState([]);
   const [userNickname, setUserNickname] = useState("");
   const [password, setPassword] = useState(""); // 새로운 비밀번호
   const [inputConPw, setInputConPw] = useState(""); // 비밀번호 확인
@@ -63,18 +66,31 @@ function AdminEditUser() {
   const [conPwMessage, setConPwMessage] = useState("");
 
   // 초기값 설정
+  
+
+
   useEffect(() => {
-    const originEmail = sessionStorage.getItem("userEmail");
-    const originNickname = sessionStorage.getItem("userNickname");
-    const originPhone = sessionStorage.getItem("phone");
-    const profileImagePath = sessionStorage.getItem("profileImagePath");
-    if (originEmail || originNickname || originPhone || profileImagePath) {
+    const MemberData = async () => {
+      try {
+        console.log(params);
+        const response = await AdminApi.admemberDetail(params)
+        const originEmail = response.data.userEmail;
+        const originNickname = response.data.userNickname;
+        const originPhone = response.data.phone        ;
+        const profileImagePath = response.data.profileImage;
+console.log("이메일 확인 : " , originEmail )
       setUserEmail(originEmail);
       setUserNickname(originNickname);
       setPhone(originPhone);
       // 원래 설정한 이미지를 세션 스토리지에서 가져옴
       setImgFile(profileImagePath);
-    }
+    
+        console.log(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    MemberData();
   }, []);
 
   const saveImgFile = (e) => {
@@ -158,7 +174,8 @@ function AdminEditUser() {
           profileImage = nowProfileImage;
         }
 
-        const userUpdate = await UserApi.userUpdate(
+        const userUpdate = await AdminApi.AdUserUpdate(
+          params,
           userEmail,
           password,
           userNickname,
@@ -208,7 +225,7 @@ function AdminEditUser() {
           sessionStorage.setItem("userEmail", userUpdate.data.userEmail);
           sessionStorage.setItem("userNickname", userUpdate.data.userNickname);
           sessionStorage.setItem("phone", userUpdate.data.phone);
-          window.location.replace("/Profile");
+          window.location.replace("/AdmemberList");
         }
       }
     } else {
@@ -220,10 +237,10 @@ function AdminEditUser() {
     <Box>
       <Container>
         <Content>
-          <Link to="/Profile">
+          <Link to="/AdminMemberList">
             <MdArrowBack size="24" style={{ margin: 10 }} />
           </Link>
-          <h1 class="form-title">Edit Account Information</h1>
+          <h1 class="form-title">회원정보 수정</h1>
           <div>
             <form className="edit-form">
               <img
