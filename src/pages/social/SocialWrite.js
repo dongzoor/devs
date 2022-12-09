@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Form from "react-bootstrap/Form";
 import styled from "styled-components";
 import SocialApi from "../../api/SocialApi";
 import { storageService } from "../../lib/api/fbase";
@@ -28,7 +29,8 @@ const SocialWrite = () => {
 
   // 사진을 안올릴 경우 들어갈 수 있도록 빈 값 지정
   let attachmentUrl = " ";
-  // 첨부이미지 firebase 저장&미리보기
+  
+  // 첨부이미지 firebase 미리보기
   const onFileChange = (e) => {
     const {
       target: { files },
@@ -59,7 +61,7 @@ const SocialWrite = () => {
         "data_url"
       );
       attachmentUrl = await getDownloadURL(response.ref);
-      console.log("이미지 주소 : " + attachmentUrl);
+      console.log("★ 이미지 주소 : " + attachmentUrl);
     }
     const res = await SocialApi.socialWrite(
       getUserId,
@@ -77,7 +79,7 @@ const SocialWrite = () => {
       console.log(res.data);
     }
   };
-  // 첨부사진 삭제 코드
+  // 첨부 사진 삭제 코드
   const onDelete = async () => {
     const urlRef = ref(storageService, attachmentUrl);
     try {
@@ -85,7 +87,7 @@ const SocialWrite = () => {
         await deleteObject(urlRef);
       }
     } catch (error) {
-      window.alert("이미지를 삭제하는 데 실패했습니다!");
+      alert("이미지를 삭제하는 데 실패했습니다!");
     }
   };
 
@@ -116,17 +118,31 @@ const SocialWrite = () => {
           value={tagInput}
           onChange={onChangeTag}
         />
-        <input type="file" accept="image/*" onChange={onFileChange} />
-        {attachment && (
-          <div>
-            <img src={attachment} width="50px" height="50px" alt=""></img>
-          </div>
-        )}
-        <Link to="/social">
-          <button className="submitBt" onClick={onClickSubmit}>
-            제 출
-          </button>
-        </Link>
+        <label htmlFor="formFile" className="form-label">
+          이미지 첨부
+        </label>
+        <div className="image-box">
+          <input
+            className="form-control"
+            type="file"
+            id="formFile"
+            accept="image/*"
+            onChange={onFileChange}
+          />
+          {/* 이미지 미리보기 */}
+          {attachment && (
+            <img
+              src={attachment}
+              className="preview"
+              width="50px"
+              height="50px"
+              alt=""
+            />
+          )}
+        </div>
+        <button className="submitBt" onClick={onClickSubmit}>
+          제 출
+        </button>
       </div>
     </WriteBox>
   );
@@ -192,11 +208,11 @@ const WriteBox = styled.div`
     margin: 5px 20px;
   }
   .submitBt {
-    width: 25rem;
+    width: 96%;
     height: 40px;
-    margin: 10px auto;
+    margin: 20px auto;
     border: none;
-    border-radius: 20px;
+    border-radius: 10px;
     box-shadow: 5px 5px 10px rgba(0, 0, 255, 0.2);
     transition-duration: 0.3s;
     &:hover {
@@ -207,6 +223,18 @@ const WriteBox = styled.div`
       margin-top: 5px;
       box-shadow: none;
     }
+  }
+  .image-box {
+    display: flex;
+    margin: 0 20px;
+  }
+  .form-control {
+    height: 100%;
+    border-radius: 10px;
+    font-size: 20px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 255, 0.2);
+    color: rgb(98, 98, 112);
+    margin-right: 10px;
   }
 `;
 export default SocialWrite;

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import SocialApi from "../../api/SocialApi";
 import Photo from "./pic/짱난.gif";
+
 import {
   IoEyeOutline,
   IoHeartOutline,
@@ -20,7 +21,7 @@ const Social = () => {
       try {
         const response = await SocialApi.socialList();
         setSocialList(response.data);
-        console.log(response.data);
+        console.log("★ Social List " , response.data);
       } catch (e) {
         console.log(e);
       }
@@ -41,46 +42,64 @@ const Social = () => {
           <button className="postBt">P O S T</button>
         </Link>
         {socialList &&
-          socialList.map((social) => (
-            <Link to={`/social/${social.socialId}`}>
-              <div className="childBox" key={social.socialId}>
-                <div className="flex-box2">
-                  {/* {`${social.image}` !== null && ( */}
-                  <img
-                    className="insertImg"
-                    src={social.image}
-                    alt="첨부사진"
-                  />
-                  {/* )} */}
-                </div>
-                <div className="flex-box1">
-                  <div className="content-title">{social.title}</div>
-                  <div className="hashtag-box">
-                    <span className="hashtag">{social.tag}</span>
+          socialList.map((social) =>
+            social.image ? (
+              <Link to={`/social/${social.socialId}`} key={social.socialId}>
+                <div className="childBox">
+                  <div className="flex-box1">
+                    <img src={social.image} className="insertImg" alt="" />
                   </div>
-                  <div className="flex-box3">
-                    <div className="publisher-info">
-                      <img
-                        className="photos"
-                        src={Photo}
-                        alt="프로필 사진"
-                      ></img>
-                      <span className="nickName">{social.user}</span>
-                      <span className="date">| {social.postDate}</span>
+                  <div className="flex-box2">
+                    <div className="content-title">{social.title}</div>
+                    <div className="hashtag-box">
+                      <span className="hashtag">{social.tag}</span>
                     </div>
-                    <div className="icon-box">
-                      <IoEyeOutline />
-                      <span className="count">{social.view}</span>
-                      <IoHeartOutline />
-                      <span className="count">{social.like}</span>
-                      <IoChatboxOutline />
-                      <span className="count">{social.comment}</span>
+                    <div className="flex-box3">
+                      <div className="publisher-info">
+                        <img className="photos" src={Photo} alt="프로필 사진" />
+                        <span className="nickName">{social.user}</span>
+                        <span className="date">| {social.postDate}</span>
+                      </div>
+                      <div className="icon-box">
+                        <IoEyeOutline />
+                        <span className="count">{social.view}</span>
+                        <IoHeartOutline />
+                        <span className="count">{social.like}</span>
+                        <IoChatboxOutline />
+                        <span className="count">{social.comment}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ) : (
+              <Link to={`/social/${social.socialId}`} key={social.socialId}>
+                <div className="childBox-noPic">
+                  <div className="flex-box2">
+                    <div className="content-title">{social.title}</div>
+                    <div className="hashtag-box">
+                      <span className="hashtag">{social.tag}</span>
+                    </div>
+                    <div className="flex-box3">
+                      <div className="publisher-info">
+                        <img className="photos" src={Photo} alt="프로필 사진" />
+                        <span className="nickName">{social.user}</span>
+                        <span className="date">| {social.postDate}</span>
+                      </div>
+                      <div className="icon-box">
+                        <IoEyeOutline />
+                        <span className="count">{social.view}</span>
+                        <IoHeartOutline />
+                        <span className="count">{social.like}</span>
+                        <IoChatboxOutline />
+                        <span className="count">{social.comment}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            )
+          )}
       </div>
     </ListBlock>
   );
@@ -138,19 +157,43 @@ const ListBlock = styled.div`
       box-shadow: 5px 5px 10px rgba(190, 100, 255, 0.2);
       cursor: pointer;
       box-shadow: none;
-      & > .flex-box2 > img {
+      & > .flex-box1 > img {
         -webkit-transition: 0.4s ease;
         transform: scale(1.15);
         transition: 0.6s ease;
       }
     }
   }
-  .flex-box1 {
+  .childBox-noPic {
+    height: 100%;
+    margin: 20px 10px;
+    border: 2px solid grey;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 2px 3px 3px 1px rgba(0, 0, 0, 0.2);
+    transition-duration: 0.3s;
+    & > * {
+      font-size: 20px;
+    }
+    &:hover {
+      color: white;
+      background-color: rgba(190, 100, 255, 0.2);
+      box-shadow: 5px 5px 10px rgba(190, 100, 255, 0.2);
+      cursor: pointer;
+      box-shadow: none;
+      & > .flex-box1 > img {
+        -webkit-transition: 0.4s ease;
+        transform: scale(1.15);
+        transition: 0.6s ease;
+      }
+    }
+  }
+  .flex-box2 {
     display: flex;
     flex-direction: column;
     padding: 10px;
   }
-  .flex-box2 {
+  .flex-box1 {
     flex-grow: 1.5;
     overflow: hidden;
     position: relative;
@@ -162,8 +205,6 @@ const ListBlock = styled.div`
     position: absolute; // = 부모 기준 배치
     left: 5px;
     top: 5px;
-    background-image: url("../pic/coffee.jpg");
-    background-size: cover;
   }
   .flex-box3 {
     display: flex;

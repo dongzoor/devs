@@ -18,9 +18,8 @@ const SocialUpdate = () => {
   const [loading, setLoading] = useState(false);
   const params = useParams().socialId;
   const getUserId = window.sessionStorage.getItem("userId");
-
   const [socialDetail, setSocialDetail] = useState(""); // 기존 데이터 가져옴
-
+  // 기존 데이터를 넣어줄 곳
   const [titleInput, setTitleInput] = useState("");
   const [contentInput, setContentInput] = useState("");
   const [tagInput, setTagInput] = useState("");
@@ -33,13 +32,13 @@ const SocialUpdate = () => {
   const onChangeContent = (content) => setContentInput(content.target.value);
   const onChangeTag = (tag) => setTagInput(tag.target.value);
 
-  // 첨부이미지 firebase 저장&미리보기
-  const onFileChange = (e) => {
+  // 첨부이미지 미리보기
+  const onChangeImage = (e) => {
     const {
       target: { files },
     } = e;
     const theFile = files[0];
-    console.log(theFile);
+    console.log("★ 이미지 파일", theFile);
 
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
@@ -62,8 +61,9 @@ const SocialUpdate = () => {
         attachment,
         "data_url"
       );
+      console.log("★ attachment(이미지의 string 형태) :",attachment);
       attachmentUrl = await getDownloadURL(response.ref);
-      console.log("이미지 주소 : " + attachmentUrl);
+      console.log("★ 이미지 주소 : " + attachmentUrl);
     }
 
     const res = await SocialApi.socialUpdate(
@@ -75,11 +75,23 @@ const SocialUpdate = () => {
     );
     console.log("수정 버튼 클릭");
     if (res.data === true) {
-      navigate(`/social/${params}/update`);
+      navigate(`/social/${params}`); //수정된 게시글로 이동
       alert("Social 게시글 수정 완료 !");
     } else {
       alert("Social 게시글 수정 실패 ");
       console.log(res.data);
+    }
+  };
+
+  // 첨부 사진 삭제 코드
+  const onDelete = async () => {
+    const urlRef = ref(storageService, attachmentUrl);
+    try {
+      if (attachmentUrl !== "") {
+        await deleteObject(urlRef);
+      }
+    } catch (error) {
+      alert("이미지를 삭제하는 데 실패했습니다!");
     }
   };
 
@@ -125,17 +137,31 @@ const SocialUpdate = () => {
         <hr />
         <label>#해시태그</label>
         <textarea className="hashTag" value={tagInput} onChange={onChangeTag} />
-        <input type="file" accept="image/*" onChange={onFileChange} />
-        {attachment && (
-          <div>
-            <img src={attachment} width="50px" height="50px" alt=""></img>
-          </div>
-        )}
-        <Link to="/social">
-          <button className="editBt" onClick={onClickEdit}>
-            수 정
-          </button>
-        </Link>
+        <label htmlFor="formFile" className="form-label">
+          이미지 첨부
+        </label>
+        <div className="image-box">
+          <input
+            className="form-control"
+            type="file"
+            id="formFile"
+            accept="image/*"
+            onChange={onChangeImage}
+          />
+          {attachment && (
+            <img
+              src={attachment}
+              className="preview"
+              width="50px"
+              height="50px"
+              alt=""
+            />
+          )}
+        </div>
+        <button onClick={onDelete}>사진 삭제</button>
+        <button className="editBt" onClick={onClickEdit}>
+          수 정
+        </button>
       </div>
     </WriteBox>
   );
@@ -201,11 +227,11 @@ const WriteBox = styled.div`
     margin: 5px 20px;
   }
   .editBt {
-    width: 25rem;
+    width: 96%;
     height: 40px;
-    margin: 10px auto;
+    margin: 20px auto;
     border: none;
-    border-radius: 20px;
+    border-radius: 10px;
     box-shadow: 5px 5px 10px rgba(0, 0, 255, 0.2);
     transition-duration: 0.3s;
     &:hover {
@@ -216,6 +242,18 @@ const WriteBox = styled.div`
       margin-top: 5px;
       box-shadow: none;
     }
+  }
+  .image-box {
+    display: flex;
+    margin: 0 20px;
+  }
+  .form-control {
+    height: 100%;
+    border-radius: 10px;
+    font-size: 20px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 255, 0.2);
+    color: rgb(98, 98, 112);
+    margin-right: 10px;
   }
 `;
 export default SocialUpdate;

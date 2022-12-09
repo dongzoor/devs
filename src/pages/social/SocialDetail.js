@@ -6,7 +6,10 @@ import CommentList from "./components/CommentList";
 import CommentWriter from "./components/CommentWriter";
 import { useState, useEffect } from "react";
 import SocialApi from "../../api/SocialApi";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { storageService } from "../../lib/api/fbase";
+import { v4 as uuidv4 } from "uuid";
+import { ref, deleteObject } from "@firebase/storage";
 import {
   IoEyeOutline,
   IoHeartOutline,
@@ -15,6 +18,7 @@ import {
 
 const SocialDetail = () => {
   const navigate = useNavigate();
+
   const params = useParams().socialId; // router에서 지정한 :social 을 붙여줘야함!!
 
   const [socialDetail, setSocialDetail] = useState("");
@@ -25,31 +29,38 @@ const SocialDetail = () => {
     "social_id",
     socialDetail.socialId
   );
+  const [attachment, setAttachment] = useState("");
+
+  // 사진을 안올릴 경우 들어갈 수 있도록 빈 값 지정
+  let attachmentUrl = " ";
 
   const onClickUpdate = async () => {
     navigate(`/social/${params}/update`);
   };
+
   // 게시글 삭제
   const onClickDelete = async () => {
-    const res = await SocialApi.socialDelete(params);
     console.log("삭제 버튼 클릭");
+    const res = await SocialApi.socialDelete(params);
+    // -> firebase에서 해당 게시글의 이미지가 함께 삭제되도록 수정해야 함 !!!
+
     if (res.data.result === "SUCCESS") {
-      console.log("삭제 완료 !");
       navigate(`/social`);
       alert("삭제 완료");
     } else {
-      console.log("삭제 실패 ㅜ");
+      alert("삭제 실패 ㅜ");
       console.log(res.data.result);
     }
   };
+
   useEffect(() => {
     const socialData = async () => {
       setLoading(true);
       try {
-        console.log(params);
+        console.log("★ 게시글 번호 : " + params);
         const response = await SocialApi.socialDetail(params);
         setSocialDetail(response.data);
-        console.log(response.data);
+        console.log("★ 게시글 내용 ", response.data);
       } catch (e) {
         console.log(e);
       }
@@ -82,19 +93,21 @@ const SocialDetail = () => {
                 <span className="count">{socialDetail.comment}</span>
               </div>
             </div>
-            <hr />
+            <div className="attachedImg">
+              {`${socialDetail.image}` != null && (
+                <img src={socialDetail.image} className="preview" alt="" />
+              )}
+            </div>
             <div className="content-text">{socialDetail.content}</div>
             <div className="hashtag-box">
               <span className="hashtag">{socialDetail.tag}</span>
-              <Link to="/social">
-                <button className="deleteBt" onClick={onClickDelete}>
-                  삭제
-                </button>
-              </Link>
-              <button className="updateBt" onClick={onClickUpdate}>
-                수정
-              </button>
             </div>
+            <button className="deleteBt" onClick={onClickDelete}>
+              삭제
+            </button>
+            <button className="updateBt" onClick={onClickUpdate}>
+              수정
+            </button>
             <hr />
             <CommentWriter />
             <CommentList />
@@ -182,6 +195,16 @@ const DetailBox = styled.div`
     font-style: italic;
     background-color: rgba(219, 219, 219, 0.5);
     border-radius: 10px;
+  }
+  // 첨부 사진 최대 크기 조정
+  .preview {
+    max-width: 95%;
+  }
+  // 첨부 사진 가운데 정렬
+  .attachedImg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 export default SocialDetail;
