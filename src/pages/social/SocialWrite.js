@@ -29,8 +29,8 @@ const SocialWrite = () => {
 
   // 사진을 안올릴 경우 들어갈 수 있도록 빈 값 지정
   let attachmentUrl = " ";
-  
-  // 첨부이미지 firebase 미리보기
+
+  // 문자로 된 파일을 이미지로 보여줌 - 미리보기 코드
   const onFileChange = (e) => {
     const {
       target: { files },
@@ -49,45 +49,42 @@ const SocialWrite = () => {
   };
 
   const onClickSubmit = async () => {
-    let attachmentUrl = null;
+    if (true) {
+      // 변수 scope 때문에 함수로 묶어놓음
+      let attachmentUrl = null;
+      let imageName = null;
 
-    if (attachment !== "") {
-      // 파일 저장 경로 지정
-      const attachmentRef = ref(storageService, `/SOCIAL/${uuidv4()}`);
-      // 파일 storage에 저장
-      const response = await uploadString(
-        attachmentRef,
-        attachment,
-        "data_url"
-      );
-      attachmentUrl = await getDownloadURL(response.ref);
-      console.log("★ 이미지 주소 : " + attachmentUrl);
-    }
-    const res = await SocialApi.socialWrite(
-      getUserId,
-      titleInput,
-      contentInput,
-      tagInput,
-      attachmentUrl
-    );
-    console.log("제출 버튼 클릭");
-    if (res.data === true) {
-      window.alert("Social 게시글 작성 완료 !");
-      navigate(`/social/`);
-    } else {
-      window.alert("Social 게시글 작성 실패 ㅜ");
-      console.log(res.data);
-    }
-  };
-  // 첨부 사진 삭제 코드
-  const onDelete = async () => {
-    const urlRef = ref(storageService, attachmentUrl);
-    try {
-      if (attachmentUrl !== "") {
-        await deleteObject(urlRef);
+      if (attachment !== "") {
+        // 파일 참조 경로 지정
+        imageName = uuidv4(); // 이미지 UUID
+        const attachmentRef = ref(storageService, `/SOCIAL/${imageName}`);
+        // 참조경로로 storage에 저장
+        const response = await uploadString(
+          attachmentRef,
+          attachment,
+          "data_url"
+        );
+        attachmentUrl = await getDownloadURL(response.ref);
+        console.log("★ 이미지 주소 : " + attachmentUrl);
+        console.log("★ 이미지 UUID : " + imageName);
       }
-    } catch (error) {
-      alert("이미지를 삭제하는 데 실패했습니다!");
+      const res = await SocialApi.socialWrite(
+        getUserId,
+        titleInput,
+        contentInput,
+        tagInput,
+        attachmentUrl,
+        imageName
+      );
+
+      console.log("제출 버튼 클릭");
+      if (res.data === true) {
+        window.alert("Social 게시글 작성 완료 !");
+        navigate(`/social/`);
+      } else {
+        window.alert("Social 게시글 작성 실패 ㅜ");
+        console.log(res.data);
+      }
     }
   };
 

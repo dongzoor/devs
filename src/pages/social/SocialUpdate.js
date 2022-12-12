@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { storageService } from "../../lib/api/fbase";
 import { v4 as uuidv4 } from "uuid";
@@ -12,18 +12,22 @@ import {
   getDownloadURL,
   deleteObject,
 } from "@firebase/storage";
+import { async } from "@firebase/util";
 
 const SocialUpdate = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const params = useParams().socialId;
   const getUserId = window.sessionStorage.getItem("userId");
+  const getImageId = window.sessionStorage.getItem("social_image");
+  const imageId = sessionStorage.getItem("social_image");
+
+  const [loading, setLoading] = useState(false);
   const [socialDetail, setSocialDetail] = useState(""); // 기존 데이터 가져옴
   // 기존 데이터를 넣어줄 곳
   const [titleInput, setTitleInput] = useState("");
   const [contentInput, setContentInput] = useState("");
   const [tagInput, setTagInput] = useState("");
-  const [attachment, setAttachment] = useState("");
+  const [attachment, setAttachment] = useState(""); //이미지의 string 으로 변환한 값
 
   // 사진을 안올릴 경우 들어갈 수 있도록 빈 값 지정
   let attachmentUrl = " ";
@@ -32,7 +36,7 @@ const SocialUpdate = () => {
   const onChangeContent = (content) => setContentInput(content.target.value);
   const onChangeTag = (tag) => setTagInput(tag.target.value);
 
-  // 첨부이미지 미리보기
+  // 문자로 된 파일을 이미지로 보여줌 - 미리보기 코드
   const onChangeImage = (e) => {
     const {
       target: { files },
@@ -45,33 +49,51 @@ const SocialUpdate = () => {
       const {
         currentTarget: { result },
       } = finishedEvent;
-      setAttachment(result);
+      setAttachment(result); // 바뀐 파일의 string값 저장
+      console.log(attachment);
     };
     reader.readAsDataURL(theFile);
   };
 
-  // 수정 버튼 클릭 시
+  // [수정] 버튼 클릭 시
   const onClickEdit = async () => {
+    // 1-1. 일단 기존 사진ID가 있으면 firebase에서 삭제하고(db는 덮어쓰기 하니까 노신경)
+    if (imageId !== null) {
+      // 파이어베이스 상 파일주소 지정
+      const attachmentRef = ref(storageService, `/SOCIAL/${imageId}`);
+      // 참조경로로 firebase 이미지 삭제
+      await deleteObject(attachmentRef)
+        .then(() => {
+          console.log("Firebase File deleted successfully !");
+        })
+        .catch((error) => {
+          console.log("Uh-oh, File Delete error occurred!");
+        });
+    }
+    // 1-2. 기존에 이미지 없었는데 생겼다? firebase, db에 모두 저장
     if (attachment !== "") {
-      // 파일 저장 경로 지정
-      const attachmentRef = ref(storageService, `/SOCIAL/${uuidv4()}`);
-      // 파일 storage에 저장
+      // 파일 참조 경로 지정
+      var attachmentUrl = null;
+      var imageName = uuidv4(); // 이미지 UUID
+      const attachmentRef = ref(storageService, `/SOCIAL/${imageName}`);
+      // 참조경로로 storage에 저장
       const response = await uploadString(
         attachmentRef,
         attachment,
         "data_url"
       );
-      console.log("★ attachment(이미지의 string 형태) :",attachment);
+      console.log("★ attachment(이미지의 string 형태) :", attachment);
       attachmentUrl = await getDownloadURL(response.ref);
       console.log("★ 이미지 주소 : " + attachmentUrl);
+      console.log("★ 이미지 ID : " + imageName);
     }
-
     const res = await SocialApi.socialUpdate(
       params,
       titleInput,
       contentInput,
       tagInput,
-      attachmentUrl
+      attachmentUrl,
+      imageName
     );
     console.log("수정 버튼 클릭");
     if (res.data === true) {
@@ -83,23 +105,11 @@ const SocialUpdate = () => {
     }
   };
 
-  // 첨부 사진 삭제 코드
-  const onDelete = async () => {
-    const urlRef = ref(storageService, attachmentUrl);
-    try {
-      if (attachmentUrl !== "") {
-        await deleteObject(urlRef);
-      }
-    } catch (error) {
-      alert("이미지를 삭제하는 데 실패했습니다!");
-    }
-  };
-
   useEffect(() => {
     const socialData = async () => {
       setLoading(true);
       try {
-        console.log(params);
+        console.log("게시글ID : " + params);
         const response = await SocialApi.socialDetail(params);
         // 기존 데이터를 useState 값에 다 따로 받아주기 !
         setTitleInput(response.data.title);
@@ -158,7 +168,6 @@ const SocialUpdate = () => {
             />
           )}
         </div>
-        <button onClick={onDelete}>사진 삭제</button>
         <button className="editBt" onClick={onClickEdit}>
           수 정
         </button>

@@ -8,7 +8,6 @@ import { useState, useEffect } from "react";
 import SocialApi from "../../api/SocialApi";
 import { useParams } from "react-router-dom";
 import { storageService } from "../../lib/api/fbase";
-import { v4 as uuidv4 } from "uuid";
 import { ref, deleteObject } from "@firebase/storage";
 import {
   IoEyeOutline,
@@ -18,22 +17,21 @@ import {
 
 const SocialDetail = () => {
   const navigate = useNavigate();
-
   const params = useParams().socialId; // router에서 지정한 :social 을 붙여줘야함!!
-
   const [socialDetail, setSocialDetail] = useState("");
   const [loading, setLoading] = useState(false);
-  // web storage get/set
   const getUserId = window.sessionStorage.getItem("userId");
+  // 게시글 ID session Set
   const setSocialId = window.sessionStorage.setItem(
     "social_id",
     socialDetail.socialId
   );
-  const [attachment, setAttachment] = useState("");
-
-  // 사진을 안올릴 경우 들어갈 수 있도록 빈 값 지정
-  let attachmentUrl = " ";
-
+  // 이미지 UUID session Set
+  const setImageId = window.sessionStorage.setItem(
+    "social_image",
+    socialDetail.imageId
+  );
+  // 게시글 수정 화면으로 전환
   const onClickUpdate = async () => {
     navigate(`/social/${params}/update`);
   };
@@ -42,13 +40,25 @@ const SocialDetail = () => {
   const onClickDelete = async () => {
     console.log("삭제 버튼 클릭");
     const res = await SocialApi.socialDelete(params);
-    // -> firebase에서 해당 게시글의 이미지가 함께 삭제되도록 수정해야 함 !!!
-
+    let imageId = sessionStorage.getItem("social_image");
+    // 기존 이미지가 존재하면 삭제(이미지 ID로 확인)
+    if (imageId !== null) {
+      // 파이어베이스 상 파일주소 지정
+      const attachmentRef = ref(storageService, `/SOCIAL/${imageId}`);
+      // 참조경로로 firebase 이미지 삭제
+      await deleteObject(attachmentRef)
+        .then(() => {
+          console.log("Firebase File deleted successfully !");
+        })
+        .catch((error) => {
+          console.log("Uh-oh, File Delete error occurred!");
+        });
+    }
     if (res.data.result === "SUCCESS") {
       navigate(`/social`);
-      alert("삭제 완료");
+      alert("게시글 삭제 완료 !");
     } else {
-      alert("삭제 실패 ㅜ");
+      alert("게시글 삭제 실패 ㅜ");
       console.log(res.data.result);
     }
   };
@@ -159,6 +169,8 @@ const DetailBox = styled.div`
   }
   .content-text {
     padding: 10px;
+    // text 개행 처리 !
+    white-space: pre-wrap;
   }
   .post-info {
     display: flex;
