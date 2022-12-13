@@ -2,8 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import SocialApi from "../../api/SocialApi";
-import Photo from "./pic/짱난.gif";
-
+import Photo from "./pic/pic.gif";
 import {
   IoEyeOutline,
   IoHeartOutline,
@@ -21,7 +20,7 @@ const Social = () => {
       try {
         const response = await SocialApi.socialList();
         setSocialList(response.data);
-        console.log("★ Social List " , response.data);
+        console.log("★ Social List ", response.data);
       } catch (e) {
         console.log(e);
       }

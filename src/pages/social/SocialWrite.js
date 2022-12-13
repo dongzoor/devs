@@ -47,44 +47,42 @@ const SocialWrite = () => {
     };
     reader.readAsDataURL(theFile);
   };
+  console.log("changeImage 후 attachment 값: ", attachment);
 
   const onClickSubmit = async () => {
-    if (true) {
-      // 변수 scope 때문에 함수로 묶어놓음
-      let attachmentUrl = null;
-      let imageName = null;
+    console.log("제출 버튼 클릭");
+    console.log(attachment);
 
-      if (attachment !== "") {
-        // 파일 참조 경로 지정
-        imageName = uuidv4(); // 이미지 UUID
-        const attachmentRef = ref(storageService, `/SOCIAL/${imageName}`);
-        // 참조경로로 storage에 저장
-        const response = await uploadString(
-          attachmentRef,
-          attachment,
-          "data_url"
-        );
-        attachmentUrl = await getDownloadURL(response.ref);
-        console.log("★ 이미지 주소 : " + attachmentUrl);
-        console.log("★ 이미지 UUID : " + imageName);
-      }
-      const res = await SocialApi.socialWrite(
-        getUserId,
-        titleInput,
-        contentInput,
-        tagInput,
-        attachmentUrl,
-        imageName
+    let attachmentUrl = null;
+    if (attachment !== "") {
+      // 파일 참조 경로 지정
+      var imageName = uuidv4(); // 이미지 UUID
+      const attachmentRef = ref(storageService, `/SOCIAL/${imageName}`);
+      // 참조경로로 storage에 저장
+      const response = await uploadString(
+        attachmentRef,
+        attachment,
+        "data_url"
       );
+      attachmentUrl = await getDownloadURL(response.ref);
+      console.log("★ 이미지 주소 : " + attachmentUrl);
+      console.log("★ 이미지 UUID : " + imageName);
+    }
+    const res = await SocialApi.socialWrite(
+      getUserId,
+      titleInput,
+      contentInput,
+      tagInput,
+      attachmentUrl,
+      imageName
+    );
 
-      console.log("제출 버튼 클릭");
-      if (res.data === true) {
-        window.alert("Social 게시글 작성 완료 !");
-        navigate(`/social/`);
-      } else {
-        window.alert("Social 게시글 작성 실패 ㅜ");
-        console.log(res.data);
-      }
+    if (res.data === true) {
+      window.alert("Social 게시글 작성 완료 !");
+      navigate(`/social/`);
+    } else {
+      window.alert("Social 게시글 작성 실패 ㅜ");
+      console.log(res.data);
     }
   };
 

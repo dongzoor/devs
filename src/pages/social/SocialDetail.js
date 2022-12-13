@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
-import Photo from "./pic/짱난.gif";
+import Photo from "./pic/pic.gif";
 import CommentList from "./components/CommentList";
 import CommentWriter from "./components/CommentWriter";
 import { useState, useEffect } from "react";
@@ -67,10 +67,10 @@ const SocialDetail = () => {
     const socialData = async () => {
       setLoading(true);
       try {
-        console.log("★ 게시글 번호 : " + params);
+        console.log("★ 게시글 번호 : ", params);
         const response = await SocialApi.socialDetail(params);
         setSocialDetail(response.data);
-        console.log("★ 게시글 내용 ", response.data);
+        console.log("★ 게시글 내용 ", socialDetail);
       } catch (e) {
         console.log(e);
       }
@@ -78,7 +78,7 @@ const SocialDetail = () => {
     };
     socialData();
   }, []);
-  
+
   if (loading) {
     return <DetailBox>조금만 기다려주세요...👩‍💻</DetailBox>;
   }
@@ -120,8 +120,8 @@ const SocialDetail = () => {
               수정
             </button>
             <hr />
-            <CommentWriter />
-            <CommentList />
+            {/* <CommentWriter />
+            <CommentList /> */}
           </div>
         </div>
       </DetailBox>

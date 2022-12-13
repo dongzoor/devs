@@ -50,15 +50,16 @@ const SocialUpdate = () => {
         currentTarget: { result },
       } = finishedEvent;
       setAttachment(result); // 바뀐 파일의 string값 저장
-      console.log(attachment);
     };
     reader.readAsDataURL(theFile);
   };
+  console.log("changeImage 후 attachment 값: ", attachment);
 
   // [수정] 버튼 클릭 시
   const onClickEdit = async () => {
-    // 1-1. 일단 기존 사진ID가 있으면 firebase에서 삭제하고(db는 덮어쓰기 하니까 노신경)
-    if (imageId !== null) {
+    // 1-1. 일단 기존 사진ID가 있으면 firebase에서 삭제 (db는 덮어쓰기 하니까 노신경)
+    if (imageId !== "null") {
+      console.log(imageId);
       // 파이어베이스 상 파일주소 지정
       const attachmentRef = ref(storageService, `/SOCIAL/${imageId}`);
       // 참조경로로 firebase 이미지 삭제
@@ -71,7 +72,8 @@ const SocialUpdate = () => {
         });
     }
     // 1-2. 기존에 이미지 없었는데 생겼다? firebase, db에 모두 저장
-    if (attachment !== "") {
+    if (attachment !== null) {
+      console.log("attachment :", attachment);
       // 파일 참조 경로 지정
       var attachmentUrl = null;
       var imageName = uuidv4(); // 이미지 UUID
@@ -82,11 +84,12 @@ const SocialUpdate = () => {
         attachment,
         "data_url"
       );
-      console.log("★ attachment(이미지의 string 형태) :", attachment);
       attachmentUrl = await getDownloadURL(response.ref);
+      console.log("★ attachment :", attachment);
       console.log("★ 이미지 주소 : " + attachmentUrl);
       console.log("★ 이미지 ID : " + imageName);
     }
+    // 2. 수정 전/후 모두 이미지 첨부파일이 없으면 바로 update api로
     const res = await SocialApi.socialUpdate(
       params,
       titleInput,
@@ -129,7 +132,7 @@ const SocialUpdate = () => {
   }
   return (
     <WriteBox>
-      <div className="subtitle">Write anything you want 👩🏻‍💻✨</div>
+      <div className="subtitle">Edit Your Post 👩🏻‍💻🔥</div>
       <div className="parentBox">
         <label>제목</label>
         <textarea
