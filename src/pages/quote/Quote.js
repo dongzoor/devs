@@ -2,7 +2,6 @@ function Quote() {
   const quotes = [
     "Dance like nobody is watching, code like everybody is.",
     "A deployed MVP is worth two prototyped.",
-    "When you reach wizened engineer-level, there are at least a hundred wizened engineers above you.",
     "A/B Test twice, deploy changes once.",
     "Don't commit on master when drunk.",
     "Sleep on a force push.",
@@ -18,7 +17,6 @@ function Quote() {
     "Learning obscure and strange languages, yields better understanding and broader horizons.",
     "The better job you do, the easier others discount the level of difficulty.",
     "Testing is easier than debugging.",
-    "Finish a product in a day, and people will expect a new product every day. Teach people about proper development cycles, and your company will flourish.",
     "Customers are the best testers.",
     "Absence is beauty, in error logs.",
     "Eternal sunshine of the stateless mind.",
@@ -26,7 +24,6 @@ function Quote() {
     "Good test coverage + automated workflows = quiet cell phones and better sleep.",
     "The best code is no code at all.",
     "The best request is the one you don't make.",
-    "If a system works perfectly, no one will care what is inside it. Once it breaks, systems design and architecture decides your fate.",
     "Leave architecture for applications that require long-term support.",
     "Architecture and design are preparations for problems and changes, not a key to runtime.",
     "Without a prototype, don't build a final product.",

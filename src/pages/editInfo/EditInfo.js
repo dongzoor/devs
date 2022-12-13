@@ -13,7 +13,7 @@ import {
 import { Link } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
 import UserApi from "../../api/UserApi";
-import { storageService } from "../../lib/api/fbase";
+import { storageService } from "../../lib/api/Fbase";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 
@@ -24,7 +24,7 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: Raleway, GmarketSansMedium;
+  font-family: "Nanum Gothic", GmarketSansMedium;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
@@ -136,16 +136,26 @@ function EditInfo() {
     const passwordCurrent = e.target.value;
     setInputConPw(passwordCurrent);
     if (passwordCurrent !== password) {
-      setConPwMessage("비밀 번호가 일치하지 않습니다.");
+      setConPwMessage("비밀번호가 일치하지 않습니다.");
       setIsConPw(false);
     } else {
-      setConPwMessage("비밀 번호가 일치 합니다.");
+      setConPwMessage("비밀번호가 일치합니다.");
       setIsConPw(true);
     }
   };
 
   // 회원정보 수정
   const onClickEdit = async () => {
+    if (userNickname === "") {
+      window.alert("닉네임을 입력해주세요.");
+      return;
+    }
+
+    if (phone === "") {
+      window.alert("전화번호를 입력해주세요.");
+      return;
+    }
+
     if (window.confirm("회원정보를 수정하시겠습니까?")) {
       if (true) {
         let profileImage = null;
@@ -188,6 +198,15 @@ function EditInfo() {
                 );
                 await uploadString(attachmentRefUpload, imgFile, "data_url");
               }
+            } else {
+              if (changeImgFile !== "") {
+                // 바꿀 이미지 업로드
+                const attachmentRefUpload = ref(
+                  storageService,
+                  `/USER/${profileImage}`
+                );
+                await uploadString(attachmentRefUpload, imgFile, "data_url");
+              }
             }
           }
 
@@ -215,6 +234,19 @@ function EditInfo() {
       }
     } else {
       return;
+    }
+  };
+
+  // 회원정보 탈퇴
+  const onDeleteUser = async () => {
+    if (window.confirm("탈퇴하시겠습니까?")) {
+      const deleteUser = await UserApi.delete(userEmail);
+
+      if (deleteUser.data === true) {
+        window.confirm("탈퇴를 완료하였습니다.");
+        sessionStorage.clear();
+        window.location.replace("/");
+      }
     }
   };
 
@@ -307,6 +339,13 @@ function EditInfo() {
               >
                 Submit
               </button>
+              <label
+                className="Withdraw"
+                style={{ margin: "10px", color: "#7875b5" }}
+                onClick={onDeleteUser}
+              >
+                Withdraw
+              </label>
             </form>
           </div>
         </Content>
