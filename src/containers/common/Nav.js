@@ -7,6 +7,26 @@ import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
 
 function OffcanvasExample() {
+  const [userEmail, setUserEmail] = useState("");
+  // 초기값 설정
+  useEffect(() => {
+    const sessioninfo = sessionStorage.getItem("userEmail");
+    if (sessioninfo !== null) {
+      setUserEmail(sessioninfo);
+    }
+  }, []);
+
+  const onClickLogout = async () => {
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      const logOut = await UserApi.logOut();
+
+      if (logOut.data === true) {
+        window.alert("로그아웃 되었습니다.");
+        sessionStorage.clear();
+      }
+    }
+  };
+
   return (
     <>
       {[false].map((expand) => (
@@ -32,6 +52,11 @@ function OffcanvasExample() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
+                  {userEmail !== null && (
+                    <Nav.Link href="/" onClick={onClickLogout}>
+                      로그아웃
+                    </Nav.Link>
+                  )}
                   <NavDropdown
                     title="마이페이지"
                     id={`offcanvasNavbarDropdown-expand-${expand}`}
@@ -47,8 +72,9 @@ function OffcanvasExample() {
                       내 스터디 보기
                     </NavDropdown.Item>
                   </NavDropdown>
-                  <Nav.Link href="#action2">스터디</Nav.Link>
-                  <Nav.Link href="#action2">자유게시판</Nav.Link>
+                  <Nav.Link href="/study">스터디</Nav.Link>
+                  <Nav.Link href="/social">Social</Nav.Link>
+                  <Nav.Link href="/AdminLogin">관리자모드</Nav.Link>
                 </Nav>
                 <Form className="d-flex" style={{ marginTop: "20px" }}>
                   <Form.Control
@@ -63,8 +89,7 @@ function OffcanvasExample() {
             </Navbar.Offcanvas>
           </Container>
         </Navbar>
-      ))
-      }
+      ))}
     </>
   );
 }

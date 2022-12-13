@@ -1,9 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 import Photo from "./pic/짱난.gif";
 import CommentList from "./components/CommentList";
 import CommentWriter from "./components/CommentWriter";
-import Nav from "../../containers/common/Nav";
+import { useState, useEffect } from "react";
+import SocialApi from "../../api/SocialApi";
+import { useParams } from "react-router-dom";
+import { storageService } from "../../lib/api/fbase";
+import { ref, deleteObject } from "@firebase/storage";
 import {
   IoEyeOutline,
   IoHeartOutline,
@@ -11,47 +16,113 @@ import {
 } from "react-icons/io5";
 
 const SocialDetail = () => {
+  const navigate = useNavigate();
+  const params = useParams().socialId; // router에서 지정한 :social 을 붙여줘야함!!
+  const [socialDetail, setSocialDetail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const getUserId = window.sessionStorage.getItem("userId");
+  // 게시글 ID session Set
+  const setSocialId = window.sessionStorage.setItem(
+    "social_id",
+    socialDetail.socialId
+  );
+  // 이미지 UUID session Set
+  const setImageId = window.sessionStorage.setItem(
+    "social_image",
+    socialDetail.imageId
+  );
+  // 게시글 수정 화면으로 전환
+  const onClickUpdate = async () => {
+    navigate(`/social/${params}/update`);
+  };
+
+  // 게시글 삭제
+  const onClickDelete = async () => {
+    console.log("삭제 버튼 클릭");
+    const res = await SocialApi.socialDelete(params);
+    let imageId = sessionStorage.getItem("social_image");
+    // 기존 이미지가 존재하면 삭제(이미지 ID로 확인)
+    if (imageId !== null) {
+      // 파이어베이스 상 파일주소 지정
+      const attachmentRef = ref(storageService, `/SOCIAL/${imageId}`);
+      // 참조경로로 firebase 이미지 삭제
+      await deleteObject(attachmentRef)
+        .then(() => {
+          console.log("Firebase File deleted successfully !");
+        })
+        .catch((error) => {
+          console.log("Uh-oh, File Delete error occurred!");
+        });
+    }
+    if (res.data.result === "SUCCESS") {
+      navigate(`/social`);
+      alert("게시글 삭제 완료 !");
+    } else {
+      alert("게시글 삭제 실패 ㅜ");
+      console.log(res.data.result);
+    }
+  };
+
+  useEffect(() => {
+    const socialData = async () => {
+      setLoading(true);
+      try {
+        console.log("★ 게시글 번호 : " + params);
+        const response = await SocialApi.socialDetail(params);
+        setSocialDetail(response.data);
+        console.log("★ 게시글 내용 ", response.data);
+      } catch (e) {
+        console.log(e);
+      }
+      setLoading(false);
+    };
+    socialData();
+  }, []);
+  
+  if (loading) {
+    return <DetailBox>조금만 기다려주세요...👩‍💻</DetailBox>;
+  }
   return (
     <div>
-           <Nav />
       <DetailBox>
         <div className="subtitle">Board Detail Page</div>
         <div className="parentBox">
-          <div className="content-title">
-            백엔드 신입으로 입사했는데, 프론트엔드 일을 시킵니다
-          </div>
-          <div className="post-info">
-            <div className="publisher-info">
-              <img className="photos" src={Photo} alt="프로필 사진"></img>
-              <span className="nickName">곰돌이사육사</span>
-              <span className="date">| 22.11.22</span>
+          <div key={socialDetail.socialId}>
+            <div className="content-title">{socialDetail.title}</div>
+            <div className="post-info">
+              <div className="publisher-info">
+                <img className="photos" src={Photo} alt="프로필 사진"></img>
+                <span className="nickName">{socialDetail.user}</span>
+                <span className="date">| {socialDetail.postDate}</span>
+              </div>
+              <div className="icon-box">
+                <IoEyeOutline />
+                <span className="count">{socialDetail.view}</span>
+                <IoHeartOutline />
+                <span className="count">{socialDetail.like}</span>
+                <IoChatboxOutline />
+                <span className="count">{socialDetail.comment}</span>
+              </div>
             </div>
-            <div className="icon-box">
-              <IoEyeOutline />
-              <span className="count">5</span>
-              <IoHeartOutline />
-              <span className="count">5</span>
-              <IoChatboxOutline />
-              <span className="count">5</span>
+            <div className="attachedImg">
+              {`${socialDetail.image}` != null && (
+                <img src={socialDetail.image} className="preview" alt="" />
+              )}
             </div>
+            <div className="content-text">{socialDetail.content}</div>
+            <div className="hashtag-box">
+              <span className="hashtag">{socialDetail.tag}</span>
+            </div>
+            <button className="deleteBt" onClick={onClickDelete}>
+              삭제
+            </button>
+            <button className="updateBt" onClick={onClickUpdate}>
+              수정
+            </button>
+            <hr />
+            <CommentWriter />
+            <CommentList />
           </div>
-          <hr />
-          <div className="content-text">
-            백엔드 직무로 지원해 합격하였는데, 입사하고 나니 갑자기 프론트엔드
-            일을 하라네요.... 저는 백엔드 개발자로 커리어를 쌓고 싶어요. 지금껏
-            프론트가 잘 맞지도 않았구요.. 신입으로 다시 취업을
-            준비할지(첫직장입니다), 프론트 업무와 토이프로젝트를 병행하며
-            백엔드로 이직을 노려볼지... 고민이 많네요... 선배님들의 조언을
-            부탁드립니다ㅠㅠ
-          </div>
-          <div className="hashtag-box">
-            <span className="hashtag">#이직</span>
-            <span className="hashtag">#신입</span>
-            <span className="hashtag">#백앤드</span>
-          </div>
-          <hr />
-          <CommentWriter />
-          <CommentList />
         </div>
       </DetailBox>
     </div>
@@ -99,6 +170,8 @@ const DetailBox = styled.div`
   }
   .content-text {
     padding: 10px;
+    // text 개행 처리 !
+    white-space: pre-wrap;
   }
   .post-info {
     display: flex;
@@ -135,6 +208,16 @@ const DetailBox = styled.div`
     font-style: italic;
     background-color: rgba(219, 219, 219, 0.5);
     border-radius: 10px;
+  }
+  // 첨부 사진 최대 크기 조정
+  .preview {
+    max-width: 95%;
+  }
+  // 첨부 사진 가운데 정렬
+  .attachedImg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 export default SocialDetail;

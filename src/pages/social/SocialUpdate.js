@@ -1,93 +1,132 @@
-import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import SocialApi from "../../api/SocialApi";
 import { storageService } from "../../lib/api/fbase";
 import { v4 as uuidv4 } from "uuid";
+import SocialApi from "../../api/SocialApi";
 import {
   ref,
   uploadString,
   getDownloadURL,
   deleteObject,
 } from "@firebase/storage";
+import { async } from "@firebase/util";
 
-const SocialWrite = () => {
-  const getUserId = "3";
+const SocialUpdate = () => {
   const navigate = useNavigate();
-  // const userNickname = sessionStorage.getItem("userNickname");
-  // const getUserId = window.sessionStorage.getItem("userId");
+  const params = useParams().socialId;
+  const getUserId = window.sessionStorage.getItem("userId");
+  const getImageId = window.sessionStorage.getItem("social_image");
+  const imageId = sessionStorage.getItem("social_image");
+
+  const [loading, setLoading] = useState(false);
+  const [socialDetail, setSocialDetail] = useState(""); // 기존 데이터 가져옴
+  // 기존 데이터를 넣어줄 곳
   const [titleInput, setTitleInput] = useState("");
   const [contentInput, setContentInput] = useState("");
   const [tagInput, setTagInput] = useState("");
-  const [attachment, setAttachment] = useState("");
+  const [attachment, setAttachment] = useState(""); //이미지의 string 으로 변환한 값
+
+  // 사진을 안올릴 경우 들어갈 수 있도록 빈 값 지정
+  let attachmentUrl = " ";
 
   const onChangeTitle = (title) => setTitleInput(title.target.value);
   const onChangeContent = (content) => setContentInput(content.target.value);
   const onChangeTag = (tag) => setTagInput(tag.target.value);
 
-  // 사진을 안올릴 경우 들어갈 수 있도록 빈 값 지정
-  let attachmentUrl = " ";
-
   // 문자로 된 파일을 이미지로 보여줌 - 미리보기 코드
-  const onFileChange = (e) => {
+  const onChangeImage = (e) => {
     const {
       target: { files },
     } = e;
     const theFile = files[0];
-    console.log(theFile);
+    console.log("★ 이미지 파일", theFile);
 
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
       const {
         currentTarget: { result },
       } = finishedEvent;
-      setAttachment(result);
+      setAttachment(result); // 바뀐 파일의 string값 저장
+      console.log(attachment);
     };
     reader.readAsDataURL(theFile);
   };
 
-  const onClickSubmit = async () => {
-    if (true) {
-      // 변수 scope 때문에 함수로 묶어놓음
-      let attachmentUrl = null;
-      let imageName = null;
-
-      if (attachment !== "") {
-        // 파일 참조 경로 지정
-        imageName = uuidv4(); // 이미지 UUID
-        const attachmentRef = ref(storageService, `/SOCIAL/${imageName}`);
-        // 참조경로로 storage에 저장
-        const response = await uploadString(
-          attachmentRef,
-          attachment,
-          "data_url"
-        );
-        attachmentUrl = await getDownloadURL(response.ref);
-        console.log("★ 이미지 주소 : " + attachmentUrl);
-        console.log("★ 이미지 UUID : " + imageName);
-      }
-      const res = await SocialApi.socialWrite(
-        getUserId,
-        titleInput,
-        contentInput,
-        tagInput,
-        attachmentUrl,
-        imageName
+  // [수정] 버튼 클릭 시
+  const onClickEdit = async () => {
+    // 1-1. 일단 기존 사진ID가 있으면 firebase에서 삭제하고(db는 덮어쓰기 하니까 노신경)
+    if (imageId !== null) {
+      // 파이어베이스 상 파일주소 지정
+      const attachmentRef = ref(storageService, `/SOCIAL/${imageId}`);
+      // 참조경로로 firebase 이미지 삭제
+      await deleteObject(attachmentRef)
+        .then(() => {
+          console.log("Firebase File deleted successfully !");
+        })
+        .catch((error) => {
+          console.log("Uh-oh, File Delete error occurred!");
+        });
+    }
+    // 1-2. 기존에 이미지 없었는데 생겼다? firebase, db에 모두 저장
+    if (attachment !== "") {
+      // 파일 참조 경로 지정
+      var attachmentUrl = null;
+      var imageName = uuidv4(); // 이미지 UUID
+      const attachmentRef = ref(storageService, `/SOCIAL/${imageName}`);
+      // 참조경로로 storage에 저장
+      const response = await uploadString(
+        attachmentRef,
+        attachment,
+        "data_url"
       );
-
-      console.log("제출 버튼 클릭");
-      if (res.data === true) {
-        window.alert("Social 게시글 작성 완료 !");
-        navigate(`/social/`);
-      } else {
-        window.alert("Social 게시글 작성 실패 ㅜ");
-        console.log(res.data);
-      }
+      console.log("★ attachment(이미지의 string 형태) :", attachment);
+      attachmentUrl = await getDownloadURL(response.ref);
+      console.log("★ 이미지 주소 : " + attachmentUrl);
+      console.log("★ 이미지 ID : " + imageName);
+    }
+    const res = await SocialApi.socialUpdate(
+      params,
+      titleInput,
+      contentInput,
+      tagInput,
+      attachmentUrl,
+      imageName
+    );
+    console.log("수정 버튼 클릭");
+    if (res.data === true) {
+      navigate(`/social/${params}`); //수정된 게시글로 이동
+      alert("Social 게시글 수정 완료 !");
+    } else {
+      alert("Social 게시글 수정 실패 ");
+      console.log(res.data);
     }
   };
 
+  useEffect(() => {
+    const socialData = async () => {
+      setLoading(true);
+      try {
+        console.log("게시글ID : " + params);
+        const response = await SocialApi.socialDetail(params);
+        // 기존 데이터를 useState 값에 다 따로 받아주기 !
+        setTitleInput(response.data.title);
+        setContentInput(response.data.content);
+        setTagInput(response.data.tag);
+        setAttachment(response.data.image);
+        console.log(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+      setLoading(false);
+    };
+    socialData();
+  }, []);
+  if (loading) {
+    return <WriteBox>조금만 기다려주세요...👩‍💻</WriteBox>;
+  }
   return (
     <WriteBox>
       <div className="subtitle">Write anything you want 👩🏻‍💻✨</div>
@@ -95,7 +134,6 @@ const SocialWrite = () => {
         <label>제목</label>
         <textarea
           className="title"
-          placeholder="게시글의 제목을 입력해주세요."
           value={titleInput}
           onChange={onChangeTitle}
         ></textarea>
@@ -103,18 +141,12 @@ const SocialWrite = () => {
         <label>내용</label>
         <textarea
           className="content"
-          placeholder="개발, 비개발 무엇이든 작성해주세요 (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧^"
           value={contentInput}
           onChange={onChangeContent}
         />
         <hr />
         <label>#해시태그</label>
-        <textarea
-          className="hashTag"
-          placeholder="#이직 #프리랜서"
-          value={tagInput}
-          onChange={onChangeTag}
-        />
+        <textarea className="hashTag" value={tagInput} onChange={onChangeTag} />
         <label htmlFor="formFile" className="form-label">
           이미지 첨부
         </label>
@@ -124,9 +156,8 @@ const SocialWrite = () => {
             type="file"
             id="formFile"
             accept="image/*"
-            onChange={onFileChange}
+            onChange={onChangeImage}
           />
-          {/* 이미지 미리보기 */}
           {attachment && (
             <img
               src={attachment}
@@ -137,8 +168,8 @@ const SocialWrite = () => {
             />
           )}
         </div>
-        <button className="submitBt" onClick={onClickSubmit}>
-          제 출
+        <button className="editBt" onClick={onClickEdit}>
+          수 정
         </button>
       </div>
     </WriteBox>
@@ -204,7 +235,7 @@ const WriteBox = styled.div`
   .hashTag-input {
     margin: 5px 20px;
   }
-  .submitBt {
+  .editBt {
     width: 96%;
     height: 40px;
     margin: 20px auto;
@@ -234,4 +265,4 @@ const WriteBox = styled.div`
     margin-right: 10px;
   }
 `;
-export default SocialWrite;
+export default SocialUpdate;

@@ -4,11 +4,11 @@
   padding: 20px 40px 10px;
 }
 
-.register-form {
+.edit-form {
   padding: 10px 40px 0px;
 }
 
-.register-form label {
+.edit-form label {
   margin: 20px 20px 0;
   font-weight: bold;
   font-size: 13px;
@@ -17,15 +17,15 @@
   cursor: pointer;
 }
 
-.register-form input[type="file"] {
+.edit-form input[type="file"] {
   display: none;
 }
 
-.register-form > input[type="file"] {
+.edit-form > input[type="file"] {
   display: none;
 }
 
-.register-form > input[type="text"],
+.edit-form > input[type="text"],
 [type="email"] {
   border: none;
   border-bottom: 1px solid black;
@@ -35,7 +35,7 @@
   padding: 10px 0;
 }
 
-.register-form > input[type="password"] {
+.edit-form > input[type="password"] {
   border: none;
   border-bottom: 1px solid black;
   outline: none;
@@ -43,32 +43,10 @@
   margin: 8px 0;
   padding: 10px 0;
 }
-.register-form > input[type="tel"] {
-  border: none;
-  border-bottom: 1px solid black;
-  outline: none;
-  margin: 8px 0;
-  padding: 5px 0;
-}
 
-.register-form > input[type="checkbox"] {
-  border: none;
-  border-bottom: 1px solid black;
-  outline: none;
-  margin: 8px 0;
-  padding: 5px 0;
-}
-
-.register-form > input:active,
-.register-form > input:focus,
-.register-form > input:hover {
-  outline: none;
-  border-bottom-color: #6a679e;
-}
-
-.register_btn {
+.submit_btn {
   background: #fff;
-  font-size: 14px;
+  font-size: 1rem;
   margin-top: 30px;
   margin-bottom: 30px;
   padding: 16px 20px;
@@ -84,9 +62,9 @@
   cursor: pointer;
   transition: 0.2s;
 }
-.register_btn:hover,
-.register_btn:focus,
-.register_btn:active {
+.submit_btn:hover,
+.submit_btn:focus,
+.submit_btn:active {
   border-color: #6a679e;
   outline: none;
 }

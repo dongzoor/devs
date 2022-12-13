@@ -6,12 +6,10 @@ import Quote from "../quote/Quote";
 import React from "react";
 import styled from "styled-components";
 
-const imgFile = sessionStorage.getItem("profileImage");
-
 const Box = styled.div`
   margin: 0;
   padding: 0;
-  font-family: Raleway, Pretendard Std;
+  font-family: "Nanum Gothic", GmarketSansMedium;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
@@ -33,8 +31,8 @@ function Profile() {
           <img
             className="profile-img"
             src={
-              imgFile
-                ? imgFile
+              sessionStorage.getItem("profileImagePath")
+                ? sessionStorage.getItem("profileImagePath")
                 : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
             }
             alt="프로필 이미지"
@@ -47,8 +45,8 @@ function Profile() {
         </div>
         <div className="user_container">
           <h2 className="userName">{sessionStorage.getItem("userNickname")}</h2>
-          <Link to="/EditInfo">
-            <FaRegEdit size="30" style={{ margin: "5" }} />
+          <Link to="/CheckPwd">
+            <FaRegEdit size="30" style={{ marginLeft: "5" }} />
           </Link>
         </div>
         <div className="todays_info">
