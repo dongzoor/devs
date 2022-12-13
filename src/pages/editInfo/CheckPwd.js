@@ -1,6 +1,6 @@
 // 아이디, 비밀번호 찾기 페이지
 
-import "../editInfo/CheckPwd.css";
+import "./CheckPwd.css";
 
 import React, { useState } from "react";
 
@@ -16,7 +16,7 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: Raleway, GmarketSansMedium;
+  font-family: "Nanum Gothic", GmarketSansMedium;
   background: linear-gradient(90deg, #ffe7e8, #8da4d0);
 `;
 
@@ -53,7 +53,6 @@ function PwdCheck() {
       window.alert("비밀번호를 확인해주세요.");
     }
   };
-  
   return (
     <Box>
       <Container>
