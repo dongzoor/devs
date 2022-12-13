@@ -10,7 +10,6 @@ import {
 
 import { Link, useParams } from "react-router-dom";
 import { MdArrowBack } from "react-icons/md";
-import UserApi from "../../api/UserApi";
 import { storageService } from "../../lib/api/fbase";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -48,7 +47,7 @@ const Content = styled.div`
 function AdminEditUser() {
 
   const params = useParams().userId;
-  const [userEmail, setUserEmail] = useState([]);
+  const [userEmail, setUserEmail] = useState("");
   const [userNickname, setUserNickname] = useState("");
   const [password, setPassword] = useState(""); // 새로운 비밀번호
   const [inputConPw, setInputConPw] = useState(""); // 비밀번호 확인
@@ -64,7 +63,6 @@ function AdminEditUser() {
 
   const [isConPw, setIsConPw] = useState(false);
   const [conPwMessage, setConPwMessage] = useState("");
-
   // 초기값 설정
   
 
@@ -76,7 +74,7 @@ function AdminEditUser() {
         const response = await AdminApi.admemberDetail(params)
         const originEmail = response.data.userEmail;
         const originNickname = response.data.userNickname;
-        const originPhone = response.data.phone        ;
+        const originPhone = response.data.phone;
         const profileImagePath = response.data.profileImage;
 console.log("이메일 확인 : " , originEmail )
       setUserEmail(originEmail);
@@ -112,6 +110,7 @@ console.log("이메일 확인 : " , originEmail )
   };
 
   const onChangeNickname = (e) => {
+    console.log("닉네임 확인" , userNickname)
     setUserNickname(e.target.value);
   };
 
@@ -158,13 +157,48 @@ console.log("이메일 확인 : " , originEmail )
     }
   };
 
-  // 회원정보 수정
-  const onClickEdit = async () => {
+  const onClickEdit2 = async () => {
+    const userUpdate = await AdminApi.AdUserUpdate(
+      params,  
+      userNickname,
+      password,
+      phone,
+      
+    );
+    console.log("확인",userUpdate)
+    console.log("수정 버튼 클릭");
+    if (userUpdate.data === true) {
+
+      console.log("수정 완료 !!");
+      alert("Social 게시글 수정 완료 !");
+    } else {
+      console.log("수정 실패 ");
+      console.log(userUpdate.data);
+    }
+  };
+
+
+   // 회원정보 수정
+   const onClickEdit = async () => {
+   
+  
+    if (userNickname === "") {
+      window.alert("닉네임을 입력해주세요.");
+      return;
+    }
+
+    if (phone === "") {
+      window.alert("전화번호를 입력해주세요.");
+      return;
+    }
+
     if (window.confirm("회원정보를 수정하시겠습니까?")) {
       if (true) {
+        let profileImagenow = sessionStorage.setItem("profileImage" , imgFile) 
         let profileImage = null;
-        let nowProfileImage = sessionStorage.getItem("profileImage");
-
+        let nowProfileImage = profileImagenow
+        console.log("이미지파일 : " , imgFile)
+      
         // 이미지가 바뀌는 경우
         if (changeImgFile !== "") {
           //새로운 파일이름 생성
@@ -176,9 +210,8 @@ console.log("이메일 확인 : " , originEmail )
 
         const userUpdate = await AdminApi.AdUserUpdate(
           params,
-          userEmail,
-          password,
           userNickname,
+          password,
           phone,
           profileImage
         );
@@ -196,6 +229,15 @@ console.log("이메일 확인 : " , originEmail )
                 //storage 참조 경로로 기존 이미지 삭제
                 await deleteObject(attachmentRefDelete);
 
+                // 바꿀 이미지 업로드
+                const attachmentRefUpload = ref(
+                  storageService,
+                  `/USER/${profileImage}`
+                );
+                await uploadString(attachmentRefUpload, imgFile, "data_url");
+              }
+            } else {
+              if (changeImgFile !== "") {
                 // 바꿀 이미지 업로드
                 const attachmentRefUpload = ref(
                   storageService,
@@ -225,11 +267,25 @@ console.log("이메일 확인 : " , originEmail )
           sessionStorage.setItem("userEmail", userUpdate.data.userEmail);
           sessionStorage.setItem("userNickname", userUpdate.data.userNickname);
           sessionStorage.setItem("phone", userUpdate.data.phone);
-          window.location.replace("/AdmemberList");
+          window.location.replace("/AdminMemberList");
         }
       }
     } else {
       return;
+    }
+  };
+
+
+  // 회원정보 탈퇴
+   const onDeleteUser = async () => {
+    if (window.confirm("탈퇴하시겠습니까?")) {
+      const deleteUser = await AdminApi.delete(userEmail);
+
+      if (deleteUser.data === true) {
+        window.confirm("탈퇴를 완료하였습니다.");
+        sessionStorage.clear();
+        window.location.replace("/");
+      }
     }
   };
 
@@ -240,7 +296,7 @@ console.log("이메일 확인 : " , originEmail )
           <Link to="/AdminMemberList">
             <MdArrowBack size="24" style={{ margin: 10 }} />
           </Link>
-          <h1 class="form-title">회원정보 수정</h1>
+          <h1 class="form-title">Edit Account Information</h1>
           <div>
             <form className="edit-form">
               <img

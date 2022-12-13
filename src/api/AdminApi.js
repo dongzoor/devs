@@ -1,8 +1,10 @@
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 
 const HEADER = "application/json";
 const WN_DOMAIN = "http://localhost:8211/";
+const params = useParams.userId
 
 const AdminApi = {
 
@@ -21,15 +23,16 @@ const AdminApi = {
     return await axios.get(WN_DOMAIN  + "adUserList/" + userId, HEADER);
   },
 
-  AdUserUpdate: async function (userId, userNickname, password, phone, profileImage) {
+  AdUserUpdate: async function ( userid , userNickname, password, phone, profileImage) {
     const updateObj = {
+    
       userNickname: userNickname,
       password: password,
       phone: phone,
       profileImage: profileImage,
     };
     return await axios.put(
-      WN_DOMAIN + "adUserList/" + userId + "/update",
+      WN_DOMAIN + "adUserList/" + userid + "/update",
       updateObj,
       HEADER
     );

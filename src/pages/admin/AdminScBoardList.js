@@ -84,7 +84,7 @@ function AdminScBoardList() {
             <Adminheader></Adminheader>
             <Adcontainer>
                 <div>
-                    <h1 className='adTitle'> 자유 게시판  리스트</h1>
+                    <h1 className='adTitle'> 자유 게시판  리스트 &nbsp;<i class="fi fi-rr-document"></i></h1>
                     <Table striped bordered hover size="sm" className='table_adboardlist'>
                         <thead>
                             <tr>
