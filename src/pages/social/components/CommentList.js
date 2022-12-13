@@ -8,7 +8,7 @@ const CommentList = () => {
   const getSocialId = window.sessionStorage.getItem("social_id");
   const getUserId = window.sessionStorage.getItem("userId"); // 삭제시 현 유저아이디 대조용
 
-  console.log("Social 게시물 ID : " + getSocialId);
+  // console.log("Social 게시물 ID : " + getSocialId);
   const [commentList, setCommentList] = useState("");
   const [inputContent, setInputContent] = useState(""); // 댓글 내용 입력 받을 객체
   const [deleteComplete, setDeleteComplete] = useState(false);

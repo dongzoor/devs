@@ -6,7 +6,9 @@ import CommentList from "./components/CommentList";
 import CommentWriter from "./components/CommentWriter";
 import { useState, useEffect } from "react";
 import SocialApi from "../../api/SocialApi";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { storageService } from "../../lib/api/fbase";
+import { ref, deleteObject } from "@firebase/storage";
 import {
   IoEyeOutline,
   IoHeartOutline,
@@ -16,39 +18,59 @@ import {
 const SocialDetail = () => {
   const navigate = useNavigate();
   const params = useParams().socialId; // router에서 지정한 :social 을 붙여줘야함!!
-
   const [socialDetail, setSocialDetail] = useState("");
   const [loading, setLoading] = useState(false);
-  // web storage get/set
   const getUserId = window.sessionStorage.getItem("userId");
+  // 게시글 ID session Set
   const setSocialId = window.sessionStorage.setItem(
     "social_id",
     socialDetail.socialId
   );
-
+  // 이미지 UUID session Set
+  const setImageId = window.sessionStorage.setItem(
+    "social_image",
+    socialDetail.imageId
+  );
+  // 게시글 수정 화면으로 전환
   const onClickUpdate = async () => {
     navigate(`/social/${params}/update`);
   };
 
+  // 게시글 삭제
   const onClickDelete = async () => {
-    const res = await SocialApi.socialDelete(params);
     console.log("삭제 버튼 클릭");
+    const res = await SocialApi.socialDelete(params);
+    let imageId = sessionStorage.getItem("social_image");
+    // 기존 이미지가 존재하면 삭제(이미지 ID로 확인)
+    if (imageId !== null) {
+      // 파이어베이스 상 파일주소 지정
+      const attachmentRef = ref(storageService, `/SOCIAL/${imageId}`);
+      // 참조경로로 firebase 이미지 삭제
+      await deleteObject(attachmentRef)
+        .then(() => {
+          console.log("Firebase File deleted successfully !");
+        })
+        .catch((error) => {
+          console.log("Uh-oh, File Delete error occurred!");
+        });
+    }
     if (res.data.result === "SUCCESS") {
-      console.log("삭제 완료 !");
-      alert("삭제 완료");
+      navigate(`/social`);
+      alert("게시글 삭제 완료 !");
     } else {
-      console.log("삭제 실패 ㅜ");
+      alert("게시글 삭제 실패 ㅜ");
       console.log(res.data.result);
     }
   };
+
   useEffect(() => {
     const socialData = async () => {
       setLoading(true);
       try {
-        console.log(params);
+        console.log("★ 게시글 번호 : " + params);
         const response = await SocialApi.socialDetail(params);
         setSocialDetail(response.data);
-        console.log(response.data);
+        console.log("★ 게시글 내용 ", response.data);
       } catch (e) {
         console.log(e);
       }
@@ -82,19 +104,21 @@ const SocialDetail = () => {
                 <span className="count">{socialDetail.comment}</span>
               </div>
             </div>
-            <hr />
+            <div className="attachedImg">
+              {`${socialDetail.image}` != null && (
+                <img src={socialDetail.image} className="preview" alt="" />
+              )}
+            </div>
             <div className="content-text">{socialDetail.content}</div>
             <div className="hashtag-box">
               <span className="hashtag">{socialDetail.tag}</span>
-              <Link to="/social">
-                <button className="deleteBt" onClick={onClickDelete}>
-                  삭제
-                </button>
-              </Link>
-              <button className="updateBt" onClick={onClickUpdate}>
-                수정
-              </button>
             </div>
+            <button className="deleteBt" onClick={onClickDelete}>
+              삭제
+            </button>
+            <button className="updateBt" onClick={onClickUpdate}>
+              수정
+            </button>
             <hr />
             <CommentWriter />
             <CommentList />
@@ -146,6 +170,8 @@ const DetailBox = styled.div`
   }
   .content-text {
     padding: 10px;
+    // text 개행 처리 !
+    white-space: pre-wrap;
   }
   .post-info {
     display: flex;
@@ -182,6 +208,16 @@ const DetailBox = styled.div`
     font-style: italic;
     background-color: rgba(219, 219, 219, 0.5);
     border-radius: 10px;
+  }
+  // 첨부 사진 최대 크기 조정
+  .preview {
+    max-width: 95%;
+  }
+  // 첨부 사진 가운데 정렬
+  .attachedImg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 export default SocialDetail;
