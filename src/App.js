@@ -24,6 +24,8 @@ import StudyDetail from "./pages/study/StudyDetail";
 import StudyList from "./pages/study/StudyList";
 import StudyWrite from "./pages/study/StudyWrite";
 import Terms from "./pages/register/Terms";
+import StudyUpdate from "./pages/study/StudyUpdate";
+
 
 // import Admin from "./pages/admin/Admin";
 function App() {
@@ -47,6 +49,7 @@ function App() {
         <Route path="/studies" element={<StudyList />} />
         <Route path="/study/write" element={<StudyWrite />} />
         <Route exact path="/study/:studyId" element={<StudyDetail />} />
+        <Route exact path="/study/edit/:studyId" element={<StudyUpdate />} />
         <Route path="/Socket" element={<SocketTest />} />
         <Route path="/social" element={<SocialList />} />
         <Route exact path="/social/:socialId" element={<SocialDetail />} />

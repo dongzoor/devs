@@ -22,6 +22,19 @@ const StudyApi = {
     }
     return await axios.post(DEVS_DOMAIN + "/study/write", studyObj, HEADER)
   },
+
+  studyUpdate: async function (studyId, title, content, imgUrl) {
+    const studyObj = {
+      title: title,
+      content: content,
+      imgUrl: imgUrl,
+    }
+    return await axios.put(DEVS_DOMAIN + "/study/edit/" + studyId, studyObj, HEADER)
+  },
+
+  studyUpdateDetail: async function (studyId) {
+    return await axios.get(DEVS_DOMAIN + "/study/edit/" + studyId, HEADER);
+  },
 }
 
 export default StudyApi;
