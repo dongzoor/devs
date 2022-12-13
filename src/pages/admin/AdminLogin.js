@@ -5,10 +5,11 @@ import React, { useState } from "react";
 import { SiGithub, SiGoogle, SiKakaotalk } from "react-icons/si";
 import { getDownloadURL, ref } from "@firebase/storage";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserApi from "../../api/UserApi";
 import { storageService } from "../../lib/api/fbase";
 import styled from "styled-components";
+import AdminApi from "../../api/AdminApi";
 
 const Box = styled.div`
   margin: 0 auto;
@@ -25,11 +26,10 @@ const Container = styled.div`
   min-height: 100vh;
 `;
 
-function Login() {
+function AdminLogin() {
   // 세션이 존재하는 경우 프로필 화면으로
-  if (sessionStorage.getItem("userEmail") !== null) {
-    window.location.replace("/Profile");
-  }
+  
+  const navigate = useNavigate();
 
   // 키보드 입력
   const [inputId, setInputId] = useState("");
@@ -46,32 +46,14 @@ function Login() {
 
   const onClickLogin = async () => {
     // 로그인을 위한 axios 호출
-    const res = await UserApi.userLogin(inputId, inputPw);
-
+    const res = await AdminApi.AdminLogin(inputId, inputPw);
+    
     // 로그인을 성공하는 경우
     if (res.data !== false) {
-      // 사람정보에 이미지가 존재하는 경우
-      if (res.data.profileImage !== null) {
-        //FireBase에서 이미지를 불러올 경로 참고 생성
-        let attachmentUrl = ref(
-          storageService,
-          `/USER/${res.data.profileImage}`
-        );
-
-        // 경로 참고를 가지고 이미지 경로를 불러온다.
-        let profileImagePath = await getDownloadURL(attachmentUrl);
-
-        sessionStorage.setItem("profileImage", res.data.profileImage);
-        sessionStorage.setItem("profileImagePath", profileImagePath);
+      navigate("/AdminScBoarList")
+      } else if (res.data === false) {
+        window.alert("이메일이나 비밀번호를 확인해주세요.");
       }
-
-      sessionStorage.setItem("userEmail", res.data.userEmail);
-      sessionStorage.setItem("userNickname", res.data.userNickname);
-      sessionStorage.setItem("phone", res.data.phone);
-      window.location.replace("/Profile");
-    } else if (res.data === false) {
-      window.alert("이메일이나 비밀번호를 확인해주세요.");
-    }
   };
 
   return (
@@ -109,33 +91,7 @@ function Login() {
                 Log in now
               </button>
 
-              <Link
-                to="/Register"
-                style={{ textDecoration: "none", margin: "10px" }}
-              >
-                Register
-              </Link>
-              <Link
-                to="/FindInfo"
-                style={{ textDecoration: "none", margin: "10px" }}
-              >
-                Find Id/Pw
-              </Link>
             </form>
-            <div className="social-login">
-              <h3>log in via</h3>
-              <div className="social-icons">
-                <a href="#" className="kakaoIcon">
-                  <SiKakaotalk />
-                </a>
-                <a href="#" className="googleIcon">
-                  <SiGoogle />
-                </a>
-                <a href="#" className="githubIcon">
-                  <SiGithub />
-                </a>
-              </div>
-            </div>
           </div>
           <div class="screen__background">
             <span class="screen__background__shape screen__background__shape4"></span>
@@ -149,4 +105,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default AdminLogin;

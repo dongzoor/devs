@@ -6,7 +6,8 @@ import Quote from "../quote/Quote";
 import React from "react";
 import styled from "styled-components";
 
-const imgFile = sessionStorage.getItem("profileImage");
+// 세션에 존재하는 이미지 경로
+const imgFile = sessionStorage.getItem("profileImagePath");
 
 const Box = styled.div`
   margin: 0;

@@ -53,6 +53,7 @@ function PwdCheck() {
       window.alert("비밀번호를 확인해주세요.");
     }
   };
+  
   return (
     <Box>
       <Container>

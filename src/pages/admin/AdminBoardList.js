@@ -5,6 +5,7 @@ import Adminheader from './Adminheader';
 import { useEffect, useState } from 'react';
 import AdminApi from '../../api/AdminApi';
 import Loading from '../../utill/Loading';
+import { Link, useParams } from 'react-router-dom';
 
 const Adcontainer = styled.div`
 display: flex;
@@ -24,14 +25,28 @@ justify-content: center;
 
 function AdminBoardList() {
 
+ 
+  const params = useParams().studyId;
   const [adstudyboard, setAdstudyboard] = useState([]); // 스터디게시판 조회
   const [loading, setLoading] = useState(false);
+  const [deleteAdBoard, setDeleteAdBoard] = useState(false); //멤버삭제
 
-  // 게시판 아이디별 조회
-  const onClickBoardList = (val) => {
-    console.log("게시판 이동 : " + val);
-    window.localStorage.setItem("Detail", val);
-    window.location.replace("/study/detail");
+ 
+
+
+
+  // 스터디 게시판 삭제
+  const clickDelBoard = async (e) => {
+    console.log("삭제 버튼 클릭");
+    const response = await AdminApi.deleteStudyBoard(e);
+    setLoading(true);
+    setDeleteAdBoard(true)
+    // console.log(response.data);
+    // if (response.data) {
+    //   setLoading(true);
+    //   setDeleteAdBoard(true);
+    // } else setDeleteAdBoard(false);
+    // setLoading(false);
   };
 
 
@@ -49,7 +64,7 @@ function AdminBoardList() {
     };
 
     BoardData();
-  }, []);
+  }, [loading]);
 
   if (loading) {
     return <Loading></Loading>;
@@ -62,7 +77,7 @@ function AdminBoardList() {
       <Adminheader></Adminheader>
       <Adcontainer>
         <div>
-          <h1 className='adTitle'>스터디 게시판 리스트</h1>
+          <h1 className='adTitle'>스터디 게시판 리스트&nbsp;<i class="fi fi-rr-document"></i></h1> 
           <Table striped bordered hover size="sm" className='table_adboardlist'>
             <thead>
               <tr>
@@ -87,9 +102,9 @@ function AdminBoardList() {
                     <td>{list.updateTime}</td>
                     <td>{list.coordinate}</td>
                     <td>
-                      <button className='adbutton delete'>삭제</button>
-                      <button className='adbutton delete' onClick={() => onClickBoardList(list.id)} >조회</button>
-                      <button className='adbutton delete'>수정</button>
+                      <button className='adbutton delete' onClick={()=>clickDelBoard(list.id)} >삭제</button>
+                      <Link to={`/study/${list.id}`} style={{ textDecoration: "none" , color : "inherit"}}><button className='adbutton serch' >조회</button></Link>
+                      <button className='adbutton edit'>수정</button>
                       <button className='adbutton delete'>미정</button>
                     </td>
                   </tr>

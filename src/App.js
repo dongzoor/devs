@@ -20,6 +20,8 @@ import StudyDetail from "./pages/study/StudyDetail";
 import StudyList from "./pages/study/StudyList";
 import StudyWrite from "./pages/study/StudyWrite";
 import SocialUpdate from "./pages/social/SocialUpdate";
+import AdminEditUser from "./pages/admin/AdminEditUser";
+import AdminLogin from "./pages/admin/AdminLogin";
 
 function App() {
   return (
@@ -27,14 +29,17 @@ function App() {
       <Nav />
       <Routes>
         {/* <Route path="/Admin" element={<Admin />} /> */}
+        <Route path="/AdminLogin" element={<AdminLogin />} />
         <Route path="/AdminScBoarList" element={<AdminScBoardList />} />
         <Route path="/AdminBoarList" element={<AdminBoardList />} />
         <Route path="/AdminMemberList" element={<AdminMemberList />} />
+        <Route exact path="/AdminMember/:userId" element={<AdminEditUser />} />
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/FindInfo" element={<FindInfo />} />
         <Route path="/EditInfo" element={<EditInfo />} />
+        <Route path="/CheckPwd" element={<CheckPwd />} />
         <Route path="/studies" element={<StudyList />} />
         <Route path="/study/write" element={<StudyWrite />} />
         <Route exact path="/study/:studyId" element={<StudyDetail />} />
@@ -43,10 +48,9 @@ function App() {
         <Route exact path="/social/:socialId" element={<SocialDetail />} />
         <Route exact path="/social/:socialId/update" element={<SocialUpdate />} />
         <Route path="/social/write" element={<SocialWrite />} />
-        {/* <Login/>   */}
-      </Routes >
+      </Routes>
       {/* <Admin></Admin> */}
-    </Router >
+    </Router>
   );
 }
 

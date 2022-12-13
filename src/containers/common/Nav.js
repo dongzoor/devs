@@ -50,6 +50,7 @@ function OffcanvasExample() {
                   </NavDropdown>
                   <Nav.Link href="/study">스터디</Nav.Link>
                   <Nav.Link href="/social">Social</Nav.Link>
+                  <Nav.Link href="/AdminLogin">관리자모드</Nav.Link>
                 </Nav>
                 <Form className="d-flex" style={{ marginTop: "20px" }}>
                   <Form.Control

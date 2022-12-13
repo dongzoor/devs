@@ -51,7 +51,6 @@ function Register() {
   const [isConPw, setIsConPw] = useState(false);
   const [conPwMessage, setConPwMessage] = useState("");
 
-  let profileImage = " ";
   //프로필 이미지 firebase 저장 및 미리 보여주기
   const saveImgFile = (e) => {
     const {
@@ -140,15 +139,18 @@ function Register() {
     if (true) {
       let profileImage = null;
 
+      // 이미지가 존재하는 경우
       if (imgFile !== "") {
-        //파일 경로 참조 만들기
+        //파일 랜덤 이름 생성(FireBase에 저장할 파일 이름)
         profileImage = uuidv4();
+
+        // 업로드파일 참조
         const attachmentRef = ref(storageService, `/USER/${profileImage}`);
         //storage 참조 경로로 파일 업로드 하기
         await uploadString(attachmentRef, imgFile, "data_url");
       }
-      console.log(profileImage);
 
+      // 회원가입
       const userReg = await UserApi.userReg(
         userEmail,
         password,
@@ -156,12 +158,13 @@ function Register() {
         phone,
         profileImage
       );
-      console.log(userReg.statusText);
-      if (userReg.statusText === "OK")
-        //storage 참조 경로에 있는 파일의 URL을 다운로드해서 attachmentUrl 변수에 넣어서 업데이트
-        // attachmentUrl = await getDownloadURL(response.ref);
+      // 회원가입에 성공하는 경우
+      if (userReg.statusText === "OK") {
         window.confirm("회원가입이 완료되었습니다.");
-      window.location.replace("/");
+        window.location.replace("/");
+      } else {
+        window.confirm("회원가입에 실패했습니다.");
+      }
     }
   };
 

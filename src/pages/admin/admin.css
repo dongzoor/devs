@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic+Coding:400');
 @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+@import url('https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css');
 
 /* :root {
   --button-color: #ffffff;
@@ -39,22 +40,26 @@
   transition: 0.5s;
 }
 
-.adbutton.success {
-  --button-bg-color: #28a745;
-  --button-hover-bg-color: #218838;
+.adbutton.serch {
+  --button-bg-color: #9691db;
+  --button-hover-bg-color: #5dd076;
 }
 
 .adbutton.delete {
 
   --button-bg-color: #9691db;
-  --button-hover-bg-color: #b753a5;
+  --button-hover-bg-color: #d662c1;
 }
 
-.adbutton.warning {
-  --button-color: #212529;
-  --button-bg-color: #ffc107;
-  --button-hover-bg-color: #e0a800;
+.adbutton.edit {
+  --button-bg-color: #9691db;
+  --button-hover-bg-color: #ecc85d;
 }
+.adbutton.warning {
+  --button-bg-color: #9691db;
+  --button-hover-bg-color: #5aa6e9;
+}
+
 
 .adbutton:active,
 .adbutton:hover,
@@ -75,6 +80,7 @@
   /* width: 100% */
   left: 0;
   right: 0;
+  font-family: 'Gowun Dodum', sans-serif;
 
 }
 
@@ -96,16 +102,26 @@
 .table_admemberlist {
   background-color: #ddddef;
 
-  /* align-items: center;
-  justify-content: center; */
-
+  width: 1300px;
+  margin-bottom: 18rem;
+  box-shadow: 0px 0px 24px #5c6696;
 }
 
 .table_adboardlist {
   background-color: #ddddef;
   width: 1020px;
   margin-bottom: 18rem;
+  box-shadow: 0px 0px 24px #5c6696;
 
+}
+.table_admemberlist td{
+  justify-content: center;
+  text-align: center;
+}
+
+.table_admemberlist th{
+  justify-content: center;
+  text-align: center;
 }
 
 .table_adboardlist td {
